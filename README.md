@@ -1,6 +1,4 @@
 # cvbebop
-
-## Description
 CV Bebop (= OpenCV + bebop drone)
 
 ## Licence
