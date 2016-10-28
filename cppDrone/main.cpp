@@ -80,7 +80,7 @@ void process_opencv() {
 
 int main(void)
 {
-	process_opencv();
-	// process_bebop();
+	// process_opencv();
+	process_bebop();
 	return 0;
 }
