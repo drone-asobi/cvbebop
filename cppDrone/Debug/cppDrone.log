@@ -1,6 +1,0 @@
-﻿  bebopCommand.cpp
-c:\users\dronepc04\documents\visual studio 2012\projects\cppdrone\cppdrone\bebopcommand.cpp(471): warning C4996: 'avcodec_alloc_frame': が古い形式として宣言されました。
-          c:\ffmpeg\include\libavcodec\avcodec.h(3662) : 'avcodec_alloc_frame' の宣言を確認してください。
-c:\users\dronepc04\documents\visual studio 2012\projects\cppdrone\cppdrone\bebopcommand.cpp(472): warning C4996: 'avcodec_alloc_frame': が古い形式として宣言されました。
-          c:\ffmpeg\include\libavcodec\avcodec.h(3662) : 'avcodec_alloc_frame' の宣言を確認してください。
-  cppDrone.vcxproj -> C:\Users\dronepc04\documents\visual studio 2012\Projects\cppDrone\Debug\cppDrone.exe
