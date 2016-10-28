@@ -42,6 +42,8 @@ void process_bebop() {
 	bebop.landing();
 }
 
+/**** ここを実装してイメージ処理をする ****/
+/**** 他のファイルは今の段階でいじる必要なし ****/
 void process_opencv() {
 	// ref: http://qiita.com/vs4sh/items/4a9ce178f1b2fd26ea30
 	cv::VideoCapture cap(0);//デバイスのオープン
