@@ -17,6 +17,7 @@
 #include <opencv2\calib3d.hpp>
 #include "bebopCommand.h"
 
+using namespace cv;
 
 void process_bebop() {
 	bebopCommand bebop;
@@ -40,6 +41,21 @@ void process_bebop() {
 		bebop.move(x, y, z, r);
 	}
 	bebop.landing();
+}
+
+void opencv_loadimage()
+{
+	auto img = imread("img.png", IMREAD_COLOR);
+
+	if (!img.data)
+	{
+		std::cout << "Load image error" << std::endl;
+		return;
+	}
+
+	imshow("window", img);
+
+	waitKey(0);
 }
 
 /**** ここを実装してイメージ処理をする ****/
@@ -75,6 +91,16 @@ void process_opencv() {
 		{
 			//フレーム画像を保存する．
 			cv::imwrite("img.png", frame);
+		}
+		else if(key == 116) //tが押されたとき
+		{
+			// 保存されている(img.png)を表示させる
+			opencv_loadimage();
+		}
+		else if(key == 114) //rが押されたとき
+		{
+			//単に待つ
+			waitKey(0);
 		}
 	}
 	cv::destroyAllWindows();
