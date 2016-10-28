@@ -1,0 +1,6 @@
+cppDrone.sdf
+cppDrone.VC.opendb
+cppDrone/x64/Release/
+cppDrone/*.vcxproj.user
+x64/Release/
+.vs/
