@@ -93,7 +93,7 @@ void opencv_detect_face(Mat img)
 	cv::imshow("result", img);
 }
 
-void opencv_detect_person(Mat img)
+void opencv_detect_person(Mat img, cv::Rect &r)
 {
 	// ref: http://opencv.jp/cookbook/opencv_img.html#id43
 	HOGDescriptor hog;
@@ -109,7 +109,8 @@ void opencv_detect_person(Mat img)
 	std::cout << "found:" << found.size() << std::endl;
 	for (auto it = found.begin(); it != found.end(); ++it)
 	{
-		cv::Rect r = *it;
+		//cv::Rect
+		r = *it;
 		// 描画に際して，検出矩形を若干小さくする
 		r.x += cvRound(r.width * 0.1);
 		r.width = cvRound(r.width * 0.8);
@@ -155,6 +156,14 @@ void process_opencv()
 
 	bool flag_detect_people = false;
 	bool flag_detect_face = false;
+	bool flag_detect_distance = false;
+
+	double f_s = 106.3;	//カメラの焦点距離(pixel)
+	double distance = 0;	//カメラとの距離(m)
+	double H = 240;	//撮影される画像の縦の長さ(pixel)
+	double h;	//カメラの高さ(m)
+	double y;	//注目点のy座標(pixel)
+	cv::Rect result;	//人認識の領域
 
 	while (true)//無限ループ
 	{
@@ -198,10 +207,22 @@ void process_opencv()
 			flag_detect_people = !flag_detect_people;
 			cout << "Detect People ON" << endl;
 		}
+		else if (key == 'd') //距離計測
+		{
+			flag_detect_distance = !flag_detect_distance;
+			cout << "Distance Measurement ON" << endl;
+		}
+		
 
 		if (flag_detect_people)
 		{
-			opencv_detect_person(frame2);
+			opencv_detect_person(frame2,result);
+				
+			if (flag_detect_distance)
+			{
+			cout << "領域範囲"<< result.area() << endl;
+			//			cout << distance << endl;
+			}
 		}
 		else if (flag_detect_face)
 		{
