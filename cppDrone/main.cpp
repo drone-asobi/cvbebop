@@ -116,6 +116,7 @@ void opencv_detect_person(Mat img)
 		r.y += cvRound(r.height * 0.07);
 		r.height = cvRound(r.height * 0.8);
 		cv::rectangle(img, r.tl(), r.br(), cv::Scalar(0, 255, 0), 3);
+		r.area();
 	}
 
 	// 結果の描画
@@ -145,6 +146,7 @@ void process_opencv()
 	// ref: http://qiita.com/vs4sh/items/4a9ce178f1b2fd26ea30
 	VideoCapture cap(0);//デバイスのオープン //cap.open(0); //こっちでも良い．
 
+
 	if (!cap.isOpened())//カメラデバイスが正常にオープンしたか確認．
 	{
 		//読み込みに失敗したときの処理
@@ -156,14 +158,15 @@ void process_opencv()
 
 	while (true)//無限ループ
 	{
-		cv::Mat frame;
-		cap >> frame; // get a new frame from camera
+		cv::Mat frame1;
+		cv::Mat frame2;
+		cap >> frame1; // get a new frame from camera
 
 		//
 		//取得したフレーム画像に対して，クレースケール変換や2値化などの処理を書き込む．
 		//
-
-		cv::imshow("window", frame);//画像を表示．
+		cv::resize(frame1, frame2, cv::Size(), 0.5, 0.5);
+		cv::imshow("window", frame2);//画像を表示．
 
 		int key = cv::waitKey(1);
 		if (key == 'q')//qボタンが押されたとき
@@ -173,7 +176,7 @@ void process_opencv()
 		else if (key == 's')//sが押されたとき
 		{
 			//フレーム画像を保存する．
-			cv::imwrite("img.png", frame);
+			cv::imwrite("img.png", frame2);
 		}
 		else if (key == 't') //tが押されたとき
 		{
@@ -198,11 +201,11 @@ void process_opencv()
 
 		if (flag_detect_people)
 		{
-			opencv_detect_person(frame);
+			opencv_detect_person(frame2);
 		}
 		else if (flag_detect_face)
 		{
-			opencv_detect_face(frame);
+			opencv_detect_face(frame2);
 		}
 	}
 	cv::destroyAllWindows();
