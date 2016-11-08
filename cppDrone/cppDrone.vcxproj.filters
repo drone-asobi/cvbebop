@@ -38,9 +38,6 @@
     <ClInclude Include="bebopCommand.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="inttypes.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="picojson.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

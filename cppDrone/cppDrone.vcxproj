@@ -1,17 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
@@ -25,23 +17,10 @@
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -54,54 +33,23 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)opencv\build\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)opencv\build\x64\vc14\lib;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)lib\ffmpeg\include;$(SolutionDir)lib\opencv\build\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\ffmpeg\lib;$(SolutionDir)lib\opencv\build\x64\vc14\lib;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)opencv\build\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)build\opencv\lib;$(SolutionDir)build\ffmpeg\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)lib\ffmpeg\include;$(SolutionDir)lib\opencv\build\include;$(SolutionDir)ARSDK3_Bebop2\Includes;$(SolutionDir)json;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\ffmpeg\lib;$(SolutionDir)lib\opencv\build\x64\vc14\lib;$(SolutionDir)lib\pthread;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)lib\ffmpeg\include;$(SolutionDir)lib\opencv\build\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\ffmpeg\lib;$(SolutionDir)lib\opencv\build\x64\vc14\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)lib\ffmpeg\include;$(SolutionDir)lib\opencv\build\include;$(SolutionDir)ARSDK3_Bebop2\Includes;$(SolutionDir)json;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\ffmpeg\lib;$(SolutionDir)lib\opencv\build\x64\vc14\lib;$(SolutionDir)lib\pthread;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;avcodec.lib;avformat.lib;swscale.lib;avutil.lib;opencv_core310.lib;opencv_highgui310.lib;opencv_imgproc310.lib;opencv_videoio310.lib;opencv_features2d310.lib;opencv_flann310.lib;opencv_video310.lib;opencv_calib3d310.lib;opencv_imgcodecs310.lib;opencv_objdetect310.lib;opencv_aruco310.lib;opencv_bgsegm310.lib;opencv_bioinspired310.lib;opencv_ccalib310.lib;opencv_datasets310.lib;opencv_face310.lib;opencv_dnn310.lib;opencv_dpm310.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>
@@ -113,35 +61,21 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;opencv_world310d.lib;avcodec.lib;avdevice.lib;avfilter.lib;avformat.lib;avutil.lib;postproc.lib;swresample.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;pthreadVC2.lib;opencv_world310d.lib;avcodec.lib;avdevice.lib;avfilter.lib;avformat.lib;avutil.lib;postproc.lib;swresample.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkStatus>
+      </LinkStatus>
+      <OptimizeReferences>
+      </OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "$(SolutionDir)lib\opencv\build\x64\vc14\bin\opencv_world310d.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)lib\opencv\build\x64\vc14\bin\opencv_ffmpeg310_64.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)lib\ffmpeg\dll\*.dll" "$(OutDir)"
+      <Command>xcopy /y /d "$(SolutionDir)lib\opencv\build\x64\vc14\bin\opencv_world310d.dll" "$(OutDir)"
+xcopy /y /d "$(SolutionDir)lib\opencv\build\x64\vc14\bin\opencv_ffmpeg310_64.dll" "$(OutDir)"
+xcopy /y /d "$(SolutionDir)lib\ffmpeg\dll\*.dll" "$(OutDir)"
+xcopy /y /d "$(SolutionDir)lib\pthread\*.dll" "$(OutDir)"
 mkdir "$(OutDir)train"
 xcopy /y /d /s "$(SolutionDir)lib\opencv\build\etc" "$(OutDir)train"</Command>
     </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;avcodec.lib;avformat.lib;swscale.lib;avutil.lib;opencv_core310.lib;opencv_highgui310.lib;opencv_imgproc310.lib;opencv_videoio310.lib;opencv_features2d310.lib;opencv_flann310.lib;opencv_video310.lib;opencv_calib3d310.lib;opencv_imgcodecs310.lib;opencv_objdetect310.lib;opencv_aruco310.lib;opencv_bgsegm310.lib;opencv_bioinspired310.lib;opencv_ccalib310.lib;opencv_datasets310.lib;opencv_face310.lib;opencv_dnn310.lib;opencv_dpm310.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -158,13 +92,14 @@ xcopy /y /d /s "$(SolutionDir)lib\opencv\build\etc" "$(OutDir)train"</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;opencv_world310.lib;avcodec.lib;avdevice.lib;avfilter.lib;avformat.lib;avutil.lib;postproc.lib;swresample.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;pthreadVC2.lib;opencv_world310.lib;avcodec.lib;avdevice.lib;avfilter.lib;avformat.lib;avutil.lib;postproc.lib;swresample.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "$(SolutionDir)lib\opencv\build\x64\vc14\bin\opencv_world310.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)lib\opencv\build\x64\vc14\bin\opencv_ffmpeg310_64.dll" "$(OutDir)"
-xcopy /y /d  "$(SolutionDir)lib\ffmpeg\dll\*.dll" "$(OutDir)"
+      <Command>xcopy /y /d "$(SolutionDir)lib\opencv\build\x64\vc14\bin\opencv_world310.dll" "$(OutDir)"
+xcopy /y /d "$(SolutionDir)lib\opencv\build\x64\vc14\bin\opencv_ffmpeg310_64.dll" "$(OutDir)"
+xcopy /y /d "$(SolutionDir)lib\ffmpeg\dll\*.dll" "$(OutDir)"
+xcopy /y /d "$(SolutionDir)lib\pthread\*.dll" "$(OutDir)"
 mkdir "$(OutDir)train"
 xcopy /y /d /s "$(SolutionDir)lib\opencv\build\etc" "$(OutDir)train"</Command>
     </PostBuildEvent>
@@ -179,12 +114,19 @@ xcopy /y /d /s "$(SolutionDir)lib\opencv\build\etc" "$(OutDir)train"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bebopCommand.h" />
-    <ClInclude Include="inttypes.h" />
     <ClInclude Include="picojson.h" />
     <ClInclude Include="TCPClient.h" />
     <ClInclude Include="TCPServer.h" />
     <ClInclude Include="UDPSocket.h" />
     <ClInclude Include="VideoDataPool.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ARSDK3_Bebop2\ARSDK3_Bebop2.vcxproj">
+      <Project>{38b63d5f-50af-4043-a64c-dd0056fa183f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\json\json.vcxproj">
+      <Project>{6263abb6-53c5-47c0-a530-6fb9cccdaab1}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

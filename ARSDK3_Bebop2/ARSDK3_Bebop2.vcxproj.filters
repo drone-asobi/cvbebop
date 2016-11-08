@@ -1,0 +1,267 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header files\libARDiscovery">
+      <UniqueIdentifier>{942f389c-0ec2-43e0-86f2-364c7c0c2590}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\libARNetwork">
+      <UniqueIdentifier>{300359a2-e2f1-4bef-afc7-44760a2bea9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\libARNetworkAL">
+      <UniqueIdentifier>{5588acc9-c5f5-4c06-8df6-1e87ade57f92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\libARSAL">
+      <UniqueIdentifier>{de90b5e3-aea9-4e7d-b96c-5e177017dfe0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARDiscovery">
+      <UniqueIdentifier>{bdf47828-9e81-4f37-b305-544a0489790a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARDiscovery\Wifi">
+      <UniqueIdentifier>{0d1431a5-5242-4980-816b-17f28082220a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARNetwork">
+      <UniqueIdentifier>{a293e6da-2b2c-497b-83d4-780c314d2c38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARNetworkAL">
+      <UniqueIdentifier>{c38c6ba5-50cd-48fc-96f2-953237ecddd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARNetworkAL\Wifi">
+      <UniqueIdentifier>{e4fab6ed-a706-46ea-a3b1-5b983c8a4fe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARSAL">
+      <UniqueIdentifier>{fe71671a-9861-4ccf-8410-e0d3ef88aa59}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Includes\config.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\dirent.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\pthread.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\sched.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\semaphore.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDiscovery.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Connection.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Device.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Discovery.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Error.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_NetworkConfiguration.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetwork\ARNetwork.h">
+      <Filter>Header files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetwork\ARNETWORK_Error.h">
+      <Filter>Header files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetwork\ARNETWORK_IOBufferParam.h">
+      <Filter>Header files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetwork\ARNETWORK_Manager.h">
+      <Filter>Header files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetworkAL\ARNetworkAL.h">
+      <Filter>Header files\libARNetworkAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetworkAL\ARNETWORKAL_Error.h">
+      <Filter>Header files\libARNetworkAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetworkAL\ARNETWORKAL_Frame.h">
+      <Filter>Header files\libARNetworkAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetworkAL\ARNETWORKAL_Manager.h">
+      <Filter>Header files\libARNetworkAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Endianness.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Error.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Ftw.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_MD5_Manager.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Mutex.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Print.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Sem.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Singleton.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Socket.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Thread.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Time.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Wifi\ARDISCOVERY_DEVICE_Wifi.h">
+      <Filter>Source files\libARDiscovery\Wifi</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARDISCOVERY_Connection.h">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARDISCOVERY_NetworkConfiguration.h">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARNETWORK_DataDescriptor.h">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARNETWORK_IOBuffer.h">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARNETWORK_Manager.h">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARNETWORK_Receiver.h">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARNETWORK_RingBuffer.h">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARNETWORK_Sender.h">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARNETWORKAL_Manager.h">
+      <Filter>Source files\libARNetworkAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Wifi\ARNETWORKAL_WifiNetwork.h">
+      <Filter>Source files\libARNetworkAL\Wifi</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARSAL_Ftw.h">
+      <Filter>Source files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARSAL_MD5.h">
+      <Filter>Source files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\md5.h">
+      <Filter>Source files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARDISCOVERY_Device.h">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\Wifi\ARDISCOVERY_DEVICE_Wifi.c">
+      <Filter>Source files\libARDiscovery\Wifi</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARDISCOVERY_Connection.c">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARDISCOVERY_Device.c">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARDISCOVERY_Discovery.c">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARDISCOVERY_Error.c">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARDISCOVERY_NetworkConfiguration.c">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORK_Error.c">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORK_IOBuffer.c">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORK_IOBufferParam.c">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORK_Manager.c">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORK_Receiver.c">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORK_RingBuffer.c">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORK_Sender.c">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORKAL_Error.c">
+      <Filter>Source files\libARNetworkAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORKAL_Manager.c">
+      <Filter>Source files\libARNetworkAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Wifi\ARNETWORKAL_WifiNetwork.c">
+      <Filter>Source files\libARNetworkAL\Wifi</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Ftw.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_MD5.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_MD5_Manager.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Mutex.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Print.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Sem.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Socket.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Thread.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Time.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\md5.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

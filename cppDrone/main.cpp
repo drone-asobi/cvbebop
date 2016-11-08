@@ -9,6 +9,11 @@
 #include <set>
 #include <time.h>
 
+extern "C" {
+#include <libARSAL/ARSAL.h>
+#include <libARDiscovery/ARDiscovery.h>
+}
+
 #include <opencv2\core.hpp>
 #include <opencv2\imgproc.hpp>
 #include <opencv2\objdetect.hpp>
@@ -21,6 +26,53 @@
 
 using namespace std;
 using namespace cv;
+
+#ifdef _DEBUG
+#	define DEBUG_LOG(stmt) cout << stmt << endl
+#else
+#	define DEBUG_LOG(stmt)
+#endif
+ARDISCOVERY_Device_t* create_discovery_device()
+{
+	DEBUG_LOG("called create_discovery_device()");
+	auto errorDiscovery = ARDISCOVERY_OK;
+
+	auto device = ARDISCOVERY_Device_New(&errorDiscovery);
+
+	bool failed = false;
+	if (errorDiscovery != ARDISCOVERY_OK)
+	{
+		failed = true;
+		DEBUG_LOG("    ARDISCOVERY_Device_New != ARDISCOVERY_OK");
+	}
+	else
+	{
+		errorDiscovery = ARDISCOVERY_Device_InitWifi(device, ARDISCOVERY_PRODUCT_BEBOP_2, "bebop2", BEBOP_IP_ADDRESS, BEBOP_DISCOVERY_PORT);
+		if (errorDiscovery != ARDISCOVERY_OK)
+		{
+			failed = true;
+			DEBUG_LOG("    ARDISCOVERY_Device_InitWifi != ARDISCOVERY_OK");
+		}
+	}
+	
+	if(failed) {
+		ARDISCOVERY_Device_Delete(&device);
+		return nullptr;
+	}
+
+	return device;
+}
+
+void process_bebop2()
+{
+	cout << "called process_bebop2()" << endl;
+
+	auto device = create_discovery_device();
+	if(device == nullptr)
+	{
+		cout << "Discovery Fail" << endl;
+	}
+}
 
 void process_bebop()
 {
@@ -211,6 +263,7 @@ void process_opencv()
 int main(void)
 {
 	// process_opencv();
-	process_bebop();
+	// process_bebop();
+	process_bebop2();
 	return 0;
 }
