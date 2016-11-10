@@ -42,12 +42,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)lib\ffmpeg\include;$(SolutionDir)lib\opencv\build\include;$(SolutionDir)ARSDK3_Bebop2\Includes;$(SolutionDir)json;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)lib\ffmpeg\include;$(SolutionDir)lib\opencv\build\include;$(SolutionDir)ARSDK3_Bebop2\Includes;$(SolutionDir)json;$(SolutionDir)uthash;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\ffmpeg\lib;$(SolutionDir)lib\opencv\build\x64\vc14\lib;$(SolutionDir)lib\pthread;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)lib\ffmpeg\include;$(SolutionDir)lib\opencv\build\include;$(SolutionDir)ARSDK3_Bebop2\Includes;$(SolutionDir)json;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)lib\ffmpeg\include;$(SolutionDir)lib\opencv\build\include;$(SolutionDir)ARSDK3_Bebop2\Includes;$(SolutionDir)json;$(SolutionDir)uthash;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\ffmpeg\lib;$(SolutionDir)lib\opencv\build\x64\vc14\lib;$(SolutionDir)lib\pthread;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -126,6 +126,9 @@ xcopy /y /d /s "$(SolutionDir)lib\opencv\build\etc" "$(OutDir)train"</Command>
     </ProjectReference>
     <ProjectReference Include="..\json\json.vcxproj">
       <Project>{6263abb6-53c5-47c0-a530-6fb9cccdaab1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\uthash\uthash.vcxproj">
+      <Project>{567b2722-d722-4b42-bb3b-bc1e8fed9614}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

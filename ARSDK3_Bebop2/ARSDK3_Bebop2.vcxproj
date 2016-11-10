@@ -43,11 +43,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)json;$(ProjectDir)Includes;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)json;$(SolutionDir)uthash;$(ProjectDir)Includes;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)Sources;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)json;$(ProjectDir)Includes;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)json;$(SolutionDir)uthash;$(ProjectDir)Includes;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)Sources;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -81,6 +81,27 @@
   <ItemGroup>
     <ClInclude Include="Includes\config.h" />
     <ClInclude Include="Includes\dirent.h" />
+    <ClInclude Include="Includes\libARCommands\ARCommands.h" />
+    <ClInclude Include="Includes\libARCommands\ARCOMMANDS_Decoder.h" />
+    <ClInclude Include="Includes\libARCommands\ARCOMMANDS_Filter.h" />
+    <ClInclude Include="Includes\libARCommands\ARCOMMANDS_Generator.h" />
+    <ClInclude Include="Includes\libARCommands\ARCOMMANDS_Ids.h" />
+    <ClInclude Include="Includes\libARCommands\ARCOMMANDS_Types.h" />
+    <ClInclude Include="Includes\libARCommands\ARCOMMANDS_Version.h" />
+    <ClInclude Include="Includes\libARController\ARController.h" />
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Device.h" />
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Dictionary.h" />
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_DICTIONARY_Key.h" />
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Error.h" />
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Feature.h" />
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Frame.h" />
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Network.h" />
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Stream.h" />
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Stream1.h" />
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Stream2.h" />
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_StreamPool.h" />
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_StreamQueue.h" />
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_StreamSender.h" />
     <ClInclude Include="Includes\libARDiscovery\ARDiscovery.h" />
     <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Connection.h" />
     <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Device.h" />
@@ -107,9 +128,36 @@
     <ClInclude Include="Includes\libARSAL\ARSAL_Socket.h" />
     <ClInclude Include="Includes\libARSAL\ARSAL_Thread.h" />
     <ClInclude Include="Includes\libARSAL\ARSAL_Time.h" />
+    <ClInclude Include="Includes\libARStream2\arstream2_error.h" />
+    <ClInclude Include="Includes\libARStream2\arstream2_h264_filter.h" />
+    <ClInclude Include="Includes\libARStream2\arstream2_h264_parser.h" />
+    <ClInclude Include="Includes\libARStream2\arstream2_h264_sei.h" />
+    <ClInclude Include="Includes\libARStream2\arstream2_h264_writer.h" />
+    <ClInclude Include="Includes\libARStream2\arstream2_rtp_receiver.h" />
+    <ClInclude Include="Includes\libARStream2\arstream2_rtp_sender.h" />
+    <ClInclude Include="Includes\libARStream2\arstream2_stream_receiver.h" />
+    <ClInclude Include="Includes\libARStream2\arstream2_stream_recorder.h" />
+    <ClInclude Include="Includes\libARStream\ARStream.h" />
+    <ClInclude Include="Includes\libARStream\ARSTREAM_Error.h" />
+    <ClInclude Include="Includes\libARStream\ARSTREAM_Filter.h" />
+    <ClInclude Include="Includes\libARStream\ARSTREAM_Reader.h" />
+    <ClInclude Include="Includes\libARStream\ARSTREAM_Sender.h" />
     <ClInclude Include="Includes\pthread.h" />
     <ClInclude Include="Includes\sched.h" />
     <ClInclude Include="Includes\semaphore.h" />
+    <ClInclude Include="Sources\ARCOMMANDS_ReadWrite.h" />
+    <ClInclude Include="Sources\ARCONTROLLER_AudioHeader.h" />
+    <ClInclude Include="Sources\ARCONTROLLER_Device.h" />
+    <ClInclude Include="Sources\ARCONTROLLER_Dictionary.h" />
+    <ClInclude Include="Sources\ARCONTROLLER_Feature.h" />
+    <ClInclude Include="Sources\ARCONTROLLER_Frame.h" />
+    <ClInclude Include="Sources\ARCONTROLLER_Network.h" />
+    <ClInclude Include="Sources\ARCONTROLLER_Stream.h" />
+    <ClInclude Include="Sources\ARCONTROLLER_Stream1.h" />
+    <ClInclude Include="Sources\ARCONTROLLER_Stream2.h" />
+    <ClInclude Include="Sources\ARCONTROLLER_StreamPool.h" />
+    <ClInclude Include="Sources\ARCONTROLLER_StreamQueue.h" />
+    <ClInclude Include="Sources\ARCONTROLLER_StreamSender.h" />
     <ClInclude Include="Sources\ARDISCOVERY_Connection.h" />
     <ClInclude Include="Sources\ARDISCOVERY_Device.h" />
     <ClInclude Include="Sources\ARDISCOVERY_NetworkConfiguration.h" />
@@ -122,11 +170,33 @@
     <ClInclude Include="Sources\ARNETWORK_Sender.h" />
     <ClInclude Include="Sources\ARSAL_Ftw.h" />
     <ClInclude Include="Sources\ARSAL_MD5.h" />
+    <ClInclude Include="Sources\arstream2_h264.h" />
+    <ClInclude Include="Sources\arstream2_rtp.h" />
+    <ClInclude Include="Sources\ARSTREAM_Buffers.h" />
+    <ClInclude Include="Sources\ARSTREAM_NetworkHeaders.h" />
     <ClInclude Include="Sources\md5.h" />
     <ClInclude Include="Sources\Wifi\ARDISCOVERY_DEVICE_Wifi.h" />
     <ClInclude Include="Sources\Wifi\ARNETWORKAL_WifiNetwork.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\ARCOMMANDS_Decoder.c" />
+    <ClCompile Include="Sources\ARCOMMANDS_Filter.c" />
+    <ClCompile Include="Sources\ARCOMMANDS_Generator.c" />
+    <ClCompile Include="Sources\ARCOMMANDS_ReadWrite.c" />
+    <ClCompile Include="Sources\ARCOMMANDS_Version.c" />
+    <ClCompile Include="Sources\ARCONTROLLER_Device.c" />
+    <ClCompile Include="Sources\ARCONTROLLER_Dictionary.c" />
+    <ClCompile Include="Sources\ARCONTROLLER_DICTIONARY_Key.c" />
+    <ClCompile Include="Sources\ARCONTROLLER_Error.c" />
+    <ClCompile Include="Sources\ARCONTROLLER_Feature.c" />
+    <ClCompile Include="Sources\ARCONTROLLER_Frame.c" />
+    <ClCompile Include="Sources\ARCONTROLLER_Network.c" />
+    <ClCompile Include="Sources\ARCONTROLLER_Stream.c" />
+    <ClCompile Include="Sources\ARCONTROLLER_Stream1.c" />
+    <ClCompile Include="Sources\ARCONTROLLER_Stream2.c" />
+    <ClCompile Include="Sources\ARCONTROLLER_StreamPool.c" />
+    <ClCompile Include="Sources\ARCONTROLLER_StreamQueue.c" />
+    <ClCompile Include="Sources\ARCONTROLLER_StreamSender.c" />
     <ClCompile Include="Sources\ARDISCOVERY_Connection.c" />
     <ClCompile Include="Sources\ARDISCOVERY_Device.c" />
     <ClCompile Include="Sources\ARDISCOVERY_Discovery.c" />
@@ -150,6 +220,20 @@
     <ClCompile Include="Sources\ARSAL_Socket.c" />
     <ClCompile Include="Sources\ARSAL_Thread.c" />
     <ClCompile Include="Sources\ARSAL_Time.c" />
+    <ClCompile Include="Sources\arstream2_error.c" />
+    <ClCompile Include="Sources\arstream2_h264_filter.c" />
+    <ClCompile Include="Sources\arstream2_h264_parser.c" />
+    <ClCompile Include="Sources\arstream2_h264_sei.c" />
+    <ClCompile Include="Sources\arstream2_h264_writer.c" />
+    <ClCompile Include="Sources\arstream2_rtp_receiver.c" />
+    <ClCompile Include="Sources\arstream2_rtp_sender.c" />
+    <ClCompile Include="Sources\arstream2_stream_receiver.c" />
+    <ClCompile Include="Sources\arstream2_stream_recorder.c" />
+    <ClCompile Include="Sources\ARSTREAM_Buffers.c" />
+    <ClCompile Include="Sources\ARSTREAM_Error.c" />
+    <ClCompile Include="Sources\ARSTREAM_NetworkHeaders.c" />
+    <ClCompile Include="Sources\ARSTREAM_Reader.c" />
+    <ClCompile Include="Sources\ARSTREAM_Sender.c" />
     <ClCompile Include="Sources\md5.c" />
     <ClCompile Include="Sources\Wifi\ARDISCOVERY_DEVICE_Wifi.c" />
     <ClCompile Include="Sources\Wifi\ARNETWORKAL_WifiNetwork.c" />
@@ -157,6 +241,9 @@
   <ItemGroup>
     <ProjectReference Include="..\json\json.vcxproj">
       <Project>{6263abb6-53c5-47c0-a530-6fb9cccdaab1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\uthash\uthash.vcxproj">
+      <Project>{567b2722-d722-4b42-bb3b-bc1e8fed9614}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

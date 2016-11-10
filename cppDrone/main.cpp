@@ -8,10 +8,12 @@
 #include <algorithm>
 #include <set>
 #include <time.h>
+#include "semaphore.h"
 
 extern "C" {
 #include <libARSAL/ARSAL.h>
 #include <libARDiscovery/ARDiscovery.h>
+#include <libARController/ARController.h>
 }
 
 #include <opencv2\core.hpp>
@@ -63,15 +65,102 @@ ARDISCOVERY_Device_t* create_discovery_device()
 	return device;
 }
 
+ARCONTROLLER_Device_t* create_device_controller(ARDISCOVERY_Device_t* device)
+{
+	eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
+	ARCONTROLLER_Device_t *deviceController = ARCONTROLLER_Device_New(device, &error);
+
+	error = ARCONTROLLER_Device_AddStateChangedCallback(
+		deviceController,
+		[](eARCONTROLLER_DEVICE_STATE newState, eARCONTROLLER_ERROR error, void *customData)
+		{
+			switch (newState)
+			{
+			case ARCONTROLLER_DEVICE_STATE_RUNNING:
+				break;
+			case ARCONTROLLER_DEVICE_STATE_STOPPED:
+				break;
+			case ARCONTROLLER_DEVICE_STATE_STARTING:
+				break;
+			case ARCONTROLLER_DEVICE_STATE_STOPPING:
+				break;
+			default:
+				break;
+			}
+		},
+		nullptr);
+
+	error = ARCONTROLLER_Device_AddCommandReceivedCallback(
+		deviceController,
+		[](eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTROLLER_DICTIONARY_ELEMENT_t *elementDictionary, void *customData)
+		{
+			if (elementDictionary != NULL)
+			{
+				// if the command received is a battery state changed
+				if (commandKey == ARCONTROLLER_DICTIONARY_KEY_COMMON_COMMONSTATE_BATTERYSTATECHANGED)
+				{
+					ARCONTROLLER_DICTIONARY_ARG_t *arg = NULL;
+					ARCONTROLLER_DICTIONARY_ELEMENT_t *element = NULL;
+
+					// get the command received in the device controller
+					HASH_FIND_STR(elementDictionary, ARCONTROLLER_DICTIONARY_SINGLE_KEY, element);
+					if (element != NULL)
+					{
+						// get the value
+						HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_COMMON_COMMONSTATE_BATTERYSTATECHANGED_PERCENT, arg);
+
+						if (arg != NULL)
+						{
+							uint8_t batteryLevel = arg->value.U8;
+							// do what you want with the battery level
+						}
+					}
+				}
+				// else if (commandKey == THE COMMAND YOU ARE INTERESTED IN)
+			}
+		},
+		nullptr);
+
+	error = ARCONTROLLER_Device_SetVideoStreamCallbacks(
+		deviceController,
+		[](ARCONTROLLER_Stream_Codec_t codec, void *customData)
+		{
+			// configure your decoder
+			// return ARCONTROLLER_OK if configuration went well
+			// otherwise, return ARCONTROLLER_ERROR. In that case,
+			// configDecoderCallback will be called again
+
+			return ARCONTROLLER_OK;
+		},
+		[](ARCONTROLLER_Frame_t *frame, void *customData)
+		{
+			// display the frame
+			// return ARCONTROLLER_OK if display went well
+			// otherwise, return ARCONTROLLER_ERROR. In that case,
+			// configDecoderCallback will be called again
+
+			return ARCONTROLLER_OK;
+		},
+		nullptr,
+		nullptr);
+
+	error = ARCONTROLLER_Device_Start(deviceController);
+	
+	return deviceController;
+}
+
+
 void process_bebop2()
 {
 	cout << "called process_bebop2()" << endl;
 
 	auto device = create_discovery_device();
-	if(device == nullptr)
+	if (device == nullptr)
 	{
 		cout << "Discovery Fail" << endl;
 	}
+
+	auto controller = create_device_controller(device);
 }
 
 void process_bebop()
