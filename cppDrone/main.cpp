@@ -1,4 +1,6 @@
-﻿#include <WinSock2.h>
+﻿#define DEBUG
+
+#include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <string>
 #include <iostream>
@@ -8,13 +10,14 @@
 #include <algorithm>
 #include <set>
 #include <time.h>
-#include "semaphore.h"
 
 extern "C" {
 #include <libARSAL/ARSAL.h>
 #include <libARDiscovery/ARDiscovery.h>
 #include <libARController/ARController.h>
 }
+
+#include "BebopController.h"
 
 #include <opencv2\core.hpp>
 #include <opencv2\imgproc.hpp>
@@ -24,170 +27,174 @@ extern "C" {
 #include <opencv2\video.hpp>
 #include <opencv2\videoio.hpp>
 #include <opencv2\calib3d.hpp>
-#include "bebopCommand.h"
 
 using namespace std;
 using namespace cv;
 
-#ifdef _DEBUG
-#	define DEBUG_LOG(stmt) cout << stmt << endl
-#else
-#	define DEBUG_LOG(stmt)
-#endif
-ARDISCOVERY_Device_t* create_discovery_device()
+#define KEY_DOWN        0x102   /* Down arrow key                */
+#define KEY_UP          0x103   /* Up arrow key                  */
+#define KEY_LEFT        0x104   /* Left arrow key                */
+#define KEY_RIGHT       0x105   /* Right arrow key               */
+
+void key_control(ARCONTROLLER_Device_t *deviceController)
 {
-	DEBUG_LOG("called create_discovery_device()");
-	auto errorDiscovery = ARDISCOVERY_OK;
+	VideoCapture cam = VideoCapture("bebopvideo.bin");
+	bool control = true;
+	while (control) {
+		cv::Mat frame;
+		cam >> frame;
 
-	auto device = ARDISCOVERY_Device_New(&errorDiscovery);
+		imshow("video", frame);
 
-	bool failed = false;
-	if (errorDiscovery != ARDISCOVERY_OK)
-	{
-		failed = true;
-		DEBUG_LOG("    ARDISCOVERY_Device_New != ARDISCOVERY_OK");
-	}
-	else
-	{
-		errorDiscovery = ARDISCOVERY_Device_InitWifi(device, ARDISCOVERY_PRODUCT_BEBOP_2, "bebop2", BEBOP_IP_ADDRESS, BEBOP_DISCOVERY_PORT);
-		if (errorDiscovery != ARDISCOVERY_OK)
+		char key = cv::waitKey(0);
+		// Manage IHM input events
+		eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
+
+		switch (key)
 		{
-			failed = true;
-			DEBUG_LOG("    ARDISCOVERY_Device_InitWifi != ARDISCOVERY_OK");
+		case 'q':
+		case 'Q':
+			control = false;
+			break;
+		case 'e':
+		case 'E':
+			if (deviceController != NULL)
+			{
+				// send a Emergency command to the drone
+				error = deviceController->aRDrone3->sendPilotingEmergency(deviceController->aRDrone3);
+			}
+			break;
+		case 'l':
+		case 'L':
+			if (deviceController != NULL)
+			{
+				// send a landing command to the drone
+				error = deviceController->aRDrone3->sendPilotingLanding(deviceController->aRDrone3);
+			}
+			break;
+		case 't':
+		case 'T':
+			if (deviceController != NULL)
+			{
+				// send a takeoff command to the drone
+				error = deviceController->aRDrone3->sendPilotingTakeOff(deviceController->aRDrone3);
+			}
+			break;
+		case KEY_UP:
+			if (deviceController != NULL)
+			{
+				// set the flag and speed value of the piloting command
+				error = deviceController->aRDrone3->setPilotingPCMDGaz(deviceController->aRDrone3, 50);
+			}
+			break;
+		case KEY_DOWN:
+			if (deviceController != NULL)
+			{
+				error = deviceController->aRDrone3->setPilotingPCMDGaz(deviceController->aRDrone3, -50);
+			}
+			break;
+		case KEY_RIGHT:
+			if (deviceController != NULL)
+			{
+				error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 50);
+			}
+			break;
+		case KEY_LEFT:
+			if (deviceController != NULL)
+			{
+				error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, -50);
+			}
+			break;
+		case 'r': //IHM_INPUT_EVENT_FORWARD
+		case 'R':
+			if (deviceController != NULL)
+			{
+				error = deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, 50);
+				error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
+			}
+			break;
+		case 'f': //IHM_INPUT_EVENT_BACK:
+		case 'F':
+			if (deviceController != NULL)
+			{
+				error = deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, -50);
+				error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
+			}
+			break;
+		case 'd': //IHM_INPUT_EVENT_ROLL_LEFT:
+		case 'D':
+			if (deviceController != NULL)
+			{
+				error = deviceController->aRDrone3->setPilotingPCMDRoll(deviceController->aRDrone3, -50);
+				error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
+			}
+			break;
+		case 'g': //IHM_INPUT_EVENT_ROLL_RIGHT:
+		case 'G':
+			if (deviceController != NULL)
+			{
+				error = deviceController->aRDrone3->setPilotingPCMDRoll(deviceController->aRDrone3, 50);
+				error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
+			}
+			break;
+		default:
+			if (deviceController != NULL)
+			{
+				error = deviceController->aRDrone3->setPilotingPCMD(deviceController->aRDrone3, 0, 0, 0, 0, 0, 0);
+			}
+			break;
+		}
+
+		Sleep(10);
+
+		// This should be improved, here it just displays that one error occured
+		if (error != ARCONTROLLER_OK)
+		{
+			printf("Error sending an event\n");
+			// IHM_PrintInfo(ihm, "Error sending an event");
 		}
 	}
-	
-	if(failed) {
-		ARDISCOVERY_Device_Delete(&device);
-		return nullptr;
-	}
-
-	return device;
 }
-
-ARCONTROLLER_Device_t* create_device_controller(ARDISCOVERY_Device_t* device)
-{
-	eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-	ARCONTROLLER_Device_t *deviceController = ARCONTROLLER_Device_New(device, &error);
-
-	error = ARCONTROLLER_Device_AddStateChangedCallback(
-		deviceController,
-		[](eARCONTROLLER_DEVICE_STATE newState, eARCONTROLLER_ERROR error, void *customData)
-		{
-			switch (newState)
-			{
-			case ARCONTROLLER_DEVICE_STATE_RUNNING:
-				break;
-			case ARCONTROLLER_DEVICE_STATE_STOPPED:
-				break;
-			case ARCONTROLLER_DEVICE_STATE_STARTING:
-				break;
-			case ARCONTROLLER_DEVICE_STATE_STOPPING:
-				break;
-			default:
-				break;
-			}
-		},
-		nullptr);
-
-	error = ARCONTROLLER_Device_AddCommandReceivedCallback(
-		deviceController,
-		[](eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTROLLER_DICTIONARY_ELEMENT_t *elementDictionary, void *customData)
-		{
-			if (elementDictionary != NULL)
-			{
-				// if the command received is a battery state changed
-				if (commandKey == ARCONTROLLER_DICTIONARY_KEY_COMMON_COMMONSTATE_BATTERYSTATECHANGED)
-				{
-					ARCONTROLLER_DICTIONARY_ARG_t *arg = NULL;
-					ARCONTROLLER_DICTIONARY_ELEMENT_t *element = NULL;
-
-					// get the command received in the device controller
-					HASH_FIND_STR(elementDictionary, ARCONTROLLER_DICTIONARY_SINGLE_KEY, element);
-					if (element != NULL)
-					{
-						// get the value
-						HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_COMMON_COMMONSTATE_BATTERYSTATECHANGED_PERCENT, arg);
-
-						if (arg != NULL)
-						{
-							uint8_t batteryLevel = arg->value.U8;
-							// do what you want with the battery level
-						}
-					}
-				}
-				// else if (commandKey == THE COMMAND YOU ARE INTERESTED IN)
-			}
-		},
-		nullptr);
-
-	error = ARCONTROLLER_Device_SetVideoStreamCallbacks(
-		deviceController,
-		[](ARCONTROLLER_Stream_Codec_t codec, void *customData)
-		{
-			// configure your decoder
-			// return ARCONTROLLER_OK if configuration went well
-			// otherwise, return ARCONTROLLER_ERROR. In that case,
-			// configDecoderCallback will be called again
-
-			return ARCONTROLLER_OK;
-		},
-		[](ARCONTROLLER_Frame_t *frame, void *customData)
-		{
-			// display the frame
-			// return ARCONTROLLER_OK if display went well
-			// otherwise, return ARCONTROLLER_ERROR. In that case,
-			// configDecoderCallback will be called again
-
-			return ARCONTROLLER_OK;
-		},
-		nullptr,
-		nullptr);
-
-	error = ARCONTROLLER_Device_Start(deviceController);
-	
-	return deviceController;
-}
-
 
 void process_bebop2()
 {
 	cout << "called process_bebop2()" << endl;
 
-	auto device = create_discovery_device();
-	if (device == nullptr)
-	{
-		cout << "Discovery Fail" << endl;
+	eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
+	auto deviceController = start_control_bebop2(error);
+
+	if (error == ARCONTROLLER_OK) {
+		key_control(deviceController);
 	}
 
-	auto controller = create_device_controller(device);
+	error = finish_control_bebop2(deviceController);
 }
 
-void process_bebop()
-{
-	bebopCommand bebop;
-	cv::Mat img;
-	bebop.takeOff();
-
-	while (1)
-	{
-		img = bebop.getImage();
-		if (img.empty()) continue;
-		cv::imshow("image", img);
-		char key = cv::waitKey(10);
-		int x, y, z, r = 0;
-		if (key == 'q') break;
-		if (key == 'w') x = 1;
-		if (key == 'z') x = -1;
-		if (key == 'a') y = 1;
-		if (key == 's') y = -1;
-		if (key == 'd') z = 1;
-		if (key == 'x') z = -1;
-		if (key == 'r') r = 1;
-		bebop.move(x, y, z, r);
-	}
-	bebop.landing();
-}
+//void process_bebop()
+//{
+//	bebopCommand bebop;
+//	cv::Mat img;
+//	bebop.takeOff();
+//
+//	while (1)
+//	{
+//		img = bebop.getImage();
+//		if (img.empty()) continue;
+//		cv::imshow("image", img);
+//		char key = cv::waitKey(10);
+//		int x, y, z, r = 0;
+//		if (key == 'q') break;
+//		if (key == 'w') x = 1;
+//		if (key == 'z') x = -1;
+//		if (key == 'a') y = 1;
+//		if (key == 's') y = -1;
+//		if (key == 'd') z = 1;
+//		if (key == 'x') z = -1;
+//		if (key == 'r') r = 1;
+//		bebop.move(x, y, z, r);
+//	}
+//	bebop.landing();
+//}
 
 void opencv_detect_face(Mat img)
 {

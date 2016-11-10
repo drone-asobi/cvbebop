@@ -48,6 +48,8 @@ struct iovec;
 typedef SSIZE_T ssize_t;
 #endif
 
+#define errno WSAGetLastError()
+
 /**
  * @brief Type of Service class selector
  */

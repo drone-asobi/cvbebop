@@ -9,7 +9,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 #include <WS2tcpip.h>
 #include <WinSock2.h>
 #include <corecrt_io.h>
@@ -1324,7 +1323,7 @@ static int ARSTREAM2_RtpSender_SendData(ARSTREAM2_RtpSender_t *sender, uint8_t *
             /* socket send failed */
             switch (errno)
             {
-            case EAGAIN:
+            case WSATRY_AGAIN:
             {
                 struct pollfd p;
                 p.fd = sender->streamSocket;
@@ -1378,7 +1377,7 @@ static int ARSTREAM2_RtpSender_SendData(ARSTREAM2_RtpSender_t *sender, uint8_t *
                                 ARSTREAM2_RtpSender_UpdateMonitoring(sender, inputTimestamp, auTimestamp, rtpTimestamp, sender->seqNum - 1, isLastInAu, (uint32_t)bytes, 0);
                                 ret = 0;
                             }
-                            else if (errno == EAGAIN)
+                            else if (errno == WSATRY_AGAIN)
                             {
                                 /* failed: socket buffer full */
                                 ARSTREAM2_RtpSender_UpdateMonitoring(sender, inputTimestamp, auTimestamp, rtpTimestamp, sender->seqNum - 1, isLastInAu, 0, sendSize);

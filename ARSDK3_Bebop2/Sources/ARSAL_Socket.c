@@ -37,7 +37,6 @@
 #include <config.h>
 #include <stdlib.h>
 #include <libARSAL/ARSAL_Socket.h>
-#include <errno.h>
 
 #ifdef HAVE_SYS_UIO_H
 #include <sys/uio.h>
@@ -77,7 +76,7 @@ static ssize_t writev(int sockfd, const struct iovec *iov, int iovcnt)
 
     if (iovcnt <= 0 || iovcnt > IOV_MAX)
     {
-        errno = EINVAL;
+		WSASetLastError(WSAEINVAL);
         return -1;
     }
 
@@ -86,7 +85,7 @@ static ssize_t writev(int sockfd, const struct iovec *iov, int iovcnt)
     {
         if (SSIZE_MAX - sum < iov[i].iov_len)
         {
-            errno = EINVAL;
+			WSASetLastError(WSAEINVAL);
             return -1;
         }
 
@@ -122,7 +121,7 @@ static ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
 
     if (iovcnt <= 0 || iovcnt > IOV_MAX)
     {
-        errno = EINVAL;
+		WSASetLastError(WSAEINVAL);
         return -1;
     }
 
@@ -131,7 +130,7 @@ static ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
     {
         if (SSIZE_MAX - sum < iov[i].iov_len)
         {
-            errno = EINVAL;
+			WSASetLastError(WSAEINVAL);
             return -1;
         }
 
@@ -161,6 +160,12 @@ static ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
 
 int ARSAL_Socket_Create(int domain, int type, int protocol)
 {
+	WSADATA wsaData;
+	int err = WSAStartup(MAKEWORD(2, 0), &wsaData);
+	if(err != 0)
+	{
+		return -1;
+	}
     return socket(domain, type, protocol);
 }
 
@@ -182,7 +187,7 @@ ssize_t ARSAL_Socket_Send(int sockfd, const void *buf, size_t buflen, int flags)
     for (i = 0; i < tries; i++)
     {
         res = send(sockfd, buf, buflen, flags);
-        if (res >= 0 || errno != ECONNREFUSED)
+        if (res >= 0 || errno != WSAECONNREFUSED)
         {
             break;
         }
@@ -227,7 +232,13 @@ int ARSAL_Socket_Accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 
 int ARSAL_Socket_Close(int sockfd)
 {
-    return close(sockfd);
+	int err = 0;
+	if(sockfd != INVALID_SOCKET)
+	{
+		err = closesocket(sockfd);
+	}
+	WSACleanup();
+	return err;
 }
 
 int ARSAL_Socket_Setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen)

@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 #include <fcntl.h>
 #include <WS2tcpip.h>
 #include <WinSock2.h>
@@ -931,7 +930,7 @@ static int ARSTREAM2_RtpReceiver_NetReadData(ARSTREAM2_RtpReceiver_t *receiver, 
         /* socket receive failed */
         switch (errno)
         {
-        case EAGAIN:
+        case WSATRY_AGAIN:
             /* poll */
             p.fd = receiver->net.streamSocket;
             p.events = POLLIN;
@@ -959,7 +958,7 @@ static int ARSTREAM2_RtpReceiver_NetReadData(ARSTREAM2_RtpReceiver_t *receiver, 
                     /* success: save the number of bytes read */
                     *recvSize = bytes;
                 }
-                else if (errno == EAGAIN)
+                else if (errno == WSATRY_AGAIN)
                 {
                     /* failed: socket not ready (this should not happen) */
                     ARSAL_PRINT(ARSAL_PRINT_WARNING, ARSTREAM2_RTP_RECEIVER_TAG, "Socket not ready for reading");

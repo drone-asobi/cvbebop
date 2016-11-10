@@ -73,11 +73,6 @@ static int ARCONTROLLER_Network_GetAvailableSocketPort(void)
     if (fd < 0)
         goto error;
 
-	unsigned long uvalue = 1;
-	ret = ioctlsocket(fd, FIONBIO, &uvalue);
-    if (ret < 0)
-        goto error;
-
     /*  bind to a OS-assigned random port */
     memset(&addr, 0, sizeof(addr));
     addr.sin_addr.s_addr = htonl(INADDR_ANY);
