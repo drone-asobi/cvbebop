@@ -34,8 +34,6 @@
 #include <libARDiscovery/ARDISCOVERY_Error.h>
 #include <libARDiscovery/ARDISCOVERY_Connection.h>
 
-#define pipe(fds) _pipe(fds,4096, _O_BINARY)
-
 /**
  * @brief Low level communication related structure
  */

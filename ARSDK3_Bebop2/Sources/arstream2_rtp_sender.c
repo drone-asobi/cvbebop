@@ -1043,7 +1043,7 @@ static int ARSTREAM2_RtpSender_StreamSocketSetup(ARSTREAM2_RtpSender_t *sender)
     if (ret == 0)
     {
         /* set to non-blocking */
-		unsigned long flags = 1;
+		u_long flags = 1;
         ioctlsocket(sender->streamSocket, FIONBIO, &flags);
 
         /* source address */
@@ -1196,7 +1196,7 @@ static int ARSTREAM2_RtpSender_ControlSocketSetup(ARSTREAM2_RtpSender_t *sender)
     if (ret == 0)
     {
         /* set to non-blocking */
-		unsigned long flags = 1;
+		u_long flags = 1;
         ioctlsocket(sender->controlSocket, FIONBIO, &flags);
 
         /* receive address */
@@ -1323,7 +1323,9 @@ static int ARSTREAM2_RtpSender_SendData(ARSTREAM2_RtpSender_t *sender, uint8_t *
             /* socket send failed */
             switch (errno)
             {
-            case WSATRY_AGAIN:
+            case WSAEWOULDBLOCK:
+			case WSAEINPROGRESS:
+			case WSAEALREADY:
             {
                 struct pollfd p;
                 p.fd = sender->streamSocket;
@@ -1377,7 +1379,7 @@ static int ARSTREAM2_RtpSender_SendData(ARSTREAM2_RtpSender_t *sender, uint8_t *
                                 ARSTREAM2_RtpSender_UpdateMonitoring(sender, inputTimestamp, auTimestamp, rtpTimestamp, sender->seqNum - 1, isLastInAu, (uint32_t)bytes, 0);
                                 ret = 0;
                             }
-                            else if (errno == WSATRY_AGAIN)
+                            else if (errno == WSAEWOULDBLOCK || errno == WSAEINPROGRESS || errno == WSAEALREADY || errno == WSAENOBUFS)
                             {
                                 /* failed: socket buffer full */
                                 ARSTREAM2_RtpSender_UpdateMonitoring(sender, inputTimestamp, auTimestamp, rtpTimestamp, sender->seqNum - 1, isLastInAu, 0, sendSize);

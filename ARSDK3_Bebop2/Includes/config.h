@@ -126,9 +126,8 @@
 #define HAVE_SEM_POST 1
 
 /* Define to 1 if you have the `sem_timedwait' function. */
-#ifdef __linux__
-#  define HAVE_SEM_TIMEDWAIT 1
-#endif
+
+#define HAVE_SEM_TIMEDWAIT 1
 
 /* Define to 1 if you have the `sem_trywait' function. */
 #define HAVE_SEM_TRYWAIT 1
@@ -198,3 +197,5 @@
 /* #undef size_t */
 
 #define HAVE_STRUCT_TIMESPEC
+
+#define HAVE_LIMITS_H

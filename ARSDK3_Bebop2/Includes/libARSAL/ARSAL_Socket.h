@@ -36,10 +36,8 @@
  */
 #ifndef _ARSAL_SOCKET_H_
 #define _ARSAL_SOCKET_H_
-#include <sys/types.h>
 #include <WS2tcpip.h>
 #include <WinSock2.h>
-#include <corecrt_io.h>
 
 struct iovec;
 
@@ -47,8 +45,6 @@ struct iovec;
 #include <BaseTsd.h>
 typedef SSIZE_T ssize_t;
 #endif
-
-#define errno WSAGetLastError()
 
 /**
  * @brief Type of Service class selector

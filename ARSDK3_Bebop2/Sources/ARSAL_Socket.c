@@ -76,6 +76,7 @@ static ssize_t writev(int sockfd, const struct iovec *iov, int iovcnt)
 
     if (iovcnt <= 0 || iovcnt > IOV_MAX)
     {
+		errno = EINVAL;
 		WSASetLastError(WSAEINVAL);
         return -1;
     }
@@ -85,6 +86,7 @@ static ssize_t writev(int sockfd, const struct iovec *iov, int iovcnt)
     {
         if (SSIZE_MAX - sum < iov[i].iov_len)
         {
+			errno = EINVAL;
 			WSASetLastError(WSAEINVAL);
             return -1;
         }
@@ -94,7 +96,7 @@ static ssize_t writev(int sockfd, const struct iovec *iov, int iovcnt)
 
     for (i = 0; i < iovcnt; i++)
     {
-        ret = write(sockfd, iov[i].iov_base, iov[i].iov_len);
+		ret = send(sockfd, iov[i].iov_base, iov[i].iov_len, 0);
         if (ret < 0)
         {
             return -1;
@@ -121,6 +123,7 @@ static ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
 
     if (iovcnt <= 0 || iovcnt > IOV_MAX)
     {
+		errno = EINVAL;
 		WSASetLastError(WSAEINVAL);
         return -1;
     }
@@ -130,6 +133,7 @@ static ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
     {
         if (SSIZE_MAX - sum < iov[i].iov_len)
         {
+			errno = EINVAL;
 			WSASetLastError(WSAEINVAL);
             return -1;
         }
@@ -139,7 +143,7 @@ static ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
 
     for (i = 0; i < iovcnt; i++)
     {
-        ret = read(sockfd, iov[i].iov_base, iov[i].iov_len);
+        ret = recv(sockfd, iov[i].iov_base, iov[i].iov_len, 0);
         if (ret < 0)
         {
             return -1;
@@ -161,9 +165,10 @@ static ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
 int ARSAL_Socket_Create(int domain, int type, int protocol)
 {
 	WSADATA wsaData;
-	int err = WSAStartup(MAKEWORD(2, 0), &wsaData);
-	if(err != 0)
+	int err = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if (err != 0)
 	{
+		errno = err;
 		return -1;
 	}
     return socket(domain, type, protocol);
@@ -171,22 +176,33 @@ int ARSAL_Socket_Create(int domain, int type, int protocol)
 
 int ARSAL_Socket_Connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 {
-    return connect(sockfd, addr, addrlen);
+	int err = connect(sockfd, addr, addrlen);
+	if (err == SOCKET_ERROR)
+	{
+		errno = WSAGetLastError();
+	}
+    return err;
 }
 
 ssize_t ARSAL_Socket_Sendto(int sockfd, const void *buf, size_t buflen, int flags, const struct sockaddr *dest_addr, socklen_t addrlen)
 {
-    return sendto(sockfd, buf, buflen, flags, dest_addr, addrlen);
+	int len = sendto(sockfd, buf, buflen, flags, dest_addr, addrlen);
+	if (len == SOCKET_ERROR)
+	{
+		errno = WSAGetLastError();
+	}
+	return len;
 }
 
 ssize_t ARSAL_Socket_Send(int sockfd, const void *buf, size_t buflen, int flags)
 {
-    ssize_t res;
+    ssize_t res = -1;
     int tries = 10;
     int i;
     for (i = 0; i < tries; i++)
     {
         res = send(sockfd, buf, buflen, flags);
+		errno = WSAGetLastError();
         if (res >= 0 || errno != WSAECONNREFUSED)
         {
             break;
@@ -197,12 +213,22 @@ ssize_t ARSAL_Socket_Send(int sockfd, const void *buf, size_t buflen, int flags)
 
 ssize_t ARSAL_Socket_Recvfrom(int sockfd, void *buf, size_t buflen, int flags, struct sockaddr *src_addr, socklen_t *addrlen)
 {
-    return recvfrom(sockfd, buf, buflen, flags, src_addr, addrlen);
+	int len = recvfrom(sockfd, buf, buflen, flags, src_addr, addrlen);
+	if (len == SOCKET_ERROR)
+	{
+		errno = WSAGetLastError();
+	}
+	return len;
 }
 
 ssize_t ARSAL_Socket_Recv(int sockfd, void *buf, size_t buflen, int flags)
 {
-    return recv(sockfd, buf, buflen, flags);
+	int len = recv(sockfd, buf, buflen, flags);
+	if (len == SOCKET_ERROR)
+	{
+		errno = WSAGetLastError();
+	}
+    return len;
 }
 
 ssize_t ARSAL_Socket_Writev (int sockfd, const struct iovec *iov, int iovcnt)
@@ -217,17 +243,32 @@ ssize_t ARSAL_Socket_Readv (int sockfd, const struct iovec *iov, int iovcnt)
 
 int ARSAL_Socket_Bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 {
-    return bind(sockfd, addr, addrlen);
+	int err = bind(sockfd, addr, addrlen);
+	if (err == SOCKET_ERROR)
+	{
+		errno = WSAGetLastError();
+	}
+    return err;
 }
 
 int ARSAL_Socket_Listen(int sockfd, int backlog)
 {
-    return listen(sockfd, backlog);
+	int err = listen(sockfd, backlog);
+	if (err == SOCKET_ERROR)
+	{
+		errno = WSAGetLastError();
+	}
+    return err;
 }
 
 int ARSAL_Socket_Accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 {
-    return accept(sockfd, addr, addrlen);
+	SOCKET sock = accept(sockfd, addr, addrlen);
+	if (sock == INVALID_SOCKET)
+	{
+		errno = WSAGetLastError();
+	}
+	return sock;
 }
 
 int ARSAL_Socket_Close(int sockfd)
@@ -243,16 +284,31 @@ int ARSAL_Socket_Close(int sockfd)
 
 int ARSAL_Socket_Setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen)
 {
-    return setsockopt(sockfd, level, optname, optval, optlen);
+	int err = setsockopt(sockfd, level, optname, optval, optlen);
+	if (err == SOCKET_ERROR)
+	{
+		errno = WSAGetLastError();
+	}
+    return err;
 }
 
 int ARSAL_Socket_Getsockopt(int sockfd, int level, int optname, void *optval, socklen_t *optlen)
 {
-    return getsockopt(sockfd, level, optname, optval, optlen);
+	int err = getsockopt(sockfd, level, optname, optval, optlen);
+	if (err == SOCKET_ERROR)
+	{
+		errno = WSAGetLastError();
+	}
+	return err;
 }
 
 int ARSAL_Socket_Getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 {
-    return getsockname(sockfd, addr, addrlen);
+    int err = getsockname(sockfd, addr, addrlen);
+	if (err == SOCKET_ERROR)
+	{
+		errno = WSAGetLastError();
+	}
+	return err;
 }
 

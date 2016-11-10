@@ -81,7 +81,7 @@ static int ARCONTROLLER_Network_GetAvailableSocketPort(void)
     ret = ARSAL_Socket_Bind(fd, (struct sockaddr *)&addr, sizeof(addr));
     if (ret < 0) {
         ARSAL_PRINT(ARSAL_PRINT_ERROR, ARCONTROLLER_NETWORK_TAG,
-                    "bind fd=%d, addr='0.0.0.0', port=0: error='%s'", fd, strerror(errno));
+                    "bind fd=%d, addr='0.0.0.0', port=0: error='[%d]%s'", fd, errno, strerror(errno));
         goto error;
     }
 
@@ -89,7 +89,7 @@ static int ARCONTROLLER_Network_GetAvailableSocketPort(void)
     addrlen = sizeof(addr);
     ret = ARSAL_Socket_Getsockname(fd, (struct sockaddr *)&addr, &addrlen);
     if (ret < 0) {
-        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARCONTROLLER_NETWORK_TAG, "getsockname fd=%d, error='%s'", fd, strerror(errno));
+        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARCONTROLLER_NETWORK_TAG, "getsockname fd=%d, error='[%d]%s'", fd, errno, strerror(errno));
         goto error;
     }
 
@@ -1257,7 +1257,7 @@ void *ARCONTROLLER_Network_ReaderRun (void *data)
             else
             {
                 //sleep
-                _sleep (1); //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! replace by signal 
+                Sleep (1000); //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! replace by signal 
             }
         }
     }
