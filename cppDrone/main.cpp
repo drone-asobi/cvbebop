@@ -19,6 +19,7 @@
 #include <opencv2\video.hpp>
 #include <opencv2\videoio.hpp>
 #include <opencv2\calib3d.hpp>
+#include <opencv2\video\tracking.hpp>
 #include "bebopCommand.h"
 
 using namespace std;
@@ -142,6 +143,12 @@ void opencv_loadimage()
 	waitKey(0);
 }
 
+double measure_fps(int64 start, int64 end, double fps)
+{
+	return fps = cv::getTickFrequency() / (end - start);
+}
+
+
 /**** ここを実装してイメージ処理をする ****/
 /**** 他のファイルは今の段階でいじる必要なし ****/
 void process_opencv()
@@ -160,6 +167,8 @@ void process_opencv()
 	bool flag_detect_people = false;
 	bool flag_detect_face = false;
 	bool flag_detect_distance = false;
+	bool flag_measure_fps = false;
+	bool flag_tracking_something = false;
 
 	cv::Rect result;	//人認識の領域
 	
@@ -179,16 +188,23 @@ void process_opencv()
 	vector<double> list(10, 1); //要素数10中身1で初期化.
 	double n = 0;
 	double avg; //平均値
+	////measure_fps////
+	int64 start = 0;
+	int64 end = 0;
+	double fps = 0;
 
 	while (true)//無限ループ
 	{
 		cv::Mat frame1;
 		cv::Mat frame2;
+
+		start = cv::getTickCount(); //fps計測基準時取得
+		
 		cap >> frame1; // get a new frame from camera
 		//
 		//取得したフレーム画像に対して，クレースケール変換や2値化などの処理を書き込む．
 		//
-		cv::resize(frame1, frame2, cv::Size(), 0.5, 0.5);
+		cv::resize(frame1, frame2, cv::Size(), 0.6, 0.6);
 		cv::imshow("window", frame2);//画像を表示．
 
 		int key = cv::waitKey(1);
@@ -226,6 +242,16 @@ void process_opencv()
 			flag_detect_distance = !flag_detect_distance;
 			cout << "Distance Measurement ON" << endl;
 		}
+		else if (key == 'x') //fps計測
+		{
+			flag_measure_fps = !flag_measure_fps;
+			cout << "fps Measurement ON" << endl;
+		}
+		else if (key == 'y') //追跡開始
+		{
+			flag_tracking_something = !flag_tracking_something;
+			cout << "Tracking start" << endl;
+		}
 
 		if (flag_detect_people)
 		{
@@ -242,7 +268,7 @@ void process_opencv()
 		
 			count++;
 			
-			if(avg < 0.1)//ここの値を変えることで警告の出やすさを調節する
+			if(avg < 0.5)//ここの値を変えることで警告の出やすさを調節する
 				cout << "Stop Drone!!!" << std::endl;
 				
 			if (flag_detect_distance)
@@ -251,20 +277,35 @@ void process_opencv()
 
 				tyumoku.y = result.br().y;	//注目点は人領域の下辺の真ん中
 				tyumoku.x = (result.tl().x + result.br().x) / 2;
-					
-//				distance = (2*f_s*h) / (2*tyumoku.y - H);				
-//				cout << "distance_part1" << endl;
-//				cout << (2 * f_s*h) / (2 * tyumoku.y - H) << endl;
 
-//				distance = reference_d*sqrt(reference_size) / sqrt(result.area());
+				//				distance = (2*f_s*h) / (2*tyumoku.y - H);				
+				//				cout << "distance_part1" << endl;
+				//				cout << (2 * f_s*h) / (2 * tyumoku.y - H) << endl;
+
+				//				distance = reference_d*sqrt(reference_size) / sqrt(result.area());
 				cout << "distance_part2" << std::endl;
 				cout << reference_d*sqrt(reference_size) / sqrt(result.area()) << endl;
 			}
 		}
+
 		else if (flag_detect_face)
 		{
 			opencv_detect_face(frame2);
 		}
+
+		if (flag_tracking_something) //対象の追跡を開始
+		{
+
+		}
+
+		if (flag_measure_fps) //fps計測と表示
+		{
+			end = cv::getTickCount();
+			fps = measure_fps(start, end, fps);
+			std::cout << "::" << fps << "fps" << std::endl;
+			std::cout << "x = " << result.x << std::endl;
+		}
+
 	}
 	cv::destroyAllWindows();
 }
