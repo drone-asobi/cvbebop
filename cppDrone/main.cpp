@@ -205,23 +205,11 @@ void process_opencv()
 	/////フラグ/////
 	bool flag_detect_people = false;
 	bool flag_detect_face = false;
-	bool flag_detect_distance = false;
 	bool flag_measure_fps = false;
 	bool flag_tracking_something = false;
 
 	cv::Rect result;	//人認識の領域
 	
-	/////distance_part1/////
-	double f_s = 1062.9;	//カメラの焦点距離(pixel)
-	double distance = 0;	//カメラとの距離(m)
-	double H = 240;	//撮影される画像の縦の長さ(pixel)
-	double h = 0.53;	//カメラの高さ(m)
-	Point tyumoku;	//注目点の座標(pixel)
-
-	/////distance_part2/////
-	double reference_d = 2.33;	//基準の距離(m)
-	double reference_size = 15225; //基準の人領域の大きさ
-
 	/////検出結果チェック/////
 	int count = 0; //配列の番号を指す
 	vector<double> list(10, 1); //要素数10中身1で初期化.
@@ -276,11 +264,6 @@ void process_opencv()
 			flag_detect_people = !flag_detect_people;
 			cout << "Detect People ON" << endl;
 		}
-		else if (key == 'd') //距離計測
-		{
-			flag_detect_distance = !flag_detect_distance;
-			cout << "Distance Measurement ON" << endl;
-		}
 		else if (key == 'x') //fps計測
 		{
 			flag_measure_fps = !flag_measure_fps;
@@ -310,21 +293,6 @@ void process_opencv()
 			if(avg < 0.5)//ここの値を変えることで警告の出やすさを調節する
 				cout << "Stop Drone!!!" << std::endl;
 				
-			if (flag_detect_distance)
-			{
-
-
-				tyumoku.y = result.br().y;	//注目点は人領域の下辺の真ん中
-				tyumoku.x = (result.tl().x + result.br().x) / 2;
-
-				//				distance = (2*f_s*h) / (2*tyumoku.y - H);				
-				//				cout << "distance_part1" << endl;
-				//				cout << (2 * f_s*h) / (2 * tyumoku.y - H) << endl;
-
-				//				distance = reference_d*sqrt(reference_size) / sqrt(result.area());
-				cout << "distance_part2" << std::endl;
-				cout << reference_d*sqrt(reference_size) / sqrt(result.area()) << endl;
-			}
 		}
 		else if (flag_detect_face)
 		{
