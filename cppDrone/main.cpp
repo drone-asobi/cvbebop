@@ -133,6 +133,8 @@ void opencv_detect_person(Mat img, cv::Rect &r,double &n)
 	// 探索窓のスケール変化係数，グルーピング係数
 	hog.detectMultiScale(img, found, 0.2, cv::Size(8, 8), cv::Size(16, 16), 1.05, 2);
 
+	int d;
+
 	std::cout << "found:" << found.size() << std::endl;
 	n = (double) found.size(); //size_t型をdouble型にキャスト
 	for (auto it = found.begin(); it != found.end(); ++it)
@@ -144,12 +146,13 @@ void opencv_detect_person(Mat img, cv::Rect &r,double &n)
 		r.y += cvRound(r.height * 0.07);
 		r.height = cvRound(r.height * 0.8);
 		r.area();
- 
-		if (distance_measurement(r.area()) == 0) {	//近いと赤色の四角
+		d = distance_measurement(r.area());
+
+		if (d == 0) {	//近いと赤色の四角
 			cv::rectangle(img, r.tl(), r.br(), cv::Scalar(0, 0, 255), 3);
 			cv::putText(img, "near_range", cv::Point(r.tl().x, r.tl().y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 0, 255), 2, CV_AA);
 		}
-		else if (distance_measurement(r.area()) == 1) {	//中間の距離は緑の四角
+		else if (d == 1) {	//中間の距離は緑の四角
 			cv::rectangle(img, r.tl(), r.br(), cv::Scalar(0, 255, 0), 3);
 			cv::putText(img, "middle_range", cv::Point(r.tl().x, r.tl().y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2, CV_AA);
 		}
