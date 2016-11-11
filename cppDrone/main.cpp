@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <set>
 #include <time.h>
+#include <vector>
+#include <numeric>
 
 #include <opencv2\core.hpp>
 #include <opencv2\imgproc.hpp>
@@ -118,7 +120,7 @@ int distance_measurement(int S) {
 	return(2);
 }
 
-void opencv_detect_person(Mat img, cv::Rect &r)
+void opencv_detect_person(Mat img, cv::Rect &r,double &n)
 {
 	// ref: http://opencv.jp/cookbook/opencv_img.html#id43
 	HOGDescriptor hog;
@@ -132,6 +134,7 @@ void opencv_detect_person(Mat img, cv::Rect &r)
 	hog.detectMultiScale(img, found, 0.2, cv::Size(8, 8), cv::Size(16, 16), 1.05, 2);
 
 	std::cout << "found:" << found.size() << std::endl;
+	n = (double) found.size(); //size_t型をdouble型にキャスト
 	for (auto it = found.begin(); it != found.end(); ++it)
 	{
 		r = *it;
@@ -216,6 +219,11 @@ void process_opencv()
 	double reference_d = 2.33;	//基準の距離(m)
 	double reference_size = 15225; //基準の人領域の大きさ
 
+	/////検出結果チェック/////
+	int count = 0; //配列の番号を指す
+	vector<double> list(10, 1); //要素数10中身1で初期化.
+	double n = 0;
+	double avg; //平均値
 	////measure_fps////
 	int64 start = 0;
 	int64 end = 0;
@@ -229,7 +237,6 @@ void process_opencv()
 		start = cv::getTickCount(); //fps計測基準時取得
 		
 		cap >> frame1; // get a new frame from camera
-
 		//
 		//取得したフレーム画像に対して，クレースケール変換や2値化などの処理を書き込む．
 		//
@@ -284,10 +291,26 @@ void process_opencv()
 
 		if (flag_detect_people)
 		{
-			opencv_detect_person(frame2, result);
+			opencv_detect_person(frame2,result,n);
+			list[count] = n;
+			if (count == 9)
+				count = 0;  //countの値をリセットして配列をループさせる
+                
+			avg = accumulate(list.begin(), list.end(), 0.0) /(list.size()-1); //平均値を出す
 
+//		    cout << list.size() << std::endl;
+//		    cout << accumulate(list.begin(), list.end(), 0.0) << std::endl;
+//			cout << avg << std::endl;  数値チェック用
+		
+			count++;
+			
+			if(avg < 0.5)//ここの値を変えることで警告の出やすさを調節する
+				cout << "Stop Drone!!!" << std::endl;
+				
 			if (flag_detect_distance)
 			{
+
+
 				tyumoku.y = result.br().y;	//注目点は人領域の下辺の真ん中
 				tyumoku.x = (result.tl().x + result.br().x) / 2;
 
