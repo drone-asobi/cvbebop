@@ -93,7 +93,7 @@ void opencv_detect_face(Mat img)
 	cv::imshow("result", img);
 }
 
-int Distance(int S) {
+int distance_measurement(int S) {
 
 	/////距離計測/////
 	double reference_d = 2.33;	//基準の距離(m)
@@ -141,11 +141,11 @@ void opencv_detect_person(Mat img, cv::Rect &r)
 		r.height = cvRound(r.height * 0.8);
 		r.area();
  
-		if (Distance(r.area()) == 0) {	//近いと赤色の四角
+		if (distance_measurement(r.area()) == 0) {	//近いと赤色の四角
 			cv::rectangle(img, r.tl(), r.br(), cv::Scalar(0, 0, 255), 3);
 			cv::putText(img, "near_range", cv::Point(r.tl().x, r.tl().y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 0, 255), 2, CV_AA);
 		}
-		else if (Distance(r.area()) == 1) {	//中間の距離は緑の四角
+		else if (distance_measurement(r.area()) == 1) {	//中間の距離は緑の四角
 			cv::rectangle(img, r.tl(), r.br(), cv::Scalar(0, 255, 0), 3);
 			cv::putText(img, "middle_range", cv::Point(r.tl().x, r.tl().y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2, CV_AA);
 		}
