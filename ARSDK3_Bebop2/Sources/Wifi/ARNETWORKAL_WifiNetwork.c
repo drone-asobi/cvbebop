@@ -783,13 +783,8 @@ eARNETWORKAL_MANAGER_RETURN ARNETWORKAL_WifiNetwork_Receive(ARNETWORKAL_Manager_
 
 	// Create a fd_set to select on both the socket and the "cancel" pipe
 	fd_set set;
-	fd_set exceptSet;
 	FD_ZERO(&set);
 	FD_SET(receiverObject->socket, &set);
-	FD_SET(receiverObject->fifo[0], &set);
-	FD_ZERO(&exceptSet);
-	FD_SET(receiverObject->socket, &exceptSet);
-	FD_SET(receiverObject->fifo[0], &exceptSet);
 	// Get the max fd +1 for select call
 	int maxFd = (receiverObject->socket > receiverObject->fifo[0]) ? receiverObject->socket + 1 : receiverObject->fifo[0] + 1;
 	// Create the timeout object
@@ -802,12 +797,8 @@ eARNETWORKAL_MANAGER_RETURN ARNETWORKAL_WifiNetwork_Receive(ARNETWORKAL_Manager_
 	}
 
 	// Wait for either file to be reading for a read
-	int err = select(maxFd, &set, NULL, &exceptSet, &tv);
+	int err = select(maxFd, &set, NULL, NULL, &tv);
 
-	if (FD_ISSET(receiverObject->socket, &exceptSet))
-	{
-		ARSAL_PRINT(ARSAL_PRINT_ERROR, ARNETWORKAL_WIFINETWORK_TAG, "FOUND SOCKET ERROR FD_ISSET(except) %d", FD_ISSET(receiverObject->socket, &exceptSet));
-	}
 	if (err < 0)
 	{
 		// Read error
@@ -876,7 +867,7 @@ eARNETWORKAL_MANAGER_RETURN ARNETWORKAL_WifiNetwork_Receive(ARNETWORKAL_Manager_
 			receiverObject->size = 0;
 
 			/* check the disconnection */
-			if ((receiverObject->isDisconnected != 1) && (!FD_ISSET(receiverObject->fifo[0], &set)))
+			if (receiverObject->isDisconnected != 1)
 			{
 				/* check if the connection is lost */
 				if (ARNETWORKAL_WifiNetwork_IsTooLongWithoutReceive(manager, receiverObject) != 0)
@@ -893,13 +884,6 @@ eARNETWORKAL_MANAGER_RETURN ARNETWORKAL_WifiNetwork_Receive(ARNETWORKAL_Manager_
 					}
 				}
 			}
-		}
-
-		if (FD_ISSET(receiverObject->fifo[0], &set))
-		{
-			// If the fifo is ready for a read, dump bytes from it (so it won't be ready next time)
-			char dump[1];
-			_read(receiverObject->fifo[0], &dump, 1);
 		}
 	}
 

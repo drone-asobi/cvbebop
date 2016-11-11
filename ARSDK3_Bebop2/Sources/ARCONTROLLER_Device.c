@@ -5041,7 +5041,7 @@ void *ARCONTROLLER_Device_ControllerLooperThread (void *data)
                (deviceController->privatePart->state == ARCONTROLLER_DEVICE_STATE_PAUSED))
         {
             //TODO manager pause !!!!!!!!!!!!!!!!!!!!!!!!!
-            Sleep (controllerLoopIntervalUs);
+            Sleep (controllerLoopIntervalUs / 1000);
             
             ARSAL_Mutex_Lock(&(deviceController->privatePart->mutex));
             

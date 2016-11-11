@@ -366,7 +366,7 @@ ARNETWORKAL_Manager_t *ARDISCOVERY_DEVICE_Wifi_NewARNetworkAL (ARDISCOVERY_Devic
     if ((localError == ARDISCOVERY_OK) && (localErrorAL == ARNETWORKAL_OK))
     {
         // Initialize the ARNetworkALManager        
-        localErrorAL = ARNETWORKAL_Manager_InitWifiNetwork (networkAL, specificWifiParam->address, specificWifiParam->controllerToDevicePort, specificWifiParam->deviceToControllerPort, 1);
+        localErrorAL = ARNETWORKAL_Manager_InitWifiNetwork (networkAL, specificWifiParam->address, specificWifiParam->controllerToDevicePort, specificWifiParam->deviceToControllerPort, 30);
         
     }
 
