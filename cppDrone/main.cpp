@@ -93,6 +93,30 @@ void opencv_detect_face(Mat img)
 	cv::imshow("result", img);
 }
 
+int Distance(int S) {
+
+	/////距離計測/////
+	double reference_d = 2.33;	//基準の距離(m)
+	double reference_size = 15225; //基準の人領域の大きさ
+	double distance = 0;	//距離(m)
+
+	/////距離の度合い/////
+	double near_range = 2.3;
+	double middle_range = 2.7;
+
+	distance = reference_d*sqrt(reference_size) / sqrt(S);
+	cout << "distance" << distance << endl;
+
+	if (distance <= near_range) {
+		return(0);
+	}
+	else if (distance <= middle_range && distance > near_range) {
+		return(1);
+	}
+
+	return(2);
+}
+
 void opencv_detect_person(Mat img, cv::Rect &r)
 {
 	// ref: http://opencv.jp/cookbook/opencv_img.html#id43
@@ -115,10 +139,21 @@ void opencv_detect_person(Mat img, cv::Rect &r)
 		r.width = cvRound(r.width * 0.8);
 		r.y += cvRound(r.height * 0.07);
 		r.height = cvRound(r.height * 0.8);
-		cv::rectangle(img, r.tl(), r.br(), cv::Scalar(0, 255, 0), 3);
 		r.area();
+ 
+		if (Distance(r.area()) == 0) {	//近いと赤色の四角
+			cv::rectangle(img, r.tl(), r.br(), cv::Scalar(0, 0, 255), 3);
+			cv::putText(img, "near_range", cv::Point(r.tl().x, r.tl().y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 0, 255), 2, CV_AA);
+		}
+		else if (Distance(r.area()) == 1) {	//中間の距離は緑の四角
+			cv::rectangle(img, r.tl(), r.br(), cv::Scalar(0, 255, 0), 3);
+			cv::putText(img, "middle_range", cv::Point(r.tl().x, r.tl().y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2, CV_AA);
+		}
+		else {	//遠いと青色の四角
+			cv::rectangle(img, r.tl(), r.br(), cv::Scalar(255, 0, 0), 3);
+			cv::putText(img, "far_range", cv::Point(r.tl().x, r.tl().y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 0, 0), 2, CV_AA);
+		}
 	}
-
 	// 結果の描画
 	cv::namedWindow("result", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
 	cv::imshow("result", img);
@@ -154,23 +189,12 @@ void process_opencv()
 		return;
 	}
 
+	/////フラグ/////
 	bool flag_detect_people = false;
 	bool flag_detect_face = false;
-	bool flag_detect_distance = false;
 
 	cv::Rect result;	//人認識の領域
 	
-	/////distance_part1/////
-	double f_s = 1062.9;	//カメラの焦点距離(pixel)
-	double distance = 0;	//カメラとの距離(m)
-	double H = 240;	//撮影される画像の縦の長さ(pixel)
-	double h = 0.53;	//カメラの高さ(m)
-	Point tyumoku;	//注目点の座標(pixel)
-
-	/////distance_part2/////
-	double reference_d = 2.33;	//基準の距離(m)
-	double reference_size = 15225; //基準の人領域の大きさ
-
 	while (true)//無限ループ
 	{
 		cv::Mat frame1;
@@ -213,34 +237,17 @@ void process_opencv()
 			flag_detect_people = !flag_detect_people;
 			cout << "Detect People ON" << endl;
 		}
-		else if (key == 'd') //距離計測
-		{
-			flag_detect_distance = !flag_detect_distance;
-			cout << "Distance Measurement ON" << endl;
-		}
 
 		if (flag_detect_people)
 		{
 			opencv_detect_person(frame2,result);
-				
-			if (flag_detect_distance)
-			{
-				tyumoku.y = result.br().y;	//注目点は人領域の下辺の真ん中
-				tyumoku.x = (result.tl().x + result.br().x) / 2;
-					
-//				distance = (2*f_s*h) / (2*tyumoku.y - H);				
-//				cout << "distance_part1" << endl;
-//				cout << (2 * f_s*h) / (2 * tyumoku.y - H) << endl;
 
-//				distance = reference_d*sqrt(reference_size) / sqrt(result.area());
-				cout << "distance_part2" << std::endl;
-				cout << reference_d*sqrt(reference_size) / sqrt(result.area()) << endl;
-			}
 		}
 		else if (flag_detect_face)
 		{
 			opencv_detect_face(frame2);
 		}
+
 	}
 	cv::destroyAllWindows();
 }
