@@ -157,9 +157,10 @@ void process_opencv()
 	bool flag_detect_people = false;
 	bool flag_detect_face = false;
 	bool flag_detect_distance = false;
+	bool flag_measure_fps = false;
 
 	cv::Rect result;	//人認識の領域
-	
+
 	/////distance_part1/////
 	double f_s = 1062.9;	//カメラの焦点距離(pixel)
 	double distance = 0;	//カメラとの距離(m)
@@ -170,6 +171,13 @@ void process_opencv()
 	/////distance_part2/////
 	double reference_d = 2.33;	//基準の距離(m)
 	double reference_size = 15225; //基準の人領域の大きさ
+
+	////measure_fps////
+	double start = 0;
+	double end = 0;
+	double time = 0;		
+	double fps = 0;
+	int i = 0;
 
 	while (true)//無限ループ
 	{
@@ -182,6 +190,8 @@ void process_opencv()
 		//
 		cv::resize(frame1, frame2, cv::Size(), 0.5, 0.5);
 		cv::imshow("window", frame2);//画像を表示．
+
+		start = cv::getTickCount(); //fps計測基準時取得
 
 		int key = cv::waitKey(1);
 		if (key == 'q')//qボタンが押されたとき
@@ -218,6 +228,11 @@ void process_opencv()
 			flag_detect_distance = !flag_detect_distance;
 			cout << "Distance Measurement ON" << endl;
 		}
+		else if (key == 'x') //fps計測
+		{
+			flag_measure_fps = !flag_measure_fps;
+			cout << "fps Measurement ON" << endl;
+		}
 
 		if (flag_detect_people)
 		{
@@ -241,8 +256,20 @@ void process_opencv()
 		{
 			opencv_detect_face(frame2);
 		}
+		
+		i++;
+		end = cv::getTickCount();
+		time += end - start;
+		if (time > 1)
+		{
+			fps = i / time;
+			cout << ": " << fps << "fps" << endl;
+			i = 0;
+			time = 0;
+		}
 	}
 	cv::destroyAllWindows();
+
 }
 
 int main(void)
