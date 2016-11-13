@@ -48,51 +48,6 @@ void process_bebop()
 	bebop.landing();
 }
 
-void opencv_detect_face(Mat img)
-{
-	// ref: http://opencv.jp/cookbook/opencv_img.html#id40
-
-	double scale = 4.0;
-	cv::Mat gray, smallImg(cv::saturate_cast<int>(img.rows / scale), cv::saturate_cast<int>(img.cols / scale), CV_8UC1);
-	// グレースケール画像に変換
-	cv::cvtColor(img, gray, CV_BGR2GRAY);
-	// 処理時間短縮のために画像を縮小
-	cv::resize(gray, smallImg, smallImg.size(), 0, 0, cv::INTER_LINEAR);
-	cv::equalizeHist(smallImg, smallImg);
-
-	// 分類器の読み込み
-	std::string cascadeName = "./train/haarcascades/haarcascade_frontalface_alt.xml"; // Haar-like
-	//std::string cascadeName = "./train/lbpcascades/lbpcascade_frontalface.xml"; // LBP
-	cv::CascadeClassifier cascade;
-	if (!cascade.load(cascadeName)) {
-		cout << "fail to load cascade file" << endl;
-		return;
-	}
-
-	std::vector<cv::Rect> faces;
-	/// マルチスケール（顔）探索xo
-	// 画像，出力矩形，縮小スケール，最低矩形数，（フラグ），最小矩形
-	cascade.detectMultiScale(smallImg, faces,
-	                         1.1, 2,
-	                         CV_HAAR_SCALE_IMAGE,
-	                         cv::Size(30, 30));
-
-	// 結果の描画
-	std::vector<cv::Rect>::const_iterator r = faces.begin();
-	for (; r != faces.end(); ++r)
-	{
-		cv::Point center;
-		int radius;
-		center.x = cv::saturate_cast<int>((r->x + r->width * 0.5) * scale);
-		center.y = cv::saturate_cast<int>((r->y + r->height * 0.5) * scale);
-		radius = cv::saturate_cast<int>((r->width + r->height) * 0.25 * scale);
-		cv::circle(img, center, radius, cv::Scalar(80, 80, 255), 3, 8, 0);
-	}
-
-	cv::namedWindow("result", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
-	cv::imshow("result", img);
-}
-
 void opencv_detect_person(Mat img, cv::Rect &r)
 {
 	// ref: http://opencv.jp/cookbook/opencv_img.html#id43
@@ -139,6 +94,63 @@ void opencv_loadimage()
 	waitKey(0);
 }
 
+double measure_fps(int64 start, int64 end, double fps)
+{
+	return fps = cv::getTickFrequency() / (end - start);
+}
+
+void track_something(Mat img, cv::Rect_<float> &r_keep, cv::Rect &r, cv::Rect_<float> &r_predict, cv::Rect_<float> &rect_keep, int64 start) //物体追跡
+{
+	cv::Rect_<float> rect;
+	float x_aft = r.x;
+	float y_aft = r.y;
+	float wid_aft = r.width;
+	float hei_aft = r.height;
+	float x_bef = r_keep.x;
+	float y_bef = r_keep.y;
+	float wid_bef = r_keep.width;
+	float hei_bef = r_keep.height;
+	int64 end = cv::getTickCount();
+	double sec = (end - start) / cv::getTickFrequency();
+	double fps = cv::getTickFrequency() / (end - start);
+
+	if(x_aft != 0 && x_aft != x_bef){
+	
+		//1sあたりの変化量
+		r_predict.x = (x_aft - x_bef) * fps;
+		r_predict.y = (y_aft - y_bef) * fps;
+		r_predict.width = (wid_aft - wid_bef) * fps;
+		r_predict.height = 2 * r_predict.width;
+
+		rect_keep.x = x_aft;
+		rect_keep.y = y_aft;
+		rect_keep.width = wid_aft;
+		rect_keep.height = hei_aft;
+
+	}
+
+	rect.x += cvRound(rect_keep.x + r_predict.x * sec);
+	rect.y += cvRound(rect_keep.y + r_predict.y * sec);
+	rect.width = cvRound(rect_keep.width + r_predict.width * sec);
+	rect.height = 2 * rect.width;
+	cv::rectangle(img, rect.tl(), rect.br(), cv::Scalar(200, 200, 200), 3);
+	rect.area();
+
+	r_keep.x = x_aft;
+	r_keep.y = y_aft;
+	r_keep.width = wid_aft;
+	r_keep.height = hei_aft;
+
+	rect_keep.x = rect.x;
+	rect_keep.y = rect.y;
+	rect_keep.width = rect.width;
+	rect_keep.height = rect.height;
+
+	// 結果の描画
+	cv::namedWindow("result", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
+	cv::imshow("result", img);
+}
+
 /**** ここを実装してイメージ処理をする ****/
 /**** 他のファイルは今の段階でいじる必要なし ****/
 void process_opencv()
@@ -155,12 +167,15 @@ void process_opencv()
 	}
 
 	bool flag_detect_people = false;
-	bool flag_detect_face = false;
 	bool flag_detect_distance = false;
 	bool flag_measure_fps = false;
+	bool flag_track_something = false;
 
 	cv::Rect result;	//人認識の領域
-
+	cv::Rect_<float> r_keep;
+	cv::Rect_<float> r_predict;
+	cv::Rect_<float> rect_keep;
+	
 	/////distance_part1/////
 	double f_s = 1062.9;	//カメラの焦点距離(pixel)
 	double distance = 0;	//カメラとの距離(m)
@@ -173,25 +188,24 @@ void process_opencv()
 	double reference_size = 15225; //基準の人領域の大きさ
 
 	////measure_fps////
-	double start = 0;
-	double end = 0;
-	double time = 0;		
+	int64 start = 0;
+	int64 end = 0;
 	double fps = 0;
-	int i = 0;
 
 	while (true)//無限ループ
 	{
 		cv::Mat frame1;
 		cv::Mat frame2;
+
+		start = cv::getTickCount(); //fps計測基準時取得
+		
 		cap >> frame1; // get a new frame from camera
 
 		//
 		//取得したフレーム画像に対して，クレースケール変換や2値化などの処理を書き込む．
 		//
-		cv::resize(frame1, frame2, cv::Size(), 0.5, 0.5);
+		cv::resize(frame1, frame2, cv::Size(), 0.6, 0.6);
 		cv::imshow("window", frame2);//画像を表示．
-
-		start = cv::getTickCount(); //fps計測基準時取得
 
 		int key = cv::waitKey(1);
 		if (key == 'q')//qボタンが押されたとき
@@ -213,11 +227,6 @@ void process_opencv()
 			//単に待つ
 			waitKey(0);
 		}
-		else if (key == 'f') //顔認識
-		{
-			flag_detect_face = !flag_detect_face;
-			cout << "Detect Face ON" << endl;
-		}
 		else if (key == 'p') //人認識
 		{
 			flag_detect_people = !flag_detect_people;
@@ -233,43 +242,45 @@ void process_opencv()
 			flag_measure_fps = !flag_measure_fps;
 			cout << "fps Measurement ON" << endl;
 		}
+		else if (key == 'y') //追跡開始
+		{
+			flag_track_something = !flag_track_something;
+			cout << "Tracking start" << endl;
+		}
 
 		if (flag_detect_people)
 		{
-			opencv_detect_person(frame2,result);
-				
+			opencv_detect_person(frame2, result);
+
 			if (flag_detect_distance)
 			{
 				tyumoku.y = result.br().y;	//注目点は人領域の下辺の真ん中
 				tyumoku.x = (result.tl().x + result.br().x) / 2;
-					
-//				distance = (2*f_s*h) / (2*tyumoku.y - H);				
-//				cout << "distance_part1" << endl;
-//				cout << (2 * f_s*h) / (2 * tyumoku.y - H) << endl;
 
-//				distance = reference_d*sqrt(reference_size) / sqrt(result.area());
+				//				distance = (2*f_s*h) / (2*tyumoku.y - H);				
+				//				cout << "distance_part1" << endl;
+				//				cout << (2 * f_s*h) / (2 * tyumoku.y - H) << endl;
+
+				//				distance = reference_d*sqrt(reference_size) / sqrt(result.area());
 				cout << "distance_part2" << std::endl;
 				cout << reference_d*sqrt(reference_size) / sqrt(result.area()) << endl;
 			}
 		}
-		else if (flag_detect_face)
+
+
+		if (flag_measure_fps) //fps計測と表示
 		{
-			opencv_detect_face(frame2);
+			end = cv::getTickCount();
+			fps = measure_fps(start, end, fps);
+			std::cout << "::" << fps << "fps" << std::endl;
 		}
-		
-		i++;
-		end = cv::getTickCount();
-		time += end - start;
-		if (time > 1)
+		if (flag_track_something) //対象の追跡を開始
 		{
-			fps = i / time;
-			cout << ": " << fps << "fps" << endl;
-			i = 0;
-			time = 0;
+			track_something(frame2, r_keep, result, r_predict, rect_keep, start);
 		}
+
 	}
 	cv::destroyAllWindows();
-
 }
 
 int main(void)
