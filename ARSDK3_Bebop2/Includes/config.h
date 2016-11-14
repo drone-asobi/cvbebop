@@ -75,7 +75,7 @@
 #ifdef __linux__
 #  define HAVE_DECL_CLOCK_REALTIME 1
 #else
-#  define HAVE_DECL_CLOCK_REALTIME 0
+// #  define HAVE_DECL_CLOCK_REALTIME 0
 #endif
 
 /* Define to 1 if you have the declaration of `log2', and to 0 if you don't.
@@ -111,7 +111,7 @@
 #define HAVE_PTHREAD_H 1
 
 /* Define to 1 if you have the <semaphore.h> header file. */
-// #define HAVE_SEMAPHORE_H 1
+#define HAVE_SEMAPHORE_H 1
 
 /* Define to 1 if you have the `sem_destroy' function. */
 #define HAVE_SEM_DESTROY 1

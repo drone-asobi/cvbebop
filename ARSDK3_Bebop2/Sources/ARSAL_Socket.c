@@ -36,10 +36,8 @@
  */
 #include <config.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <libARSAL/ARSAL_Socket.h>
 #include <errno.h>
-
 #ifdef HAVE_SYS_UIO_H
 #include <sys/uio.h>
 #else
@@ -55,61 +53,59 @@
 #define IOV_MAX 1024
 #endif
 
-/* SSIZE_MAX should normally be defined in limits.h. In case it's not, hope
- * compiler define __SIZE_MAX__ and derived SSIZE_MAX from it. */
-#ifndef SSIZE_MAX
-#define SSIZE_MAX (__SIZE_MAX__ >> 1)
-#endif
-
-#ifndef HAVE_STRUCT_IOVEC
-struct iovec
-{
-	void *iov_base;
-	size_t iov_len;
-}
-#endif
-
 static ssize_t writev(int sockfd, const struct iovec *iov, int iovcnt)
 {
     int i;
     ssize_t wbytes = 0;
-    ssize_t ret = 0;
+    ssize_t ret;
     ssize_t sum = 0;
+	DWORD flags;
 
     if (iovcnt <= 0 || iovcnt > IOV_MAX)
     {
-        errno = EINVAL;
+        errno = WSAEINVAL;
         return -1;
     }
-
+	
     /* check we don't overflow SSIZE_MAX */
     for (i = 0; i < iovcnt; i++)
     {
         if (SSIZE_MAX - sum < iov[i].iov_len)
         {
-            errno = EINVAL;
+            errno = WSAEINVAL;
             return -1;
         }
 
         sum += iov[i].iov_len;
     }
 
-    for (i = 0; i < iovcnt; i++)
-    {
-        ret = write(sockfd, iov[i].iov_base, iov[i].iov_len);
-        if (ret < 0)
-        {
-            return -1;
-        }
+	WSAOVERLAPPED sendOverlapped;
+	SecureZeroMemory((PVOID)& sendOverlapped, sizeof(WSAOVERLAPPED));
+	sendOverlapped.hEvent = WSACreateEvent();
+	if(sendOverlapped.hEvent == NULL)
+	{
+		return -1;
+	}
 
-        wbytes += ret;
+	ret = WSASend(sockfd, iov, iovcnt, &wbytes, 0, &sendOverlapped, NULL);
+	if (ret == SOCKET_ERROR && WSAGetLastError() != WSA_IO_PENDING)
+	{
+		return -1;
+	}
 
-        /* short write means we can't proceed to the next area so break */
-        if (ret < iov[i].iov_len)
-        {
-            break;
-        }
-    }
+	ret = WSAWaitForMultipleEvents(1, &sendOverlapped.hEvent, TRUE, INFINITE, TRUE);
+	if (ret == WSA_WAIT_FAILED)
+	{
+		return -1;
+	}
+
+	ret = WSAGetOverlappedResult(sockfd, &sendOverlapped, &wbytes, FALSE, &flags);
+	if (ret == FALSE)
+	{
+		return -1;
+	}
+
+	WSAResetEvent(sendOverlapped.hEvent);
 
     return wbytes;
 }
@@ -118,12 +114,13 @@ static ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
 {
     int i;
     ssize_t rbytes = 0;
-    ssize_t ret = 0;
+    ssize_t ret;
     ssize_t sum = 0;
+	DWORD flags = 0;
 
-    if (iovcnt <= 0 || iovcnt > IOV_MAX)
+	if (iovcnt <= 0 || iovcnt > IOV_MAX)
     {
-        errno = EINVAL;
+        errno = WSAEINVAL;
         return -1;
     }
 
@@ -132,29 +129,41 @@ static ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
     {
         if (SSIZE_MAX - sum < iov[i].iov_len)
         {
-            errno = EINVAL;
+            errno = WSAEINVAL;
             return -1;
         }
 
         sum += iov[i].iov_len;
     }
 
-    for (i = 0; i < iovcnt; i++)
-    {
-        ret = read(sockfd, iov[i].iov_base, iov[i].iov_len);
-        if (ret < 0)
-        {
-            return -1;
-        }
+	WSAOVERLAPPED recvOverlapped;
+	SecureZeroMemory((PVOID)& recvOverlapped, sizeof(WSAOVERLAPPED));
 
-        rbytes += ret;
+	// Create an event handle and setup an overlapped structure.
+	recvOverlapped.hEvent = WSACreateEvent();
+	if (recvOverlapped.hEvent == NULL) {
+		return -1;
+	}
 
-        /* short read means we can't proceed to the next area */
-        if (ret < iov[i].iov_len)
-        {
-            break;
-        }
-    }
+	ret = WSARecv(sockfd, iov, iovcnt, &rbytes, &flags, &recvOverlapped, NULL);
+	if (ret == SOCKET_ERROR && WSAGetLastError() != WSA_IO_PENDING)
+	{
+		return -1;
+	}
+
+	ret = WSAWaitForMultipleEvents(1, &recvOverlapped.hEvent, TRUE, INFINITE, TRUE);
+	if (ret == WSA_WAIT_FAILED)
+	{
+		return -1;
+	}
+
+	ret = WSAGetOverlappedResult(sockfd, &recvOverlapped, &rbytes, FALSE, &flags);
+	if (ret == FALSE)
+	{
+		return -1;
+	}
+
+	WSAResetEvent(recvOverlapped.hEvent);
 
     return rbytes;
 }
@@ -177,13 +186,13 @@ ssize_t ARSAL_Socket_Sendto(int sockfd, const void *buf, size_t buflen, int flag
 
 ssize_t ARSAL_Socket_Send(int sockfd, const void *buf, size_t buflen, int flags)
 {
-    ssize_t res;
+    ssize_t res = -1;
     int tries = 10;
     int i;
     for (i = 0; i < tries; i++)
     {
         res = send(sockfd, buf, buflen, flags);
-        if (res >= 0 || errno != ECONNREFUSED)
+        if (res >= 0 || WSAGetLastError() != WSAECONNRESET)
         {
             break;
         }
@@ -228,7 +237,7 @@ int ARSAL_Socket_Accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 
 int ARSAL_Socket_Close(int sockfd)
 {
-    return close(sockfd);
+	return closesocket(sockfd);
 }
 
 int ARSAL_Socket_Setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen)

@@ -237,10 +237,10 @@ void ARSAL_Print_DumpData(FILE *file, uint8_t tag, const void *data, size_t size
     header.ts[5] = (timestampUS >> 40) & 0xff;
 
     /* Write header and data without thread mix */
-    flockfile(file);
+    // flockfile(file);
     fwrite(&header, 1, sizeof(header), file);
     fwrite(data, 1, sizeDump, file);
-    funlockfile(file);
+    // funlockfile(file);
 }
 
 void ARSAL_Print_DumpRotateFiles(const char *basePath, int count)

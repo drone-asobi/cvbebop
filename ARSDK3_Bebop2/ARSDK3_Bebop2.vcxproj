@@ -121,8 +121,6 @@
     <ClInclude Include="Includes\libARNetwork\ARNETWORK_IOBufferParam.h" />
     <ClInclude Include="Includes\libARNetwork\ARNETWORK_Manager.h" />
     <ClInclude Include="Includes\libARSAL\ARSAL.h" />
-    <ClInclude Include="Includes\libARSAL\ARSAL_BLEManager.h" />
-    <ClInclude Include="Includes\libARSAL\ARSAL_CentralManager.h" />
     <ClInclude Include="Includes\libARSAL\ARSAL_Endianness.h" />
     <ClInclude Include="Includes\libARSAL\ARSAL_Error.h" />
     <ClInclude Include="Includes\libARSAL\ARSAL_Ftw.h" />
@@ -267,8 +265,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Sources\ARDISCOVERY_BonjourDiscovery.m" />
-    <None Include="Sources\ARSAL_BLEManager.m" />
-    <None Include="Sources\ARSAL_CentralManager.m" />
     <None Include="Sources\BLE\ARNETWORKAL_BLENetwork.m" />
     <None Include="Sources\USBAccessoryManager.m" />
   </ItemGroup>

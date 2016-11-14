@@ -387,12 +387,6 @@
     <ClInclude Include="Includes\libARDiscovery\USBAccessoryManager.h">
       <Filter>Header files\libARDiscovery</Filter>
     </ClInclude>
-    <ClInclude Include="Includes\libARSAL\ARSAL_BLEManager.h">
-      <Filter>Header files\libARSAL</Filter>
-    </ClInclude>
-    <ClInclude Include="Includes\libARSAL\ARSAL_CentralManager.h">
-      <Filter>Header files\libARSAL</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\ARDISCOVERY_AvahiDiscovery.h">
       <Filter>Source files\libARDiscovery</Filter>
     </ClInclude>
@@ -615,12 +609,6 @@
     </None>
     <None Include="Sources\BLE\ARNETWORKAL_BLENetwork.m">
       <Filter>Source files\libARNetworkAL\Ble</Filter>
-    </None>
-    <None Include="Sources\ARSAL_BLEManager.m">
-      <Filter>Source files\libARSAL</Filter>
-    </None>
-    <None Include="Sources\ARSAL_CentralManager.m">
-      <Filter>Source files\libARSAL</Filter>
     </None>
     <None Include="Sources\USBAccessoryManager.m">
       <Filter>Source files\libARDiscovery</Filter>

@@ -37,11 +37,27 @@
 #ifndef _ARSAL_SOCKET_H_
 #define _ARSAL_SOCKET_H_
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#include <WinSock2.h>
+#include <ws2tcpip.h>
+#include <basetsd.h>
 
-struct iovec;
+#ifndef HAVE_STRUCT_IOVEC
+
+#define HAVE_STRUCT_IOVEC
+
+#define iovec _WSABUF
+
+#define iov_len len
+#define iov_base buf
+
+#endif
+
+ /* SSIZE_MAX should normally be defined in limits.h. In case it's not, hope
+ * compiler define __SIZE_MAX__ and derived SSIZE_MAX from it. */
+#ifndef SSIZE_MAX
+typedef SSIZE_T ssize_t;
+#define SSIZE_MAX (SIZE_MAX >> 1)
+#endif
 
 /**
  * @brief Type of Service class selector

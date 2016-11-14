@@ -122,7 +122,7 @@ int ARSAL_Ftw_internal(const char *dirPath, ARSAL_FtwCallback cb, int nopenfd)
     if (retVal == 0)
     {
         // Call stat and the callback
-        retVal = lstat (dirPath, &sb);
+        retVal = _stat (dirPath, &sb);
         if (retVal != 0)
         {
             ARSAL_PRINT (ARSAL_PRINT_DEBUG, ARSAL_FTW_TAG, "Unable to lstat");
@@ -328,7 +328,7 @@ int ARSAL_Nftw_internal(const char *dirPath, ARSAL_NftwCallback cb, int nopenfd,
     if (retVal == 0)
     {
         // Call stat and the callback
-        retVal = lstat (dirPath, &sb);
+        retVal = _stat (dirPath, &sb);
         if (retVal != 0)
         {
             ARSAL_PRINT (ARSAL_PRINT_DEBUG, ARSAL_FTW_TAG, "Unable to lstat");

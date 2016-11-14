@@ -108,7 +108,6 @@ int ARSAL_Sem_Init(ARSAL_Sem_t *sem, int shared, int value)
         else
         {
             free (psem);
-            psem = NULL;
         }
     }
     /* No else: if calloc failed, return default value -1. */

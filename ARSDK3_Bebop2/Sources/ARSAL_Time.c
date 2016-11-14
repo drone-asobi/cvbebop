@@ -85,6 +85,7 @@ int ARSAL_Time_GetLocalTime (struct timespec *res, struct tm *localTime)
     /* No else --> Args check (return -1) */
 
     struct timespec ts;
+	timespec_get(&ts, TIME_UTC);
 
 #if defined(HAVE_CLOCK_GETTIME) && defined (HAVE_DECL_CLOCK_REALTIME)
 
@@ -122,7 +123,7 @@ int ARSAL_Time_GetLocalTime (struct timespec *res, struct tm *localTime)
         /* No else --> Do nothing if res is NULL */
         if (localTime != NULL)
         {
-            localtime_r (&(ts.tv_sec), localTime);
+			localtime_s(localTime, &(ts.tv_sec));
         }
         /* No else --> Do nothing if localTime is NULL */
     }

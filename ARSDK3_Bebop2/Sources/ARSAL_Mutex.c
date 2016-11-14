@@ -91,11 +91,7 @@ int ARSAL_Mutex_Lock(ARSAL_Mutex_t *mutex)
         ARSAL_PRINT(ARSAL_PRINT_FATAL, ARSAL_MUTEX_TAG, "Mutex operation failed! errno = %d , %s ; thread_id = %d",
                     result,
                     strerror(result),
-#if HAVE_DECL_SYS_GETTID
-                    syscall(SYS_gettid)
-#else
                     0
-#endif
             );
     }
 #endif
@@ -114,11 +110,7 @@ int ARSAL_Mutex_Trylock(ARSAL_Mutex_t *mutex)
         ARSAL_PRINT(ARSAL_PRINT_FATAL, ARSAL_MUTEX_TAG, "Mutex operation failed! errno = %d , %s ; thread_id = %d",
                     result,
                     strerror(result),
-#if HAVE_DECL_SYS_GETTID
-                    syscall(SYS_gettid)
-#else
                     0
-#endif
             );
     }
 #endif
@@ -137,11 +129,7 @@ int ARSAL_Mutex_Unlock(ARSAL_Mutex_t *mutex)
         ARSAL_PRINT(ARSAL_PRINT_FATAL, ARSAL_MUTEX_TAG, "Mutex operation failed! errno = %d , %s ; thread_id = %d",
                     result,
                     strerror(result),
-#if HAVE_DECL_SYS_GETTID
-                    syscall(SYS_gettid)
-#else
                     0
-#endif
             );
     }
 #endif
@@ -185,11 +173,7 @@ int ARSAL_Cond_Wait(ARSAL_Cond_t *cond, ARSAL_Mutex_t *mutex)
         ARSAL_PRINT(ARSAL_PRINT_FATAL, ARSAL_MUTEX_TAG, "Mutex/Cond operation failed! errno = %d , %s ; thread_id = %d",
                     result,
                     strerror(result),
-#if HAVE_DECL_SYS_GETTID
-                    syscall(SYS_gettid)
-#else
                     0
-#endif
             );
     }
 #endif
@@ -214,11 +198,7 @@ int ARSAL_Cond_Timedwait(ARSAL_Cond_t *cond, ARSAL_Mutex_t *mutex, int timeout)
         ARSAL_PRINT(ARSAL_PRINT_FATAL, ARSAL_MUTEX_TAG, "Mutex/Cond operation failed! errno = %d , %s ; thread_id = %d",
                     result,
                     strerror(result),
-#if HAVE_DECL_SYS_GETTID
-                    syscall(SYS_gettid)
-#else
                     0
-#endif
             );
     }
 #endif
@@ -237,11 +217,7 @@ int ARSAL_Cond_Signal(ARSAL_Cond_t *cond)
         ARSAL_PRINT(ARSAL_PRINT_FATAL, ARSAL_MUTEX_TAG, "Mutex/Cond operation failed! errno = %d , %s ; thread_id = %d",
                     result,
                     strerror(result),
-#if HAVE_DECL_SYS_GETTID
-                    syscall(SYS_gettid)
-#else
                     0
-#endif
             );
     }
 #endif
@@ -260,11 +236,7 @@ int ARSAL_Cond_Broadcast(ARSAL_Cond_t *cond)
         ARSAL_PRINT(ARSAL_PRINT_FATAL, ARSAL_MUTEX_TAG, "Mutex/Cond operation failed! errno = %d , %s ; thread_id = %d",
                     result,
                     strerror(result),
-#if HAVE_DECL_SYS_GETTID
-                    syscall(SYS_gettid)
-#else
                     0
-#endif
             );
     }
 #endif
