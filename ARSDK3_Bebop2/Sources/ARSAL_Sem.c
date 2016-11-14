@@ -212,7 +212,7 @@ int ARSAL_Sem_Destroy(ARSAL_Sem_t *sem)
 
 #endif
 
-	return result;
+    return result;
 }
 
 int ARSAL_Sem_Wait(ARSAL_Sem_t *sem)
@@ -276,7 +276,7 @@ int ARSAL_Sem_Wait(ARSAL_Sem_t *sem)
 
 #endif
 
-	return result;
+    return result;
 }
 
 int ARSAL_Sem_Trywait(ARSAL_Sem_t *sem)
@@ -344,7 +344,7 @@ int ARSAL_Sem_Trywait(ARSAL_Sem_t *sem)
 
 #endif
 
-	return result;
+    return result;
 }
 
 int ARSAL_Sem_Timedwait(ARSAL_Sem_t *sem, const struct timespec *timeout)
@@ -415,7 +415,7 @@ int ARSAL_Sem_Timedwait(ARSAL_Sem_t *sem, const struct timespec *timeout)
 
 #endif
 
-	return result;
+    return result;
 }
 
 int ARSAL_Sem_Post(ARSAL_Sem_t *sem)
@@ -479,7 +479,7 @@ int ARSAL_Sem_Post(ARSAL_Sem_t *sem)
 
 #endif
 
-	return result;
+    return result;
 }
 
 int ARSAL_Sem_Getvalue(ARSAL_Sem_t *sem, int *value)
@@ -527,5 +527,5 @@ int ARSAL_Sem_Getvalue(ARSAL_Sem_t *sem, int *value)
 
 #endif
 
-	return result;
+    return result;
 }

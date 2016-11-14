@@ -67,6 +67,18 @@
     <Filter Include="Source files\libARStream2">
       <UniqueIdentifier>{1829f52c-e11a-4e9a-8753-73378261a3a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source files\libARDiscovery\Usb">
+      <UniqueIdentifier>{08ba87f1-c5c3-44a1-ace8-530b08f035c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARDiscovery\Ble">
+      <UniqueIdentifier>{8c24485d-3116-4fb6-a3a9-83142df907a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARNetworkAL\Ble">
+      <UniqueIdentifier>{87bfda9e-eb09-44a2-b2f2-ca0e727b7c75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARNetworkAL\Mux">
+      <UniqueIdentifier>{18c46a59-3dd4-4d87-a914-e88b94f30b93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Includes\config.h">
@@ -363,6 +375,42 @@
     <ClInclude Include="Sources\arstream2_rtp.h">
       <Filter>Source files\libARStream2</Filter>
     </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_AvahiDiscovery.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_BonjourDiscovery.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_MuxDiscovery.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\USBAccessoryManager.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_BLEManager.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_CentralManager.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARDISCOVERY_AvahiDiscovery.h">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARDISCOVERY_AvahiDiscovery_nodbus.h">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Usb\ARDISCOVERY_DEVICE_Usb.h">
+      <Filter>Source files\libARDiscovery\Usb</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\BLE\ARDISCOVERY_DEVICE_Ble.h">
+      <Filter>Source files\libARDiscovery\Ble</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\BLE\ARNETWORKAL_BLENetwork.h">
+      <Filter>Source files\libARNetworkAL\Ble</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Mux\ARNETWORKAL_MuxNetwork.h">
+      <Filter>Source files\libARNetworkAL\Mux</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Wifi\ARDISCOVERY_DEVICE_Wifi.c">
@@ -539,5 +587,43 @@
     <ClCompile Include="Sources\arstream2_error.c">
       <Filter>Source files\libARStream2</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\ARDISCOVERY_AvahiDiscovery.c">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARDISCOVERY_AvahiDiscovery_nodbus.c">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARDISCOVERY_MuxDiscovery.c">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Usb\ARDISCOVERY_DEVICE_Usb.c">
+      <Filter>Source files\libARDiscovery\Usb</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\BLE\ARDISCOVERY_DEVICE_Ble.c">
+      <Filter>Source files\libARDiscovery\Ble</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Mux\ARNETWORKAL_MuxNetwork.c">
+      <Filter>Source files\libARNetworkAL\Mux</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Error.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Sources\ARDISCOVERY_BonjourDiscovery.m">
+      <Filter>Source files\libARDiscovery</Filter>
+    </None>
+    <None Include="Sources\BLE\ARNETWORKAL_BLENetwork.m">
+      <Filter>Source files\libARNetworkAL\Ble</Filter>
+    </None>
+    <None Include="Sources\ARSAL_BLEManager.m">
+      <Filter>Source files\libARSAL</Filter>
+    </None>
+    <None Include="Sources\ARSAL_CentralManager.m">
+      <Filter>Source files\libARSAL</Filter>
+    </None>
+    <None Include="Sources\USBAccessoryManager.m">
+      <Filter>Source files\libARDiscovery</Filter>
+    </None>
   </ItemGroup>
 </Project>

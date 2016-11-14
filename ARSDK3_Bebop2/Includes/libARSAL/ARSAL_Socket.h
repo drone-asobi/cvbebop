@@ -36,15 +36,12 @@
  */
 #ifndef _ARSAL_SOCKET_H_
 #define _ARSAL_SOCKET_H_
-#include <WS2tcpip.h>
-#include <WinSock2.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 struct iovec;
-
-#if defined(_MSC_VER)
-#include <BaseTsd.h>
-typedef SSIZE_T ssize_t;
-#endif
 
 /**
  * @brief Type of Service class selector

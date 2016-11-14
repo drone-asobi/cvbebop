@@ -46,6 +46,8 @@
 struct mux_ctx;
 
 #include "Wifi/ARDISCOVERY_DEVICE_Wifi.h"
+#include "BLE/ARDISCOVERY_DEVICE_Ble.h"
+#include "Usb/ARDISCOVERY_DEVICE_Usb.h"
 
 #include "ARDISCOVERY_Device.h"
 
@@ -435,6 +437,150 @@ eARDISCOVERY_ERROR ARDISCOVERY_DEVICE_WifiSetQoSLevel (ARDISCOVERY_Device_t *dev
 eARDISCOVERY_ERROR ARDISCOVERY_Device_WifiSetDeviceToControllerPort (ARDISCOVERY_Device_t *device, int d2c_port)
 {
     return ARDISCOVERY_DEVICE_Wifi_SetDeviceToControllerPort (device, d2c_port);
+}
+
+
+/***********************
+ * -- BLE part --
+ ***********************/
+
+eARDISCOVERY_ERROR ARDISCOVERY_Device_InitBLE (ARDISCOVERY_Device_t *device, eARDISCOVERY_PRODUCT product, ARNETWORKAL_BLEDeviceManager_t bleDeviceManager, ARNETWORKAL_BLEDevice_t bleDevice)
+{
+    // -- Initialize the Discovery Device with a wifi device --
+
+    eARDISCOVERY_ERROR error = ARDISCOVERY_OK;
+
+    // check parameters
+    if ((device == NULL) ||
+        (bleDeviceManager == NULL) ||
+        (bleDevice == NULL) ||
+        (ARDISCOVERY_getProductService (product) != ARDISCOVERY_PRODUCT_BLESERVICE))
+    {
+        error = ARDISCOVERY_ERROR_BAD_PARAMETER;
+    }
+    // No Else: the checking parameters sets error to ARNETWORK_ERROR_BAD_PARAMETER and stop the processing
+
+    //TODO see to check fi the device is already initialized !!!!
+
+    if (error == ARDISCOVERY_OK)
+    {
+        switch (product)
+        {
+        case ARDISCOVERY_PRODUCT_MINIDRONE:
+        case ARDISCOVERY_PRODUCT_MINIDRONE_EVO_LIGHT:
+        case ARDISCOVERY_PRODUCT_MINIDRONE_EVO_BRICK:
+        case ARDISCOVERY_PRODUCT_MINIDRONE_EVO_HYDROFOIL:
+        case ARDISCOVERY_PRODUCT_MINIDRONE_DELOS3:
+        case ARDISCOVERY_PRODUCT_MINIDRONE_WINGX:
+            device->initNetworkConfiguration = ARDISCOVERY_DEVICE_Ble_InitRollingSpiderNetworkConfiguration;
+            break;
+
+        case ARDISCOVERY_PRODUCT_SKYCONTROLLER:
+        case ARDISCOVERY_PRODUCT_SKYCONTROLLER_2:
+        case ARDISCOVERY_PRODUCT_ARDRONE:
+        case ARDISCOVERY_PRODUCT_BEBOP_2:
+        case ARDISCOVERY_PRODUCT_JS:
+        case ARDISCOVERY_PRODUCT_JS_EVO_LIGHT:
+        case ARDISCOVERY_PRODUCT_JS_EVO_RACE:
+        case ARDISCOVERY_PRODUCT_POWER_UP:
+        case ARDISCOVERY_PRODUCT_EVINRUDE:
+        case ARDISCOVERY_PRODUCT_UNKNOWNPRODUCT_4:
+        case ARDISCOVERY_PRODUCT_TINOS:
+        case ARDISCOVERY_PRODUCT_MAX:
+            error = ARDISCOVERY_ERROR_BAD_PARAMETER;
+            break;
+
+        default:
+            ARSAL_PRINT (ARSAL_PRINT_ERROR, ARDISCOVERY_DEVICE_TAG, "Product:%d not known", product);
+            error = ARDISCOVERY_ERROR_BAD_PARAMETER;
+            break;
+        }
+    }
+
+    if (error == ARDISCOVERY_OK)
+    {
+        // Initialize common parameters
+        device->productID = product;
+        device->newNetworkAL = ARDISCOVERY_DEVICE_Ble_NewARNetworkAL;
+        device->deleteNetworkAL = ARDISCOVERY_DEVICE_Ble_DeleteARNetworkAL;
+        device->getCopyOfSpecificParameters = ARDISCOVERY_DEVICE_Ble_GetCopyOfSpecificParameters;
+        device->deleteSpecificParameters = ARDISCOVERY_DEVICE_Ble_DeleteSpecificParameters;
+    }
+
+    if (error == ARDISCOVERY_OK)
+    {
+        // Initialize BLE specific parameters
+        error = ARDISCOVERY_DEVICE_Ble_CreateSpecificParameters (device, bleDeviceManager, bleDevice);
+    }
+
+    return error;
+}
+
+/***********************
+ * -- USB part --
+ ***********************/
+
+eARDISCOVERY_ERROR ARDISCOVERY_Device_InitUSB (ARDISCOVERY_Device_t *device, eARDISCOVERY_PRODUCT product, struct mux_ctx *mux)
+{
+    // -- Initialize the Discovery Device with an usb device --
+
+    // Check parameters
+    if ((device == NULL) ||
+        (mux == NULL) ||
+        (ARDISCOVERY_getProductService (product) != ARDISCOVERY_PRODUCT_USBSERVICE))
+        return ARDISCOVERY_ERROR_BAD_PARAMETER;
+
+    switch (product) {
+    case ARDISCOVERY_PRODUCT_SKYCONTROLLER_2:
+        device->initNetworkConfiguration = ARDISCOVERY_DEVICE_Usb_InitSkyController2NetworkConfiguration;
+        break;
+    case ARDISCOVERY_PRODUCT_ARDRONE:
+    case ARDISCOVERY_PRODUCT_BEBOP_2:
+    case ARDISCOVERY_PRODUCT_JS:
+    case ARDISCOVERY_PRODUCT_JS_EVO_LIGHT:
+    case ARDISCOVERY_PRODUCT_JS_EVO_RACE:
+    case ARDISCOVERY_PRODUCT_POWER_UP:
+    case ARDISCOVERY_PRODUCT_EVINRUDE:
+    case ARDISCOVERY_PRODUCT_UNKNOWNPRODUCT_4:
+    case ARDISCOVERY_PRODUCT_SKYCONTROLLER:
+    case ARDISCOVERY_PRODUCT_MINIDRONE:
+    case ARDISCOVERY_PRODUCT_MINIDRONE_EVO_LIGHT:
+    case ARDISCOVERY_PRODUCT_MINIDRONE_EVO_BRICK:
+    case ARDISCOVERY_PRODUCT_MINIDRONE_EVO_HYDROFOIL:
+    case ARDISCOVERY_PRODUCT_MINIDRONE_DELOS3:
+    case ARDISCOVERY_PRODUCT_MINIDRONE_WINGX:
+    case ARDISCOVERY_PRODUCT_TINOS:
+    case ARDISCOVERY_PRODUCT_MAX:
+        return ARDISCOVERY_ERROR_BAD_PARAMETER;
+        break;
+
+    default:
+        ARSAL_PRINT (ARSAL_PRINT_ERROR, ARDISCOVERY_DEVICE_TAG, "Product:%d not known", product);
+        return ARDISCOVERY_ERROR_BAD_PARAMETER;
+        break;
+    }
+
+    // Initialize common parameters
+    device->productID = product;
+    device->newNetworkAL = ARDISCOVERY_DEVICE_Usb_NewARNetworkAL;
+    device->deleteNetworkAL = ARDISCOVERY_DEVICE_Usb_DeleteARNetworkAL;
+    device->getCopyOfSpecificParameters = ARDISCOVERY_DEVICE_Usb_GetCopyOfSpecificParameters;
+    device->deleteSpecificParameters = ARDISCOVERY_DEVICE_Usb_DeleteSpecificParameters;
+
+    return ARDISCOVERY_DEVICE_Usb_CreateSpecificParameters (device, mux);
+}
+
+
+eARDISCOVERY_ERROR ARDISCOVERY_Device_UsbAddConnectionCallbacks (ARDISCOVERY_Device_t *device, ARDISCOVERY_Device_ConnectionJsonCallback_t sendJsonCallback, ARDISCOVERY_Device_ConnectionJsonCallback_t receiveJsonCallback, void *customData)
+{
+    // -- USB Add Connection Callbacks --
+
+    return ARDISCOVERY_DEVICE_Usb_AddConnectionCallbacks (device, sendJsonCallback, receiveJsonCallback, customData);
+}
+
+eARDISCOVERY_ERROR ARDISCOVERY_Device_UsbGetMux(ARDISCOVERY_Device_t *device, struct mux_ctx **mux)
+{
+    return ARDISCOVERY_DEVICE_Usb_GetMux(device, mux);
 }
 
 /*************************

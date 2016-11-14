@@ -37,12 +37,316 @@
 #ifndef _ARSAL_ENDIANNESS_H_
 #define _ARSAL_ENDIANNESS_H_
 
-#define __LITTLE_ENDIAN 1234
-#define __BIG_ENDIAN    4321
-#define __BYTE_ORDER __LITTLE_ENDIAN
-#define __FLOAT_WORD_ORDER __BYTE_ORDER
+#include <inttypes.h>
 
-typedef unsigned char uint8_t;
+#ifdef __APPLE__ // Apple use a different method for endianness handling
+
+#include <architecture/byte_order.h>
+#include <libkern/OSByteOrder.h>
+
+/**
+ * @brief Define little endian macro to the same values as linux <endian.h>
+ */
+#ifndef __LITTLE_ENDIAN
+# define __LITTLE_ENDIAN 1234
+#endif
+
+/**
+ * @brief Define big endian macro to the same values as linux <endian.h>
+ */
+#ifndef __BIG_ENDIAN
+# define __BIG_ENDIAN 4321
+#endif
+
+/**
+ * @brief Define pdp endian macro to the same values as linux <endian.h>
+ */
+#ifndef __PDP_ENDIAN
+# define __PDP_ENDIAN 3412
+#endif
+
+/**
+ * @brief Device endianness
+ */
+#ifndef __DEVICE_ENDIAN
+# define __DEVICE_ENDIAN __LITTLE_ENDIAN
+#endif
+
+/**
+ * @brief Opposite endiannes
+ */
+#ifndef __INVER_ENDIAN
+# if __DEVICE_ENDIAN == __LITTLE_ENDIAN
+#  define __INVER_ENDIAN __BIG_ENDIAN
+# elif __DEVICE_ENDIAN == __BIG_ENDIAN
+#  define __INVER_ENDIAN __LITTLE_ENDIAN
+# else
+#  error Device endian __PDP_ENDIAN not supported
+# endif
+#endif
+
+#if __DEVICE_ENDIAN == __LITTLE_ENDIAN
+/*
+ * HOST --> DEVICE Conversion macros
+ */
+
+/**
+ * @brief Convert a short int (2 bytes) to device endianness
+ */
+#define htods(v) OSSwapHostToLittleInt16(v)
+/**
+ * @brief Convert a long int (4 bytes) to device endianness
+ */
+#define htodl(v) OSSwapHostToLittleInt32(v)
+/**
+ * @brief Convert a long long int (8 bytes) to device endianness
+ */
+#define htodll(v) OSSwapHostToLittleInt64(v)
+/**
+ * @brief Convert a IEEE-754 float (4 bytes) to device endianness
+ */
+#define htodf(v) ARSAL_Endianness_SwapHostToLittleFloat(v)
+/**
+ * @brief Convert a IEEE-754 double (8 bytes) to device endianness
+ */
+#define htodd(v) ARSAL_Endianness_SwapHostToLittleDouble(v)
+
+/*
+ * DEVICE --> HOST Conversion macros
+ */
+
+/**
+ * @brief Convert a short int (2 bytes) from device endianness
+ */
+#define dtohs(v) OSSwapLittleToHostInt16(v)
+/**
+ * @brief Convert a long int (4 bytes) from device endianness
+ */
+#define dtohl(v) OSSwapLittleToHostInt32(v)
+/**
+ * @brief Convert a long long int (8 bytes) from device endianness
+ */
+#define dtohll(v) OSSwapLittleToHostInt64(v)
+/**
+ * @brief Convert a IEEE-754 float (4 bytes) from device endianness
+ */
+#define dtohf(v) ARSAL_Endianness_SwapLittleToHostFloat(v)
+/**
+ * @brief Convert a IEEE-754 double (8 bytes) from device endianness
+ */
+#define dtohd(v) ARSAL_Endianness_SwapLittleToHostDouble(v)
+
+#elif __DEVICE_ENDIAN == __BIG_ENDIAN
+/*
+ * HOST --> DEVICE Conversion macros
+ */
+
+/**
+ * @brief Convert a short int (2 bytes) to device endianness
+ */
+#define htods(v) OSSwapHostToBigInt16(v)
+/**
+ * @brief Convert a long int (4 bytes) to device endianness
+ */
+#define htodl(v) OSSwapHostToBigInt32(v)
+/**
+ * @brief Convert a long long int (8 bytes) to device endianness
+ */
+#define htodll(v) OSSwapHostToBigInt64(v)
+/**
+ * @brief Convert a IEEE-754 float (4 bytes) to device endianness
+ */
+#define htodf(v) ARSAL_Endianness_SwapHostToBigFloat(v)
+/**
+ * @brief Convert a IEEE-754 double (8 bytes) to device endianness
+ */
+#define htodd(v) ARSAL_Endianness_SwapHostToBigDouble(v)
+
+/*
+ * DEVICE --> HOST Conversion macros
+ */
+
+/**
+ * @brief Convert a short int (2 bytes) from device endianness
+ */
+#define dtohs(v) OSSwapBigToHostInt16(v)
+/**
+ * @brief Convert a long int (4 bytes) from device endianness
+ */
+#define dtohl(v) OSSwapBigToHostInt32(v)
+/**
+ * @brief Convert a long long int (8 bytes) from device endianness
+ */
+#define dtohll(v) OSSwapBigToHostInt64(v)
+/**
+ * @brief Convert a IEEE-754 float (4 bytes) from device endianness
+ */
+#define dtohf(v) ARSAL_Endianness_SwapBigToHostFloat(v)
+/**
+ * @brief Convert a IEEE-754 double (8 bytes) from device endianness
+ */
+#define dtohd(v) ARSAL_Endianness_SwapBigToHostDouble(v)
+
+#else
+# error Device PDP endianness is not supported
+#endif
+
+
+#if !defined(OS_INLINE)
+# if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#        define OS_INLINE static inline
+# else
+#        define OS_INLINE static __inline__
+# endif
+#endif
+
+/**
+ * @brief INTERNAL_FUNCTION - Swap a float value from host to little endian
+ * @param orig Initial host endian value to swap
+ * @return little endian value of orig
+ */
+OS_INLINE
+float
+ARSAL_Endianness_SwapHostToLittleFloat (float orig)
+{
+    union fconv {
+        float f;
+        uint32_t i;
+    } u;
+    u.f = orig;
+    u.i = OSSwapHostToLittleInt32 (u.i);
+    return u.f;
+}
+
+/**
+ * @brief INTERNAL_FUNCTION - Swap a float value from little to host endian
+ * @param orig Initial little endian value to swap
+ * @return host endian value of orig
+ */
+OS_INLINE
+float
+ARSAL_Endianness_SwapLittleToHostFloat (float orig)
+{
+    union fconv {
+        float f;
+        uint32_t i;
+    } u;
+    u.f = orig;
+    u.i = OSSwapLittleToHostInt32 (u.i);
+    return u.f;
+}
+
+/**
+ * @brief INTERNAL_FUNCTION - Swap a float value from host to big endian
+ * @param orig Initial host endian value to swap
+ * @return big endian value of orig
+ */
+OS_INLINE
+float
+ARSAL_Endianness_SwapHostToBigFloat (float orig)
+{
+    union fconv {
+        float f;
+        uint32_t i;
+    } u;
+    u.f = orig;
+    u.i = OSSwapHostToBigInt32 (u.i);
+    return u.f;
+}
+
+/**
+ * @brief INTERNAL_FUNCTION - Swap a float value from big to host endian
+ * @param orig Initial big endian value to swap
+ * @return host endian value of orig
+ */
+OS_INLINE
+float
+ARSAL_Endianness_SwapBigToHostFloat (float orig)
+{
+    union fconv {
+        float f;
+        uint32_t i;
+    } u;
+    u.f = orig;
+    u.i = OSSwapBigToHostInt32 (u.i);
+    return u.f;
+}
+
+/**
+ * @brief INTERNAL_FUNCTION - Swap a double value from host to little endian
+ * @param orig Initial host endian value to swap
+ * @return little endian value of orig
+ */
+OS_INLINE
+double
+ARSAL_Endianness_SwapHostToLittleDouble (double orig)
+{
+    union dconv {
+        double d;
+        uint64_t i;
+    } u;
+    u.d = orig;
+    u.i = OSSwapHostToLittleInt64 (u.i);
+    return u.d;
+}
+
+/**
+ * @brief INTERNAL_FUNCTION - Swap a double value from little to host endian
+ * @param orig Initial little endian value to swap
+ * @return host endian value of orig
+ */
+OS_INLINE
+double
+ARSAL_Endianness_SwapLittleToHostDouble (double orig)
+{
+    union dconv {
+        double d;
+        uint64_t i;
+    } u;
+    u.d = orig;
+    u.i = OSSwapLittleToHostInt64 (u.i);
+    return u.d;
+}
+
+/**
+ * @brief INTERNAL_FUNCTION - Swap a double value from host to big endian
+ * @param orig Initial host endian value to swap
+ * @return big endian value of orig
+ */
+OS_INLINE
+double
+ARSAL_Endianness_SwapHostToBigDouble (double orig)
+{
+    union dconv {
+        double d;
+        uint64_t i;
+    } u;
+    u.d = orig;
+    u.i = OSSwapHostToBigInt64 (u.i);
+    return u.d;
+}
+
+/**
+ * @brief INTERNAL_FUNCTION - Swap a double value from big to host endian
+ * @param orig Initial big endian value to swap
+ * @return host endian value of orig
+ */
+OS_INLINE
+double
+ARSAL_Endianness_SwapBigToHostDouble (double orig)
+{
+    union dconv {
+        double d;
+        uint64_t i;
+    } u;
+    u.d = orig;
+    u.i = OSSwapBigToHostInt64 (u.i);
+    return u.d;
+}
+
+#else // ! defined (__APPLE__)
+
+#include <endian.h>
 
 /**
  * @brief Device endianness
@@ -232,5 +536,7 @@ static inline double ARSAL_Endianness_bswapd (double orig)
 #else // __BYTE_ORDER in neither LITTLE nor BIG endian
 #error PDP Byte endianness not supported
 #endif // __BYTE_ORDER
+
+#endif // __APPLE__
 
 #endif /* _ARSAL_ENDIANNESS_H_ */

@@ -103,11 +103,15 @@
     <ClInclude Include="Includes\libARController\ARCONTROLLER_StreamQueue.h" />
     <ClInclude Include="Includes\libARController\ARCONTROLLER_StreamSender.h" />
     <ClInclude Include="Includes\libARDiscovery\ARDiscovery.h" />
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_AvahiDiscovery.h" />
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_BonjourDiscovery.h" />
     <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Connection.h" />
     <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Device.h" />
     <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Discovery.h" />
     <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Error.h" />
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_MuxDiscovery.h" />
     <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_NetworkConfiguration.h" />
+    <ClInclude Include="Includes\libARDiscovery\USBAccessoryManager.h" />
     <ClInclude Include="Includes\libARNetworkAL\ARNetworkAL.h" />
     <ClInclude Include="Includes\libARNetworkAL\ARNETWORKAL_Error.h" />
     <ClInclude Include="Includes\libARNetworkAL\ARNETWORKAL_Frame.h" />
@@ -117,6 +121,8 @@
     <ClInclude Include="Includes\libARNetwork\ARNETWORK_IOBufferParam.h" />
     <ClInclude Include="Includes\libARNetwork\ARNETWORK_Manager.h" />
     <ClInclude Include="Includes\libARSAL\ARSAL.h" />
+    <ClInclude Include="Includes\libARSAL\ARSAL_BLEManager.h" />
+    <ClInclude Include="Includes\libARSAL\ARSAL_CentralManager.h" />
     <ClInclude Include="Includes\libARSAL\ARSAL_Endianness.h" />
     <ClInclude Include="Includes\libARSAL\ARSAL_Error.h" />
     <ClInclude Include="Includes\libARSAL\ARSAL_Ftw.h" />
@@ -158,6 +164,8 @@
     <ClInclude Include="Sources\ARCONTROLLER_StreamPool.h" />
     <ClInclude Include="Sources\ARCONTROLLER_StreamQueue.h" />
     <ClInclude Include="Sources\ARCONTROLLER_StreamSender.h" />
+    <ClInclude Include="Sources\ARDISCOVERY_AvahiDiscovery.h" />
+    <ClInclude Include="Sources\ARDISCOVERY_AvahiDiscovery_nodbus.h" />
     <ClInclude Include="Sources\ARDISCOVERY_Connection.h" />
     <ClInclude Include="Sources\ARDISCOVERY_Device.h" />
     <ClInclude Include="Sources\ARDISCOVERY_NetworkConfiguration.h" />
@@ -174,7 +182,11 @@
     <ClInclude Include="Sources\arstream2_rtp.h" />
     <ClInclude Include="Sources\ARSTREAM_Buffers.h" />
     <ClInclude Include="Sources\ARSTREAM_NetworkHeaders.h" />
+    <ClInclude Include="Sources\BLE\ARDISCOVERY_DEVICE_Ble.h" />
+    <ClInclude Include="Sources\BLE\ARNETWORKAL_BLENetwork.h" />
     <ClInclude Include="Sources\md5.h" />
+    <ClInclude Include="Sources\Mux\ARNETWORKAL_MuxNetwork.h" />
+    <ClInclude Include="Sources\Usb\ARDISCOVERY_DEVICE_Usb.h" />
     <ClInclude Include="Sources\Wifi\ARDISCOVERY_DEVICE_Wifi.h" />
     <ClInclude Include="Sources\Wifi\ARNETWORKAL_WifiNetwork.h" />
   </ItemGroup>
@@ -197,10 +209,13 @@
     <ClCompile Include="Sources\ARCONTROLLER_StreamPool.c" />
     <ClCompile Include="Sources\ARCONTROLLER_StreamQueue.c" />
     <ClCompile Include="Sources\ARCONTROLLER_StreamSender.c" />
+    <ClCompile Include="Sources\ARDISCOVERY_AvahiDiscovery.c" />
+    <ClCompile Include="Sources\ARDISCOVERY_AvahiDiscovery_nodbus.c" />
     <ClCompile Include="Sources\ARDISCOVERY_Connection.c" />
     <ClCompile Include="Sources\ARDISCOVERY_Device.c" />
     <ClCompile Include="Sources\ARDISCOVERY_Discovery.c" />
     <ClCompile Include="Sources\ARDISCOVERY_Error.c" />
+    <ClCompile Include="Sources\ARDISCOVERY_MuxDiscovery.c" />
     <ClCompile Include="Sources\ARDISCOVERY_NetworkConfiguration.c" />
     <ClCompile Include="Sources\ARNETWORKAL_Error.c" />
     <ClCompile Include="Sources\ARNETWORKAL_Manager.c" />
@@ -211,6 +226,7 @@
     <ClCompile Include="Sources\ARNETWORK_Receiver.c" />
     <ClCompile Include="Sources\ARNETWORK_RingBuffer.c" />
     <ClCompile Include="Sources\ARNETWORK_Sender.c" />
+    <ClCompile Include="Sources\ARSAL_Error.c" />
     <ClCompile Include="Sources\ARSAL_Ftw.c" />
     <ClCompile Include="Sources\ARSAL_MD5.c" />
     <ClCompile Include="Sources\ARSAL_MD5_Manager.c" />
@@ -234,7 +250,10 @@
     <ClCompile Include="Sources\ARSTREAM_NetworkHeaders.c" />
     <ClCompile Include="Sources\ARSTREAM_Reader.c" />
     <ClCompile Include="Sources\ARSTREAM_Sender.c" />
+    <ClCompile Include="Sources\BLE\ARDISCOVERY_DEVICE_Ble.c" />
     <ClCompile Include="Sources\md5.c" />
+    <ClCompile Include="Sources\Mux\ARNETWORKAL_MuxNetwork.c" />
+    <ClCompile Include="Sources\Usb\ARDISCOVERY_DEVICE_Usb.c" />
     <ClCompile Include="Sources\Wifi\ARDISCOVERY_DEVICE_Wifi.c" />
     <ClCompile Include="Sources\Wifi\ARNETWORKAL_WifiNetwork.c" />
   </ItemGroup>
@@ -245,6 +264,13 @@
     <ProjectReference Include="..\uthash\uthash.vcxproj">
       <Project>{567b2722-d722-4b42-bb3b-bc1e8fed9614}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Sources\ARDISCOVERY_BonjourDiscovery.m" />
+    <None Include="Sources\ARSAL_BLEManager.m" />
+    <None Include="Sources\ARSAL_CentralManager.m" />
+    <None Include="Sources\BLE\ARNETWORKAL_BLENetwork.m" />
+    <None Include="Sources\USBAccessoryManager.m" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

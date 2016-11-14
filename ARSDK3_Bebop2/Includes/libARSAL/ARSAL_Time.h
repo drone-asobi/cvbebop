@@ -38,7 +38,8 @@
 #define _ARSAL_TIME_H_
 #include <inttypes.h>
 #include <time.h>
-#include <WinSock2.h>
+#include <sys/time.h>
+#include <unistd.h>
 
 /**
  * @brief Convert second to millisecond

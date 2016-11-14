@@ -9,10 +9,12 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <WS2tcpip.h>
-#include <WinSock2.h>
-#include <corecrt_io.h>
+#include <errno.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
 #include <fcntl.h>
+#include <poll.h>
 #include <math.h>
 
 #include <libARStream2/arstream2_rtp_sender.h>
@@ -533,15 +535,15 @@ ARSTREAM2_RtpSender_t* ARSTREAM2_RtpSender_New(const ARSTREAM2_RtpSender_Config_
         retSender->controlSocket = -1;
         if (config->clientAddr)
         {
-            retSender->clientAddr = _strdup(config->clientAddr);
+            retSender->clientAddr = strndup(config->clientAddr, 16);
         }
         if (config->mcastAddr)
         {
-            retSender->mcastAddr = _strdup(config->mcastAddr);
+            retSender->mcastAddr = strndup(config->mcastAddr, 16);
         }
         if (config->mcastIfaceAddr)
         {
-            retSender->mcastIfaceAddr = _strdup(config->mcastIfaceAddr);
+            retSender->mcastIfaceAddr = strndup(config->mcastIfaceAddr, 16);
         }
         retSender->serverStreamPort = (config->serverStreamPort > 0) ? config->serverStreamPort : ARSTREAM2_RTP_SENDER_DEFAULT_SERVER_STREAM_PORT;
         retSender->serverControlPort = (config->serverControlPort > 0) ? config->serverControlPort : ARSTREAM2_RTP_SENDER_DEFAULT_SERVER_CONTROL_PORT;
@@ -1043,8 +1045,8 @@ static int ARSTREAM2_RtpSender_StreamSocketSetup(ARSTREAM2_RtpSender_t *sender)
     if (ret == 0)
     {
         /* set to non-blocking */
-		u_long flags = 1;
-        ioctlsocket(sender->streamSocket, FIONBIO, &flags);
+        int flags = fcntl(sender->streamSocket, F_GETFL, 0);
+        fcntl(sender->streamSocket, F_SETFL, flags | O_NONBLOCK);
 
         /* source address */
         memset(&sourceSin, 0, sizeof(sourceSin));
@@ -1196,8 +1198,8 @@ static int ARSTREAM2_RtpSender_ControlSocketSetup(ARSTREAM2_RtpSender_t *sender)
     if (ret == 0)
     {
         /* set to non-blocking */
-		u_long flags = 1;
-        ioctlsocket(sender->controlSocket, FIONBIO, &flags);
+        int flags = fcntl(sender->controlSocket, F_GETFL, 0);
+        fcntl(sender->controlSocket, F_SETFL, flags | O_NONBLOCK);
 
         /* receive address */
         memset(&recvSin, 0, sizeof(struct sockaddr_in));
@@ -1323,9 +1325,7 @@ static int ARSTREAM2_RtpSender_SendData(ARSTREAM2_RtpSender_t *sender, uint8_t *
             /* socket send failed */
             switch (errno)
             {
-            case WSAEWOULDBLOCK:
-			case WSAEINPROGRESS:
-			case WSAEALREADY:
+            case EAGAIN:
             {
                 struct pollfd p;
                 p.fd = sender->streamSocket;
@@ -1334,7 +1334,7 @@ static int ARSTREAM2_RtpSender_SendData(ARSTREAM2_RtpSender_t *sender, uint8_t *
                 int pollTimeMs = (maxNetworkLatencyUs - (int)(curTime - inputTimestamp)) / 1000;
                 if (pollTimeMs >= ARSTREAM2_RTP_SENDER_MIN_POLL_TIMEOUT_MS)
                 {
-                    int pollRet = WSAPoll(&p, 1, pollTimeMs);
+                    int pollRet = poll(&p, 1, pollTimeMs);
                     if (pollRet == 0)
                     {
                         /* failed: poll timeout */
@@ -1379,7 +1379,7 @@ static int ARSTREAM2_RtpSender_SendData(ARSTREAM2_RtpSender_t *sender, uint8_t *
                                 ARSTREAM2_RtpSender_UpdateMonitoring(sender, inputTimestamp, auTimestamp, rtpTimestamp, sender->seqNum - 1, isLastInAu, (uint32_t)bytes, 0);
                                 ret = 0;
                             }
-                            else if (errno == WSAEWOULDBLOCK || errno == WSAEINPROGRESS || errno == WSAEALREADY || errno == WSAENOBUFS)
+                            else if (errno == EAGAIN)
                             {
                                 /* failed: socket buffer full */
                                 ARSTREAM2_RtpSender_UpdateMonitoring(sender, inputTimestamp, auTimestamp, rtpTimestamp, sender->seqNum - 1, isLastInAu, 0, sendSize);
@@ -1869,7 +1869,7 @@ void* ARSTREAM2_RtpSender_RunControlThread(void *ARSTREAM2_RtpSender_t_Param)
 
     while (shouldStop == 0)
     {
-        _sleep(ARSTREAM2_RTP_SENDER_CLOCKSYNC_DATAREAD_TIMEOUT_MS * 1000);
+        usleep(ARSTREAM2_RTP_SENDER_CLOCKSYNC_DATAREAD_TIMEOUT_MS * 1000);
 
         ARSAL_Mutex_Lock(&(sender->streamMutex));
         shouldStop = sender->threadsShouldStop;

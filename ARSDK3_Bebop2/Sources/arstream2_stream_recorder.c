@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <arpa/inet.h>
 #include <math.h>
 
 #include <libARSAL/ARSAL_Print.h>
@@ -587,9 +588,9 @@ eARSTREAM2_ERROR ARSTREAM2_StreamRecorder_Init(ARSTREAM2_StreamRecorder_Handle *
         return ARSTREAM2_ERROR_BAD_PARAMETERS;
     }
     int mediaFileNameLen = strlen(config->mediaFileName);
-    if ((_stricmp(config->mediaFileName + mediaFileNameLen - 4, ".mp4") != 0)
-            && (_stricmp(config->mediaFileName + mediaFileNameLen - 4, ".264") != 0)
-            && (_stricmp(config->mediaFileName + mediaFileNameLen - 5, ".h264") != 0))
+    if ((strcasecmp(config->mediaFileName + mediaFileNameLen - 4, ".mp4") != 0)
+            && (strcasecmp(config->mediaFileName + mediaFileNameLen - 4, ".264") != 0)
+            && (strcasecmp(config->mediaFileName + mediaFileNameLen - 5, ".h264") != 0))
     {
         ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_STREAM_RECORDER_TAG, "Invalid media file name extension");
         return ARSTREAM2_ERROR_BAD_PARAMETERS;
@@ -624,7 +625,7 @@ eARSTREAM2_ERROR ARSTREAM2_StreamRecorder_Init(ARSTREAM2_StreamRecorder_Handle *
         streamRecorder->auCallbackUserPtr = config->auCallbackUserPtr;
         streamRecorder->videoWidth = config->videoWidth;
         streamRecorder->videoHeight = config->videoHeight;
-        if (_stricmp(config->mediaFileName + mediaFileNameLen - 4, ".mp4") == 0)
+        if (strcasecmp(config->mediaFileName + mediaFileNameLen - 4, ".mp4") == 0)
         {
             streamRecorder->fileType = ARSTREAM2_STREAM_RECORDER_FILE_TYPE_MP4;
         }
@@ -945,6 +946,7 @@ void* ARSTREAM2_StreamRecorder_RunThread(void *param)
                             || (item->au.index >= streamRecorder->lastSyncIndex + ARSTREAM2_STREAM_RECORDER_FILE_SYNC_MAX_INTERVAL))
                     {
                         fflush(streamRecorder->outputFile);
+                        fsync(fileno(streamRecorder->outputFile));
                         streamRecorder->lastSyncIndex = item->au.index;
                     }
                 }

@@ -37,12 +37,6 @@
 #include <config.h>
 #include <libARSAL/ARSAL_Time.h>
 
-struct tm *localtime_r(time_t *_clock, struct tm *_result)
-{
-	_localtime64_s(_result, _clock);
-	return _result;
-}
-
 int ARSAL_Time_GetTime (struct timespec *res)
 {
     int result = -1;

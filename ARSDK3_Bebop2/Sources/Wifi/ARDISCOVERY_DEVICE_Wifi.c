@@ -37,7 +37,6 @@
  */
 
 #include <stdlib.h>
-#include <string.h>
 #include <json/json.h>
 #include <libARSAL/ARSAL_Print.h>
 #include <libARNetworkAL/ARNETWORKAL_Manager.h>
@@ -366,7 +365,7 @@ ARNETWORKAL_Manager_t *ARDISCOVERY_DEVICE_Wifi_NewARNetworkAL (ARDISCOVERY_Devic
     if ((localError == ARDISCOVERY_OK) && (localErrorAL == ARNETWORKAL_OK))
     {
         // Initialize the ARNetworkALManager        
-        localErrorAL = ARNETWORKAL_Manager_InitWifiNetwork (networkAL, specificWifiParam->address, specificWifiParam->controllerToDevicePort, specificWifiParam->deviceToControllerPort, 30);
+        localErrorAL = ARNETWORKAL_Manager_InitWifiNetwork (networkAL, specificWifiParam->address, specificWifiParam->controllerToDevicePort, specificWifiParam->deviceToControllerPort, 1);
         
     }
 

@@ -58,8 +58,6 @@
  */
 #define ARNETWORKAL_WIFINETWORK_MAX_DATA_BUFFER_SIZE         (IP_MAXPACKET - UDP_HEADER_SIZE - offsetof(ARNETWORKAL_Frame_t, dataPtr))
 
-#define pipe(fds) _pipe(fds, 4096, _O_BINARY)
-
 /**
  * @brief Create a new WifiNetwork object.
  * @warning This function allocate memory

@@ -44,11 +44,6 @@
 #define ARSTREAM2_H264_SLICE_TYPE_SP_ALL 8
 #define ARSTREAM2_H264_SLICE_TYPE_SI_ALL 9
 
-#define R_OK    4       /* Test for read permission.  */
-#define W_OK    2       /* Test for write permission.  */
-//#define   X_OK    1       /* execute permission - unsupported in windows*/
-#define F_OK    0       /* Test for existence.  */
-
 /*
  * Types
  */

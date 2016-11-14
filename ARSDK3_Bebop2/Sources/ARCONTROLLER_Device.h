@@ -201,6 +201,12 @@ void ARCONTROLLER_Device_OnAllStatesEnd (ARCONTROLLER_Device_t *deviceController
 void ARCONTROLLER_Device_OnAllSettingsEnd (ARCONTROLLER_Device_t *deviceController);
 
 /**
+ * @brief Function called when an extension connection to the SkyController has changed.
+ * @param deviceController The device controller.
+ */
+void ARCONTROLLER_Device_OnSkyControllerConnectionChangedReceived (ARCONTROLLER_Device_t *deviceController);
+
+/**
  * @brief Callback used to add a json part during the device connection.
  * @param jsonObj The json in which to add.
  * @param customData The device controller.
@@ -213,6 +219,13 @@ eARDISCOVERY_ERROR ARCONTROLLER_Device_SendJsonCallback (json_object *jsonObj, v
  * @param elementDictionary command element dictionary.
  */
 void ARCONTROLLER_Device_OnARDrone3VideoEnableChanged (ARCONTROLLER_Device_t *deviceController, ARCONTROLLER_DICTIONARY_ELEMENT_t *elementDictionary);
+
+/**
+ * @brief Function called when the Jumping sumo video stream state has changed.
+ * @param deviceController The device controller.
+ * @param elementDictionary command element dictionary.
+ */
+void ARCONTROLLER_Device_OnJumpingSumoVideoEnableChanged (ARCONTROLLER_Device_t *deviceController, ARCONTROLLER_DICTIONARY_ELEMENT_t *elementDictionary);
 
 /**
  * @brief Function called when the PowerUp video stream state has changed.

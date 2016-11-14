@@ -316,6 +316,55 @@ eARNETWORKAL_ERROR ARNETWORKAL_Manager_CancelWifiNetwork (ARNETWORKAL_Manager_t 
 eARNETWORKAL_ERROR ARNETWORKAL_Manager_CloseWifiNetwork(ARNETWORKAL_Manager_t *manager);
 
 /**
+ * @brief initialize BLE network.
+ * @param manager pointer on the Manager
+ * @param deviceManager the OS device manager which will be used for network functions
+ * @param device the selected OS specific BLE device to connect to
+ * @param recvTimeoutSec timeout in seconds set to limit the time of blocking of the Receive function.
+ * @param notificationIDs list of the buffer ID to notify. If NULL all buffers of the receiver are notify.
+ * @param numberOfNotificationID number of buffer ID to notifiy.
+ * @return error equal to ARNETWORKAL_OK if the initialization if successful otherwise see eARNETWORKAL_ERROR.
+ */
+eARNETWORKAL_ERROR ARNETWORKAL_Manager_InitBLENetwork(ARNETWORKAL_Manager_t *manager, ARNETWORKAL_BLEDeviceManager_t deviceManager, ARNETWORKAL_BLEDevice_t device, int recvTimeoutSec, int *notificationIDs, int numberOfNotificationID);
+
+/**
+ * @brief Cancel the initialization BLE network.
+ * @param manager pointer on the Manager.
+ * @return error equal to ARNETWORKAL_OK if the initialization if successful Canceled otherwise see eARNETWORKAL_ERROR.
+ */
+eARNETWORKAL_ERROR ARNETWORKAL_Manager_CancelBLENetwork (ARNETWORKAL_Manager_t *manager);
+
+/**
+ * @brief close BLE network.
+ * @param manager pointer on the Manager
+ * @return error equal to ARNETWORKAL_OK if the initialization if successful otherwise see eARNETWORKAL_ERROR.
+ */
+eARNETWORKAL_ERROR ARNETWORKAL_Manager_CloseBLENetwork(ARNETWORKAL_Manager_t *manager);
+
+
+/**
+ * @brief initialize Mux network.
+ * @param manager pointer on the Manager
+ * @param[in] mux_ctx mux instance to use.
+ * @return error equal to ARNETWORKAL_OK if the initialization if successful otherwise see eARNETWORKAL_ERROR.
+ */
+eARNETWORKAL_ERROR ARNETWORKAL_Manager_InitMuxNetwork(ARNETWORKAL_Manager_t *manager, struct mux_ctx *ctx);
+
+/**
+ * @brief Cancel the initialization of the Mux network.
+ * @param manager pointer on the Manager.
+ * @return error equal to ARNETWORKAL_OK if the initialization if successful Canceled otherwise see eARNETWORKAL_ERROR.
+ */
+eARNETWORKAL_ERROR ARNETWORKAL_Manager_CancelMuxNetwork(ARNETWORKAL_Manager_t *manager);
+
+/**
+ * @brief close Mux network.
+ * @param manager pointer on the Manager
+ * @return error equal to ARNETWORKAL_OK if the initialization if successful otherwise see eARNETWORKAL_ERROR.
+ */
+eARNETWORKAL_ERROR ARNETWORKAL_Manager_CloseMuxNetwork(ARNETWORKAL_Manager_t *manager);
+
+/**
  * @brief set the OnDisconnect Callback
  * @warning Only call by the ARNetworkManager
  * @param manager pointer on the Manager

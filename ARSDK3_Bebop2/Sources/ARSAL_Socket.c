@@ -36,7 +36,9 @@
  */
 #include <config.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <libARSAL/ARSAL_Socket.h>
+#include <errno.h>
 
 #ifdef HAVE_SYS_UIO_H
 #include <sys/uio.h>
@@ -56,7 +58,7 @@
 /* SSIZE_MAX should normally be defined in limits.h. In case it's not, hope
  * compiler define __SIZE_MAX__ and derived SSIZE_MAX from it. */
 #ifndef SSIZE_MAX
-#define SSIZE_MAX (SIZE_MAX >> 1)
+#define SSIZE_MAX (__SIZE_MAX__ >> 1)
 #endif
 
 #ifndef HAVE_STRUCT_IOVEC
@@ -64,7 +66,7 @@ struct iovec
 {
 	void *iov_base;
 	size_t iov_len;
-};
+}
 #endif
 
 static ssize_t writev(int sockfd, const struct iovec *iov, int iovcnt)
@@ -76,8 +78,7 @@ static ssize_t writev(int sockfd, const struct iovec *iov, int iovcnt)
 
     if (iovcnt <= 0 || iovcnt > IOV_MAX)
     {
-		errno = EINVAL;
-		WSASetLastError(WSAEINVAL);
+        errno = EINVAL;
         return -1;
     }
 
@@ -86,8 +87,7 @@ static ssize_t writev(int sockfd, const struct iovec *iov, int iovcnt)
     {
         if (SSIZE_MAX - sum < iov[i].iov_len)
         {
-			errno = EINVAL;
-			WSASetLastError(WSAEINVAL);
+            errno = EINVAL;
             return -1;
         }
 
@@ -96,7 +96,7 @@ static ssize_t writev(int sockfd, const struct iovec *iov, int iovcnt)
 
     for (i = 0; i < iovcnt; i++)
     {
-		ret = send(sockfd, iov[i].iov_base, iov[i].iov_len, 0);
+        ret = write(sockfd, iov[i].iov_base, iov[i].iov_len);
         if (ret < 0)
         {
             return -1;
@@ -123,8 +123,7 @@ static ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
 
     if (iovcnt <= 0 || iovcnt > IOV_MAX)
     {
-		errno = EINVAL;
-		WSASetLastError(WSAEINVAL);
+        errno = EINVAL;
         return -1;
     }
 
@@ -133,8 +132,7 @@ static ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
     {
         if (SSIZE_MAX - sum < iov[i].iov_len)
         {
-			errno = EINVAL;
-			WSASetLastError(WSAEINVAL);
+            errno = EINVAL;
             return -1;
         }
 
@@ -143,7 +141,7 @@ static ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
 
     for (i = 0; i < iovcnt; i++)
     {
-        ret = recv(sockfd, iov[i].iov_base, iov[i].iov_len, 0);
+        ret = read(sockfd, iov[i].iov_base, iov[i].iov_len);
         if (ret < 0)
         {
             return -1;
@@ -164,46 +162,28 @@ static ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
 
 int ARSAL_Socket_Create(int domain, int type, int protocol)
 {
-	WSADATA wsaData;
-	int err = WSAStartup(MAKEWORD(2, 2), &wsaData);
-	if (err != 0)
-	{
-		errno = err;
-		return -1;
-	}
     return socket(domain, type, protocol);
 }
 
 int ARSAL_Socket_Connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 {
-	int err = connect(sockfd, addr, addrlen);
-	if (err == SOCKET_ERROR)
-	{
-		errno = WSAGetLastError();
-	}
-    return err;
+    return connect(sockfd, addr, addrlen);
 }
 
 ssize_t ARSAL_Socket_Sendto(int sockfd, const void *buf, size_t buflen, int flags, const struct sockaddr *dest_addr, socklen_t addrlen)
 {
-	int len = sendto(sockfd, buf, buflen, flags, dest_addr, addrlen);
-	if (len == SOCKET_ERROR)
-	{
-		errno = WSAGetLastError();
-	}
-	return len;
+    return sendto(sockfd, buf, buflen, flags, dest_addr, addrlen);
 }
 
 ssize_t ARSAL_Socket_Send(int sockfd, const void *buf, size_t buflen, int flags)
 {
-    ssize_t res = -1;
+    ssize_t res;
     int tries = 10;
     int i;
     for (i = 0; i < tries; i++)
     {
         res = send(sockfd, buf, buflen, flags);
-		errno = WSAGetLastError();
-        if (res >= 0 || errno != WSAECONNREFUSED)
+        if (res >= 0 || errno != ECONNREFUSED)
         {
             break;
         }
@@ -213,22 +193,12 @@ ssize_t ARSAL_Socket_Send(int sockfd, const void *buf, size_t buflen, int flags)
 
 ssize_t ARSAL_Socket_Recvfrom(int sockfd, void *buf, size_t buflen, int flags, struct sockaddr *src_addr, socklen_t *addrlen)
 {
-	int len = recvfrom(sockfd, buf, buflen, flags, src_addr, addrlen);
-	if (len == SOCKET_ERROR)
-	{
-		errno = WSAGetLastError();
-	}
-	return len;
+    return recvfrom(sockfd, buf, buflen, flags, src_addr, addrlen);
 }
 
 ssize_t ARSAL_Socket_Recv(int sockfd, void *buf, size_t buflen, int flags)
 {
-	int len = recv(sockfd, buf, buflen, flags);
-	if (len == SOCKET_ERROR)
-	{
-		errno = WSAGetLastError();
-	}
-    return len;
+    return recv(sockfd, buf, buflen, flags);
 }
 
 ssize_t ARSAL_Socket_Writev (int sockfd, const struct iovec *iov, int iovcnt)
@@ -243,72 +213,36 @@ ssize_t ARSAL_Socket_Readv (int sockfd, const struct iovec *iov, int iovcnt)
 
 int ARSAL_Socket_Bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 {
-	int err = bind(sockfd, addr, addrlen);
-	if (err == SOCKET_ERROR)
-	{
-		errno = WSAGetLastError();
-	}
-    return err;
+    return bind(sockfd, addr, addrlen);
 }
 
 int ARSAL_Socket_Listen(int sockfd, int backlog)
 {
-	int err = listen(sockfd, backlog);
-	if (err == SOCKET_ERROR)
-	{
-		errno = WSAGetLastError();
-	}
-    return err;
+    return listen(sockfd, backlog);
 }
 
 int ARSAL_Socket_Accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 {
-	SOCKET sock = accept(sockfd, addr, addrlen);
-	if (sock == INVALID_SOCKET)
-	{
-		errno = WSAGetLastError();
-	}
-	return sock;
+    return accept(sockfd, addr, addrlen);
 }
 
 int ARSAL_Socket_Close(int sockfd)
 {
-	int err = 0;
-	if(sockfd != INVALID_SOCKET)
-	{
-		err = closesocket(sockfd);
-	}
-	WSACleanup();
-	return err;
+    return close(sockfd);
 }
 
 int ARSAL_Socket_Setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen)
 {
-	int err = setsockopt(sockfd, level, optname, optval, optlen);
-	if (err == SOCKET_ERROR)
-	{
-		errno = WSAGetLastError();
-	}
-    return err;
+    return setsockopt(sockfd, level, optname, optval, optlen);
 }
 
 int ARSAL_Socket_Getsockopt(int sockfd, int level, int optname, void *optval, socklen_t *optlen)
 {
-	int err = getsockopt(sockfd, level, optname, optval, optlen);
-	if (err == SOCKET_ERROR)
-	{
-		errno = WSAGetLastError();
-	}
-	return err;
+    return getsockopt(sockfd, level, optname, optval, optlen);
 }
 
 int ARSAL_Socket_Getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 {
-    int err = getsockname(sockfd, addr, addrlen);
-	if (err == SOCKET_ERROR)
-	{
-		errno = WSAGetLastError();
-	}
-	return err;
+    return getsockname(sockfd, addr, addrlen);
 }
 

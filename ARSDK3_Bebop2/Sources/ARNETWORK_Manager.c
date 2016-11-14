@@ -704,7 +704,6 @@ eARNETWORK_ERROR ARNETWORK_Manager_ReadDataWithTimeout (ARNETWORK_Manager_t *man
                 break;
 
             default:
-				printf("%d\n", errno);
                 error = ARNETWORK_ERROR_SEMAPHORE;
                 break;
             }

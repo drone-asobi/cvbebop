@@ -39,6 +39,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include <libARSAL/ARSAL_Print.h>
 #include <libARSAL/ARSAL_Socket.h>
@@ -73,6 +74,10 @@ static int ARCONTROLLER_Network_GetAvailableSocketPort(void)
     if (fd < 0)
         goto error;
 
+    ret = fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) | O_NONBLOCK);
+    if (ret < 0)
+        goto error;
+
     /*  bind to a OS-assigned random port */
     memset(&addr, 0, sizeof(addr));
     addr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -81,7 +86,7 @@ static int ARCONTROLLER_Network_GetAvailableSocketPort(void)
     ret = ARSAL_Socket_Bind(fd, (struct sockaddr *)&addr, sizeof(addr));
     if (ret < 0) {
         ARSAL_PRINT(ARSAL_PRINT_ERROR, ARCONTROLLER_NETWORK_TAG,
-                    "bind fd=%d, addr='0.0.0.0', port=0: error='[%d]%s'", fd, errno, strerror(errno));
+                    "bind fd=%d, addr='0.0.0.0', port=0: error='%s'", fd, strerror(errno));
         goto error;
     }
 
@@ -89,7 +94,7 @@ static int ARCONTROLLER_Network_GetAvailableSocketPort(void)
     addrlen = sizeof(addr);
     ret = ARSAL_Socket_Getsockname(fd, (struct sockaddr *)&addr, &addrlen);
     if (ret < 0) {
-        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARCONTROLLER_NETWORK_TAG, "getsockname fd=%d, error='[%d]%s'", fd, errno, strerror(errno));
+        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARCONTROLLER_NETWORK_TAG, "getsockname fd=%d, error='%s'", fd, strerror(errno));
         goto error;
     }
 
@@ -219,6 +224,17 @@ ARCONTROLLER_Network_t *ARCONTROLLER_Network_New (ARDISCOVERY_Device_t *discover
 
         // Add callbacks for the connection json part
         dicoveryError = ARDISCOVERY_Device_WifiAddConnectionCallbacks (networkController->discoveryDevice, ARCONTROLLER_Network_OnSendJson, ARCONTROLLER_Network_OnReceiveJson, networkController);
+        if (dicoveryError != ARDISCOVERY_OK)
+        {
+            localError = ARCONTROLLER_ERROR_INIT_DEVICE_JSON_CALLBACK;
+        }
+    }
+    // or an usb device
+    else if ((localError == ARCONTROLLER_OK) && 
+             (ARDISCOVERY_getProductService (networkController->discoveryDevice->productID) == ARDISCOVERY_PRODUCT_USBSERVICE))
+    {
+        // Add callbacks for the connection json part
+        dicoveryError = ARDISCOVERY_Device_UsbAddConnectionCallbacks (networkController->discoveryDevice, ARCONTROLLER_Network_OnSendJson, ARCONTROLLER_Network_OnReceiveJson, networkController);
         if (dicoveryError != ARDISCOVERY_OK)
         {
             localError = ARCONTROLLER_ERROR_INIT_DEVICE_JSON_CALLBACK;
@@ -1257,7 +1273,7 @@ void *ARCONTROLLER_Network_ReaderRun (void *data)
             else
             {
                 //sleep
-                Sleep (1000); //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! replace by signal 
+                sleep (1); //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! replace by signal 
             }
         }
     }

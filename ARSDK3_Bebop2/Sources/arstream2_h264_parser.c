@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <math.h>
+#include <arpa/inet.h>
 
 #include <libARSAL/ARSAL_Print.h>
 

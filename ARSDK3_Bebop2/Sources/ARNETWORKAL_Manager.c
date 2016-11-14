@@ -55,6 +55,10 @@
 #include <libARNetworkAL/ARNETWORKAL_Error.h>
 #include "Wifi/ARNETWORKAL_WifiNetwork.h"
 
+#if defined(HAVE_COREBLUETOOTH_COREBLUETOOTH_H)
+#include "BLE/ARNETWORKAL_BLENetwork.h"
+#endif
+
 #include "ARNETWORKAL_Manager.h"
 
 /*****************************************
@@ -209,6 +213,96 @@ eARNETWORKAL_ERROR ARNETWORKAL_Manager_CloseWifiNetwork (ARNETWORKAL_Manager_t *
     return error;
 }
 
+eARNETWORKAL_ERROR ARNETWORKAL_Manager_InitBLENetwork (ARNETWORKAL_Manager_t *manager, ARNETWORKAL_BLEDeviceManager_t deviceManager, ARNETWORKAL_BLEDevice_t device, int recvTimeoutSec, int *notificationIDs, int numberOfNotificationID)
+{
+    /* local declarations */
+    eARNETWORKAL_ERROR error = ARNETWORKAL_OK;
+
+#if defined(HAVE_COREBLUETOOTH_COREBLUETOOTH_H)
+    /* -- Initialize the BLE Network -- */
+    /* check parameters*/
+    if (manager == NULL)
+    {
+        error = ARNETWORKAL_ERROR_BAD_PARAMETER;
+    }
+
+    if(error == ARNETWORKAL_OK)
+    {
+        error = ARNETWORKAL_BLENetwork_New(manager);
+    }
+
+    if (error == ARNETWORKAL_OK)
+    {
+        error = ARNETWORKAL_BLENetwork_Connect(manager, deviceManager, device, recvTimeoutSec, notificationIDs, numberOfNotificationID);
+    }
+
+    if(error == ARNETWORKAL_OK)
+    {
+        manager->pushFrame = ARNETWORKAL_BLENetwork_PushFrame;
+        manager->popFrame = ARNETWORKAL_BLENetwork_PopFrame;
+        manager->send = ARNETWORKAL_BLENetwork_Send;
+        manager->receive = ARNETWORKAL_BLENetwork_Receive;
+        manager->unlock = ARNETWORKAL_BLENetwork_Unlock;
+        manager->getBandwidth = ARNETWORKAL_BLENetwork_GetBandwidth;
+        manager->bandwidthThread = ARNETWORKAL_BLENetwork_BandwidthThread;
+        manager->maxIds = ARNETWORKAL_MANAGER_BLE_ID_MAX;
+        manager->maxBufferSize = ARNETWORKAL_BLENETWORK_MAX_BUFFER_SIZE;
+        manager->setOnDisconnectCallback = ARNETWORKAL_BLENetwork_SetOnDisconnectCallback;
+    }
+    else
+    {
+        ARNETWORKAL_BLENetwork_Delete(manager);
+    }
+
+#else
+    error = ARNETWORKAL_ERROR_NETWORK_TYPE;
+#endif
+
+    return error;
+}
+
+eARNETWORKAL_ERROR ARNETWORKAL_Manager_CancelBLENetwork (ARNETWORKAL_Manager_t *manager)
+{
+    /* Cancel initBLENetwork */
+    /* local declarations */
+    eARNETWORKAL_ERROR error = ARNETWORKAL_OK;
+
+#if defined(HAVE_COREBLUETOOTH_COREBLUETOOTH_H)
+    /* check parameters*/
+    if (manager == NULL)
+    {
+        error = ARNETWORKAL_ERROR_BAD_PARAMETER;
+    }
+
+    if( error == ARNETWORKAL_OK)
+    {
+        error = ARNETWORKAL_BLENetwork_Cancel(manager);
+    }
+#else
+    error = ARNETWORKAL_ERROR_NETWORK_TYPE;
+#endif
+
+    return error;
+}
+
+eARNETWORKAL_ERROR ARNETWORKAL_Manager_CloseBLENetwork (ARNETWORKAL_Manager_t *manager)
+{
+    /** local declarations */
+    eARNETWORKAL_ERROR error = ARNETWORKAL_OK;
+
+#if defined(HAVE_COREBLUETOOTH_COREBLUETOOTH_H)
+    /** -- Close the BLE Network -- */
+    if(manager)
+    {
+        error = ARNETWORKAL_BLENetwork_Delete(manager);
+    }
+#else
+    error = ARNETWORKAL_ERROR_NETWORK_TYPE;
+#endif
+
+    return error;
+}
+
 void ARNETWORKAL_Manager_Delete (ARNETWORKAL_Manager_t **manager)
 {
     /** -- Delete the Manager -- */
@@ -220,6 +314,7 @@ void ARNETWORKAL_Manager_Delete (ARNETWORKAL_Manager_t **manager)
             if ((*manager)->dumpFile != NULL)
             {
                 fflush ((*manager)->dumpFile);
+                fsync (fileno ((*manager)->dumpFile));
                 fclose ((*manager)->dumpFile);
             }
             free (*manager);

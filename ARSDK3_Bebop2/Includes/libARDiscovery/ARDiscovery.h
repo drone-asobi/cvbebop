@@ -31,10 +31,10 @@
 #ifndef _ARDISCOVERY_H_
 #define _ARDISCOVERY_H_
 
-#include <stdint.h>
 #include <libARDiscovery/ARDISCOVERY_Connection.h>
 #include <libARDiscovery/ARDISCOVERY_Discovery.h>
 #include <libARDiscovery/ARDISCOVERY_NetworkConfiguration.h>
+#include <libARDiscovery/ARDISCOVERY_MuxDiscovery.h>
 #include <libARDiscovery/ARDISCOVERY_Device.h>
 #include <libARDiscovery/ARDISCOVERY_Error.h>
 

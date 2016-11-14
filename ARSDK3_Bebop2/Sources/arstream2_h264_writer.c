@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <math.h>
+#include <arpa/inet.h>
 
 #include <libARStream2/arstream2_h264_writer.h>
 #include "arstream2_h264.h"
@@ -777,7 +778,7 @@ static int ARSTREAM2_H264Writer_WriteSeiPayload_userDataUnregistered(ARSTREAM2_H
 }
 
 
-eARSTREAM2_ERROR ARSTREAM2_H264Writer_WriteSeiNalu(ARSTREAM2_H264Writer_Handle writerHandle, ARSTREAM2_H264Writer_PictureTimingSei_t *pictureTiming,
+int ARSTREAM2_H264Writer_WriteSeiNalu(ARSTREAM2_H264Writer_Handle writerHandle, ARSTREAM2_H264Writer_PictureTimingSei_t *pictureTiming,
                                       ARSTREAM2_H264Writer_RecoveryPointSei_t *recoveryPoint, unsigned int userDataUnregisteredCount,
                                       const uint8_t *pbUserDataUnregistered[], unsigned int userDataUnregisteredSize[],
                                       uint8_t *pbOutputBuf, unsigned int outputBufSize, unsigned int *outputSize)
