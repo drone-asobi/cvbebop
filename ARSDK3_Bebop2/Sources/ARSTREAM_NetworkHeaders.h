@@ -82,7 +82,7 @@ typedef struct {
     uint8_t frameFlags; /**< Infos on the current frame */
     uint8_t fragmentNumber; /**< Index of the current fragment in current frame */
     uint8_t fragmentsPerFrame; /**< Number of fragments in current frame */
-} __attribute__ ((packed)) ARSTREAM_NetworkHeaders_DataHeader_t;
+} ARSTREAM_NetworkHeaders_DataHeader_t;
 
 /* frameFlags structure :
  *  x x x x x x x x
@@ -110,7 +110,7 @@ typedef struct {
     uint16_t frameNumber; /**< id of the current frame */
     uint64_t highPacketsAck; /**< Upper 64 packets bitfield */
     uint64_t lowPacketsAck; /**< Lower 64 packets bitfield */
-} __attribute__ ((packed)) ARSTREAM_NetworkHeaders_AckPacket_t;
+} ARSTREAM_NetworkHeaders_AckPacket_t;
 
 /**
  * @brief Header for v2 stream data frames (RTP-like, see RFC3550)
@@ -120,7 +120,7 @@ typedef struct {
     uint16_t seqNum;
     uint32_t timestamp;
     uint32_t ssrc;
-} __attribute__ ((packed)) ARSTREAM_NetworkHeaders_DataHeader2_t;
+} ARSTREAM_NetworkHeaders_DataHeader2_t;
 
 #define ARSTREAM_NETWORK_MAX_RTP_PAYLOAD_SIZE (0xFFFF - sizeof(ARSTREAM_NetworkHeaders_DataHeader2_t) - ARSTREAM_NETWORK_UDP_HEADER_SIZE - ARSTREAM_NETWORK_IP_HEADER_SIZE)
 
@@ -134,7 +134,7 @@ typedef struct {
     uint32_t receiveTimestampL;
     uint32_t transmitTimestampH;
     uint32_t transmitTimestampL;
-} __attribute__ ((packed)) ARSTREAM_NetworkHeaders_ClockFrame_t;
+} ARSTREAM_NetworkHeaders_ClockFrame_t;
 
 /*
  * Functions declarations
