@@ -6002,7 +6002,7 @@ void ARCONTROLLER_Device_OnSkyControllerConnectionChangedReceived (ARCONTROLLER_
                 if (error == ARCONTROLLER_OK)
                 {
                     deviceController->privatePart->extensionProduct = product;
-                    if (asprintf((&(deviceController->privatePart->extensionName)), "%s", productName) <= 0)
+                    if (sprintf((&(deviceController->privatePart->extensionName)), "%s", productName) <= 0)
                     {
                         error = ARCONTROLLER_ERROR_ALLOC;
                     }
@@ -6625,7 +6625,7 @@ void *ARCONTROLLER_Device_ControllerLooperThread (void *data)
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
     ARCONTROLLER_Device_t *deviceController = data;
-    u_int8_t cmdBuffer[ARCONTROLLER_DEVICE_DEFAULT_LOOPER_CMD_BUFFER_SIZE];
+    uint8_t cmdBuffer[ARCONTROLLER_DEVICE_DEFAULT_LOOPER_CMD_BUFFER_SIZE];
     int controllerLoopIntervalUs = 0;
     
     // Check parameters
@@ -6651,7 +6651,7 @@ void *ARCONTROLLER_Device_ControllerLooperThread (void *data)
                (deviceController->privatePart->state == ARCONTROLLER_DEVICE_STATE_PAUSED))
         {
             //TODO manager pause !!!!!!!!!!!!!!!!!!!!!!!!!
-            usleep (controllerLoopIntervalUs);
+            Sleep (controllerLoopIntervalUs / 1000);
             
             ARSAL_Mutex_Lock(&(deviceController->privatePart->mutex));
             

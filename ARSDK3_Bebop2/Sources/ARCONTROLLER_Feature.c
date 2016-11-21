@@ -437,7 +437,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Generic_SendDefault (ARCONTROLLER_FEATU
     // -- Send a command <code>Default</code> in project <code>Generic</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -1256,7 +1256,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingFlatTrim (ARCONTRO
     // -- Send a command <code>PilotingFlatTrim</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -1291,7 +1291,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingTakeOff (ARCONTROL
     // -- Send a command <code>PilotingTakeOff</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -1326,7 +1326,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingPCMD (ARCONTROLLER
     // -- Send a command <code>PilotingPCMD</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -1384,7 +1384,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SetPilotingPCMD (ARCONTROLLER_
     return error;
 }
 
-eARCONTROLLER_ERROR ARCONTROLLER_ARDrone3_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_ARDrone3_t *feature, u_int8_t *cmdBuffer, int32_t cmdBufferSize)
+eARCONTROLLER_ERROR ARCONTROLLER_ARDrone3_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_ARDrone3_t *feature, uint8_t *cmdBuffer, int32_t cmdBufferSize)
 {
     // -- Send the a command <code>PilotingPCMD</code> in project <code>ARDrone3</code> with the parame set beforehand  --
     
@@ -1569,7 +1569,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingLanding (ARCONTROL
     // -- Send a command <code>PilotingLanding</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -1604,7 +1604,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingEmergency (ARCONTR
     // -- Send a command <code>PilotingEmergency</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -1639,7 +1639,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingNavigateHome (ARCO
     // -- Send a command <code>PilotingNavigateHome</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -1674,7 +1674,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingAutoTakeOffMode (A
     // -- Send a command <code>PilotingAutoTakeOffMode</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -1709,7 +1709,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingMoveBy (ARCONTROLL
     // -- Send a command <code>PilotingMoveBy</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -1744,7 +1744,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingUserTakeOff (ARCON
     // -- Send a command <code>PilotingUserTakeOff</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -1779,7 +1779,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingCircle (ARCONTROLL
     // -- Send a command <code>PilotingCircle</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -1814,7 +1814,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendAnimationsFlip (ARCONTROLL
     // -- Send a command <code>AnimationsFlip</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -1849,7 +1849,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendCameraOrientation (ARCONTR
     // -- Send a command <code>CameraOrientation</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -1903,7 +1903,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SetCameraOrientation (ARCONTRO
     return error;
 }
 
-eARCONTROLLER_ERROR ARCONTROLLER_ARDrone3_SendCameraOrientationStruct (ARCONTROLLER_FEATURE_ARDrone3_t *feature, u_int8_t *cmdBuffer, int32_t cmdBufferSize)
+eARCONTROLLER_ERROR ARCONTROLLER_ARDrone3_SendCameraOrientationStruct (ARCONTROLLER_FEATURE_ARDrone3_t *feature, uint8_t *cmdBuffer, int32_t cmdBufferSize)
 {
     // -- Send the a command <code>CameraOrientation</code> in project <code>ARDrone3</code> with the parame set beforehand  --
     
@@ -1996,7 +1996,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendMediaRecordPicture (ARCONT
     // -- Send a command <code>MediaRecordPicture</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2031,7 +2031,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendMediaRecordVideo (ARCONTRO
     // -- Send a command <code>MediaRecordVideo</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2066,7 +2066,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendMediaRecordPictureV2 (ARCO
     // -- Send a command <code>MediaRecordPictureV2</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2101,7 +2101,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendMediaRecordVideoV2 (ARCONT
     // -- Send a command <code>MediaRecordVideoV2</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2136,7 +2136,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendNetworkWifiScan (ARCONTROL
     // -- Send a command <code>NetworkWifiScan</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2171,7 +2171,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendNetworkWifiAuthChannel (AR
     // -- Send a command <code>NetworkWifiAuthChannel</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2206,7 +2206,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsMaxAltitud
     // -- Send a command <code>PilotingSettingsMaxAltitude</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2241,7 +2241,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsMaxTilt (A
     // -- Send a command <code>PilotingSettingsMaxTilt</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2276,7 +2276,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsAbsolutCon
     // -- Send a command <code>PilotingSettingsAbsolutControl</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2311,7 +2311,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsMaxDistanc
     // -- Send a command <code>PilotingSettingsMaxDistance</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2346,7 +2346,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsNoFlyOverM
     // -- Send a command <code>PilotingSettingsNoFlyOverMaxDistance</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2381,7 +2381,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsSetAutonom
     // -- Send a command <code>PilotingSettingsSetAutonomousFlightMaxHorizontalSpeed</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2416,7 +2416,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsSetAutonom
     // -- Send a command <code>PilotingSettingsSetAutonomousFlightMaxVerticalSpeed</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2451,7 +2451,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsSetAutonom
     // -- Send a command <code>PilotingSettingsSetAutonomousFlightMaxHorizontalAcceleration</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2486,7 +2486,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsSetAutonom
     // -- Send a command <code>PilotingSettingsSetAutonomousFlightMaxVerticalAcceleration</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2521,7 +2521,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsSetAutonom
     // -- Send a command <code>PilotingSettingsSetAutonomousFlightMaxRotationSpeed</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2556,7 +2556,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsBankedTurn
     // -- Send a command <code>PilotingSettingsBankedTurn</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2591,7 +2591,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsMinAltitud
     // -- Send a command <code>PilotingSettingsMinAltitude</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2626,7 +2626,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsCirclingDi
     // -- Send a command <code>PilotingSettingsCirclingDirection</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2661,7 +2661,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsCirclingRa
     // -- Send a command <code>PilotingSettingsCirclingRadius</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2696,7 +2696,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsCirclingAl
     // -- Send a command <code>PilotingSettingsCirclingAltitude</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2731,7 +2731,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPilotingSettingsPitchMode 
     // -- Send a command <code>PilotingSettingsPitchMode</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2766,7 +2766,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendSpeedSettingsMaxVerticalSp
     // -- Send a command <code>SpeedSettingsMaxVerticalSpeed</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2801,7 +2801,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendSpeedSettingsMaxRotationSp
     // -- Send a command <code>SpeedSettingsMaxRotationSpeed</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2836,7 +2836,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendSpeedSettingsHullProtectio
     // -- Send a command <code>SpeedSettingsHullProtection</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2871,7 +2871,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendSpeedSettingsOutdoor (ARCO
     // -- Send a command <code>SpeedSettingsOutdoor</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2906,7 +2906,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendSpeedSettingsMaxPitchRollR
     // -- Send a command <code>SpeedSettingsMaxPitchRollRotationSpeed</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2941,7 +2941,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendNetworkSettingsWifiSelecti
     // -- Send a command <code>NetworkSettingsWifiSelection</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -2976,7 +2976,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendNetworkSettingsWifiSecurit
     // -- Send a command <code>NetworkSettingsWifiSecurity</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3011,7 +3011,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPictureSettingsPictureForm
     // -- Send a command <code>PictureSettingsPictureFormatSelection</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3046,7 +3046,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPictureSettingsAutoWhiteBa
     // -- Send a command <code>PictureSettingsAutoWhiteBalanceSelection</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3081,7 +3081,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPictureSettingsExpositionS
     // -- Send a command <code>PictureSettingsExpositionSelection</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3116,7 +3116,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPictureSettingsSaturationS
     // -- Send a command <code>PictureSettingsSaturationSelection</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3151,7 +3151,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPictureSettingsTimelapseSe
     // -- Send a command <code>PictureSettingsTimelapseSelection</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3186,7 +3186,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPictureSettingsVideoAutore
     // -- Send a command <code>PictureSettingsVideoAutorecordSelection</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3221,7 +3221,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPictureSettingsVideoStabil
     // -- Send a command <code>PictureSettingsVideoStabilizationMode</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3256,7 +3256,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPictureSettingsVideoRecord
     // -- Send a command <code>PictureSettingsVideoRecordingMode</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3291,7 +3291,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPictureSettingsVideoFramer
     // -- Send a command <code>PictureSettingsVideoFramerate</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3326,7 +3326,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendPictureSettingsVideoResolu
     // -- Send a command <code>PictureSettingsVideoResolutions</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3361,7 +3361,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendMediaStreamingVideoEnable 
     // -- Send a command <code>MediaStreamingVideoEnable</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3396,7 +3396,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendMediaStreamingVideoStreamM
     // -- Send a command <code>MediaStreamingVideoStreamMode</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3431,7 +3431,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendGPSSettingsSetHome (ARCONT
     // -- Send a command <code>GPSSettingsSetHome</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3466,7 +3466,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendGPSSettingsResetHome (ARCO
     // -- Send a command <code>GPSSettingsResetHome</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3501,7 +3501,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendGPSSettingsSendControllerG
     // -- Send a command <code>GPSSettingsSendControllerGPS</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3536,7 +3536,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendGPSSettingsHomeType (ARCON
     // -- Send a command <code>GPSSettingsHomeType</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3571,7 +3571,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendGPSSettingsReturnHomeDelay
     // -- Send a command <code>GPSSettingsReturnHomeDelay</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3606,7 +3606,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendAntiflickeringElectricFreq
     // -- Send a command <code>AntiflickeringElectricFrequency</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -3641,7 +3641,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ARDrone3_SendAntiflickeringSetMode (ARC
     // -- Send a command <code>AntiflickeringSetMode</code> in project <code>ARDrone3</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -20812,7 +20812,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendNetworkDisconnect (ARCONTROL
     // -- Send a command <code>NetworkDisconnect</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -20847,7 +20847,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendSettingsAllSettings (ARCONTR
     // -- Send a command <code>SettingsAllSettings</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -20882,7 +20882,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendSettingsReset (ARCONTROLLER_
     // -- Send a command <code>SettingsReset</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -20917,7 +20917,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendSettingsProductName (ARCONTR
     // -- Send a command <code>SettingsProductName</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -20952,7 +20952,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendSettingsCountry (ARCONTROLLE
     // -- Send a command <code>SettingsCountry</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -20987,7 +20987,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendSettingsAutoCountry (ARCONTR
     // -- Send a command <code>SettingsAutoCountry</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21022,7 +21022,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendCommonAllStates (ARCONTROLLE
     // -- Send a command <code>CommonAllStates</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21057,7 +21057,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendCommonCurrentDate (ARCONTROL
     // -- Send a command <code>CommonCurrentDate</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21092,7 +21092,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendCommonCurrentTime (ARCONTROL
     // -- Send a command <code>CommonCurrentTime</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21127,7 +21127,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendCommonReboot (ARCONTROLLER_F
     // -- Send a command <code>CommonReboot</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21162,7 +21162,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendOverHeatSwitchOff (ARCONTROL
     // -- Send a command <code>OverHeatSwitchOff</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21197,7 +21197,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendOverHeatVentilate (ARCONTROL
     // -- Send a command <code>OverHeatVentilate</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21232,7 +21232,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendControllerIsPiloting (ARCONT
     // -- Send a command <code>ControllerIsPiloting</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21267,7 +21267,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendWifiSettingsOutdoorSetting (
     // -- Send a command <code>WifiSettingsOutdoorSetting</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21302,7 +21302,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendMavlinkStart (ARCONTROLLER_F
     // -- Send a command <code>MavlinkStart</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21337,7 +21337,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendMavlinkPause (ARCONTROLLER_F
     // -- Send a command <code>MavlinkPause</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21372,7 +21372,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendMavlinkStop (ARCONTROLLER_FE
     // -- Send a command <code>MavlinkStop</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21407,7 +21407,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendCalibrationMagnetoCalibratio
     // -- Send a command <code>CalibrationMagnetoCalibration</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21442,7 +21442,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendCalibrationPitotCalibration 
     // -- Send a command <code>CalibrationPitotCalibration</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21477,7 +21477,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendGPSControllerPositionForRun 
     // -- Send a command <code>GPSControllerPositionForRun</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21512,7 +21512,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendAudioControllerReadyForStrea
     // -- Send a command <code>AudioControllerReadyForStreaming</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21547,7 +21547,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendHeadlightsIntensity (ARCONTR
     // -- Send a command <code>HeadlightsIntensity</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21582,7 +21582,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendAnimationsStartAnimation (AR
     // -- Send a command <code>AnimationsStartAnimation</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21617,7 +21617,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendAnimationsStopAnimation (ARC
     // -- Send a command <code>AnimationsStopAnimation</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21652,7 +21652,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendAnimationsStopAllAnimations 
     // -- Send a command <code>AnimationsStopAllAnimations</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21687,7 +21687,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendAccessoryConfig (ARCONTROLLE
     // -- Send a command <code>AccessoryConfig</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -21722,7 +21722,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Common_SendChargerSetMaxChargeRate (ARC
     // -- Send a command <code>ChargerSetMaxChargeRate</code> in project <code>Common</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -32885,7 +32885,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ControllerInfo_SendGps (ARCONTROLLER_FE
     // -- Send a command <code>Gps</code> in project <code>ControllerInfo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -32920,7 +32920,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_ControllerInfo_SendBarometer (ARCONTROL
     // -- Send a command <code>Barometer</code> in project <code>ControllerInfo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -33263,7 +33263,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Debug_SendGetAllSettings (ARCONTROLLER_
     // -- Send a command <code>GetAllSettings</code> in project <code>Debug</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -33298,7 +33298,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Debug_SendSetSetting (ARCONTROLLER_FEAT
     // -- Send a command <code>SetSetting</code> in project <code>Debug</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -34325,7 +34325,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_DroneManager_SendDiscoverDrones (ARCONT
     // -- Send a command <code>DiscoverDrones</code> in project <code>DroneManager</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -34360,7 +34360,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_DroneManager_SendConnect (ARCONTROLLER_
     // -- Send a command <code>Connect</code> in project <code>DroneManager</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -34395,7 +34395,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_DroneManager_SendForget (ARCONTROLLER_F
     // -- Send a command <code>Forget</code> in project <code>DroneManager</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36115,7 +36115,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendPilotingPCMD (ARCONTROL
     // -- Send a command <code>PilotingPCMD</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36170,7 +36170,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SetPilotingPCMD (ARCONTROLL
     return error;
 }
 
-eARCONTROLLER_ERROR ARCONTROLLER_JumpingSumo_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_JumpingSumo_t *feature, u_int8_t *cmdBuffer, int32_t cmdBufferSize)
+eARCONTROLLER_ERROR ARCONTROLLER_JumpingSumo_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_JumpingSumo_t *feature, uint8_t *cmdBuffer, int32_t cmdBufferSize)
 {
     // -- Send the a command <code>PilotingPCMD</code> in project <code>JumpingSumo</code> with the parame set beforehand  --
     
@@ -36286,7 +36286,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendPilotingPosture (ARCONT
     // -- Send a command <code>PilotingPosture</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36321,7 +36321,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendPilotingAddCapOffset (A
     // -- Send a command <code>PilotingAddCapOffset</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36356,7 +36356,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendAnimationsJumpStop (ARC
     // -- Send a command <code>AnimationsJumpStop</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36391,7 +36391,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendAnimationsJumpCancel (A
     // -- Send a command <code>AnimationsJumpCancel</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36426,7 +36426,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendAnimationsJumpLoad (ARC
     // -- Send a command <code>AnimationsJumpLoad</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36461,7 +36461,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendAnimationsJump (ARCONTR
     // -- Send a command <code>AnimationsJump</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36496,7 +36496,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendAnimationsSimpleAnimati
     // -- Send a command <code>AnimationsSimpleAnimation</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36531,7 +36531,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendMediaRecordPicture (ARC
     // -- Send a command <code>MediaRecordPicture</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36566,7 +36566,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendMediaRecordVideo (ARCON
     // -- Send a command <code>MediaRecordVideo</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36601,7 +36601,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendMediaRecordPictureV2 (A
     // -- Send a command <code>MediaRecordPictureV2</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36636,7 +36636,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendMediaRecordVideoV2 (ARC
     // -- Send a command <code>MediaRecordVideoV2</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36671,7 +36671,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendNetworkSettingsWifiSele
     // -- Send a command <code>NetworkSettingsWifiSelection</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36706,7 +36706,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendNetworkWifiScan (ARCONT
     // -- Send a command <code>NetworkWifiScan</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36741,7 +36741,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendNetworkWifiAuthChannel 
     // -- Send a command <code>NetworkWifiAuthChannel</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36776,7 +36776,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendAudioSettingsMasterVolu
     // -- Send a command <code>AudioSettingsMasterVolume</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36811,7 +36811,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendAudioSettingsTheme (ARC
     // -- Send a command <code>AudioSettingsTheme</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36846,7 +36846,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendRoadPlanAllScriptsMetad
     // -- Send a command <code>RoadPlanAllScriptsMetadata</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36881,7 +36881,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendRoadPlanScriptUploaded 
     // -- Send a command <code>RoadPlanScriptUploaded</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36916,7 +36916,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendRoadPlanScriptDelete (A
     // -- Send a command <code>RoadPlanScriptDelete</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36951,7 +36951,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendRoadPlanPlayScript (ARC
     // -- Send a command <code>RoadPlanPlayScript</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -36986,7 +36986,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendSpeedSettingsOutdoor (A
     // -- Send a command <code>SpeedSettingsOutdoor</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -37021,7 +37021,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendMediaStreamingVideoEnab
     // -- Send a command <code>MediaStreamingVideoEnable</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -37056,7 +37056,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_JumpingSumo_SendVideoSettingsAutorecord
     // -- Send a command <code>VideoSettingsAutorecord</code> in project <code>JumpingSumo</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -43253,7 +43253,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Mapper_SendGrab (ARCONTROLLER_FEATURE_M
     // -- Send a command <code>Grab</code> in project <code>Mapper</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -43288,7 +43288,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Mapper_SendMapButtonAction (ARCONTROLLE
     // -- Send a command <code>MapButtonAction</code> in project <code>Mapper</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -43323,7 +43323,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Mapper_SendMapAxisAction (ARCONTROLLER_
     // -- Send a command <code>MapAxisAction</code> in project <code>Mapper</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -43358,7 +43358,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Mapper_SendResetMapping (ARCONTROLLER_F
     // -- Send a command <code>ResetMapping</code> in project <code>Mapper</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -43393,7 +43393,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Mapper_SendSetExpo (ARCONTROLLER_FEATUR
     // -- Send a command <code>SetExpo</code> in project <code>Mapper</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -43428,7 +43428,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Mapper_SendSetInverted (ARCONTROLLER_FE
     // -- Send a command <code>SetInverted</code> in project <code>Mapper</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46132,7 +46132,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendPilotingFlatTrim (ARCONTR
     // -- Send a command <code>PilotingFlatTrim</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46167,7 +46167,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendPilotingTakeOff (ARCONTRO
     // -- Send a command <code>PilotingTakeOff</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46202,7 +46202,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendPilotingPCMD (ARCONTROLLE
     // -- Send a command <code>PilotingPCMD</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46260,7 +46260,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SetPilotingPCMD (ARCONTROLLER
     return error;
 }
 
-eARCONTROLLER_ERROR ARCONTROLLER_MiniDrone_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_MiniDrone_t *feature, u_int8_t *cmdBuffer, int32_t cmdBufferSize)
+eARCONTROLLER_ERROR ARCONTROLLER_MiniDrone_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_MiniDrone_t *feature, uint8_t *cmdBuffer, int32_t cmdBufferSize)
 {
     // -- Send the a command <code>PilotingPCMD</code> in project <code>MiniDrone</code> with the parame set beforehand  --
     
@@ -46445,7 +46445,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendPilotingLanding (ARCONTRO
     // -- Send a command <code>PilotingLanding</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46480,7 +46480,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendPilotingEmergency (ARCONT
     // -- Send a command <code>PilotingEmergency</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46515,7 +46515,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendPilotingAutoTakeOffMode (
     // -- Send a command <code>PilotingAutoTakeOffMode</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46550,7 +46550,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendPilotingFlyingMode (ARCON
     // -- Send a command <code>PilotingFlyingMode</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46585,7 +46585,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendPilotingPlaneGearBox (ARC
     // -- Send a command <code>PilotingPlaneGearBox</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46620,7 +46620,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendAnimationsFlip (ARCONTROL
     // -- Send a command <code>AnimationsFlip</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46655,7 +46655,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendAnimationsCap (ARCONTROLL
     // -- Send a command <code>AnimationsCap</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46690,7 +46690,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendMediaRecordPicture (ARCON
     // -- Send a command <code>MediaRecordPicture</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46725,7 +46725,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendMediaRecordPictureV2 (ARC
     // -- Send a command <code>MediaRecordPictureV2</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46760,7 +46760,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendPilotingSettingsMaxAltitu
     // -- Send a command <code>PilotingSettingsMaxAltitude</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46795,7 +46795,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendPilotingSettingsMaxTilt (
     // -- Send a command <code>PilotingSettingsMaxTilt</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46830,7 +46830,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendPilotingSettingsPlaneMode
     // -- Send a command <code>PilotingSettingsPlaneModePitch</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46865,7 +46865,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendSpeedSettingsMaxVerticalS
     // -- Send a command <code>SpeedSettingsMaxVerticalSpeed</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46900,7 +46900,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendSpeedSettingsMaxRotationS
     // -- Send a command <code>SpeedSettingsMaxRotationSpeed</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46935,7 +46935,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendSpeedSettingsWheels (ARCO
     // -- Send a command <code>SpeedSettingsWheels</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -46970,7 +46970,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendSpeedSettingsMaxHorizonta
     // -- Send a command <code>SpeedSettingsMaxHorizontalSpeed</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -47005,7 +47005,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendSpeedSettingsMaxPlaneMode
     // -- Send a command <code>SpeedSettingsMaxPlaneModeRotationSpeed</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -47040,7 +47040,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendSettingsCutOutMode (ARCON
     // -- Send a command <code>SettingsCutOutMode</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -47075,7 +47075,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendGPSControllerLatitudeForR
     // -- Send a command <code>GPSControllerLatitudeForRun</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -47110,7 +47110,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendGPSControllerLongitudeFor
     // -- Send a command <code>GPSControllerLongitudeForRun</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -47145,7 +47145,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendConfigurationControllerTy
     // -- Send a command <code>ConfigurationControllerType</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -47180,7 +47180,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendConfigurationControllerNa
     // -- Send a command <code>ConfigurationControllerName</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -47215,7 +47215,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendUsbAccessoryLightControl 
     // -- Send a command <code>UsbAccessoryLightControl</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -47250,7 +47250,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendUsbAccessoryClawControl (
     // -- Send a command <code>UsbAccessoryClawControl</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -47285,7 +47285,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendUsbAccessoryGunControl (A
     // -- Send a command <code>UsbAccessoryGunControl</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -47320,7 +47320,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_MiniDrone_SendRemoteControllerSetPaired
     // -- Send a command <code>RemoteControllerSetPairedRemote</code> in project <code>MiniDrone</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -53184,7 +53184,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Powerup_SendPilotingPCMD (ARCONTROLLER_
     // -- Send a command <code>PilotingPCMD</code> in project <code>Powerup</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -53239,7 +53239,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Powerup_SetPilotingPCMD (ARCONTROLLER_F
     return error;
 }
 
-eARCONTROLLER_ERROR ARCONTROLLER_Powerup_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_Powerup_t *feature, u_int8_t *cmdBuffer, int32_t cmdBufferSize)
+eARCONTROLLER_ERROR ARCONTROLLER_Powerup_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_Powerup_t *feature, uint8_t *cmdBuffer, int32_t cmdBufferSize)
 {
     // -- Send the a command <code>PilotingPCMD</code> in project <code>Powerup</code> with the parame set beforehand  --
     
@@ -53355,7 +53355,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Powerup_SendPilotingUserTakeOff (ARCONT
     // -- Send a command <code>PilotingUserTakeOff</code> in project <code>Powerup</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -53390,7 +53390,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Powerup_SendPilotingMotorMode (ARCONTRO
     // -- Send a command <code>PilotingMotorMode</code> in project <code>Powerup</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -53425,7 +53425,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Powerup_SendPilotingSettingsSet (ARCONT
     // -- Send a command <code>PilotingSettingsSet</code> in project <code>Powerup</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -53460,7 +53460,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Powerup_SendMediaRecordPictureV2 (ARCON
     // -- Send a command <code>MediaRecordPictureV2</code> in project <code>Powerup</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -53495,7 +53495,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Powerup_SendMediaRecordVideoV2 (ARCONTR
     // -- Send a command <code>MediaRecordVideoV2</code> in project <code>Powerup</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -53530,7 +53530,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Powerup_SendNetworkSettingsWifiSelectio
     // -- Send a command <code>NetworkSettingsWifiSelection</code> in project <code>Powerup</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -53565,7 +53565,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Powerup_SendNetworkWifiScan (ARCONTROLL
     // -- Send a command <code>NetworkWifiScan</code> in project <code>Powerup</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -53600,7 +53600,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Powerup_SendNetworkWifiAuthChannel (ARC
     // -- Send a command <code>NetworkWifiAuthChannel</code> in project <code>Powerup</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -53635,7 +53635,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Powerup_SendMediaStreamingVideoEnable (
     // -- Send a command <code>MediaStreamingVideoEnable</code> in project <code>Powerup</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -53670,7 +53670,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Powerup_SendVideoSettingsAutorecord (AR
     // -- Send a command <code>VideoSettingsAutorecord</code> in project <code>Powerup</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -53705,7 +53705,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Powerup_SendVideoSettingsVideoMode (ARC
     // -- Send a command <code>VideoSettingsVideoMode</code> in project <code>Powerup</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -53740,7 +53740,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Powerup_SendSoundsBuzz (ARCONTROLLER_FE
     // -- Send a command <code>SoundsBuzz</code> in project <code>Powerup</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -58134,7 +58134,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Pro_SendProBoughtFeatures (ARCONTROLLER
     // -- Send a command <code>ProBoughtFeatures</code> in project <code>Pro</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -58169,7 +58169,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Pro_SendProResponse (ARCONTROLLER_FEATU
     // -- Send a command <code>ProResponse</code> in project <code>Pro</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -58204,7 +58204,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Pro_SendProActivateFeatures (ARCONTROLL
     // -- Send a command <code>ProActivateFeatures</code> in project <code>Pro</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -59159,7 +59159,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Rc_SendMonitorChannels (ARCONTROLLER_FE
     // -- Send a command <code>MonitorChannels</code> in project <code>Rc</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -59194,7 +59194,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Rc_SendStartCalibration (ARCONTROLLER_F
     // -- Send a command <code>StartCalibration</code> in project <code>Rc</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -59229,7 +59229,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Rc_SendInvertChannel (ARCONTROLLER_FEAT
     // -- Send a command <code>InvertChannel</code> in project <code>Rc</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -59264,7 +59264,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Rc_SendAbortCalibration (ARCONTROLLER_F
     // -- Send a command <code>AbortCalibration</code> in project <code>Rc</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -59299,7 +59299,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Rc_SendResetCalibration (ARCONTROLLER_F
     // -- Send a command <code>ResetCalibration</code> in project <code>Rc</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -60995,7 +60995,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendWifiRequestWifiList (
     // -- Send a command <code>WifiRequestWifiList</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61030,7 +61030,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendWifiRequestCurrentWif
     // -- Send a command <code>WifiRequestCurrentWifi</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61065,7 +61065,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendWifiConnectToWifi (AR
     // -- Send a command <code>WifiConnectToWifi</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61100,7 +61100,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendWifiForgetWifi (ARCON
     // -- Send a command <code>WifiForgetWifi</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61135,7 +61135,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendWifiWifiAuthChannel (
     // -- Send a command <code>WifiWifiAuthChannel</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61170,7 +61170,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendDeviceRequestDeviceLi
     // -- Send a command <code>DeviceRequestDeviceList</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61205,7 +61205,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendDeviceRequestCurrentD
     // -- Send a command <code>DeviceRequestCurrentDevice</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61240,7 +61240,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendDeviceConnectToDevice
     // -- Send a command <code>DeviceConnectToDevice</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61275,7 +61275,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendSettingsAllSettings (
     // -- Send a command <code>SettingsAllSettings</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61310,7 +61310,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendSettingsReset (ARCONT
     // -- Send a command <code>SettingsReset</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61345,7 +61345,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendCommonAllStates (ARCO
     // -- Send a command <code>CommonAllStates</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61380,7 +61380,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendAccessPointSettingsAc
     // -- Send a command <code>AccessPointSettingsAccessPointSSID</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61415,7 +61415,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendAccessPointSettingsAc
     // -- Send a command <code>AccessPointSettingsAccessPointChannel</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61450,7 +61450,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendAccessPointSettingsWi
     // -- Send a command <code>AccessPointSettingsWifiSelection</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61485,7 +61485,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendCameraResetOrientatio
     // -- Send a command <code>CameraResetOrientation</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61520,7 +61520,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendGamepadInfosGetGamepa
     // -- Send a command <code>GamepadInfosGetGamepadControls</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61555,7 +61555,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendButtonMappingsGetCurr
     // -- Send a command <code>ButtonMappingsGetCurrentButtonMappings</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61590,7 +61590,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendButtonMappingsGetAvai
     // -- Send a command <code>ButtonMappingsGetAvailableButtonMappings</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61625,7 +61625,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendButtonMappingsSetButt
     // -- Send a command <code>ButtonMappingsSetButtonMapping</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61660,7 +61660,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendButtonMappingsDefault
     // -- Send a command <code>ButtonMappingsDefaultButtonMapping</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61695,7 +61695,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendAxisMappingsGetCurren
     // -- Send a command <code>AxisMappingsGetCurrentAxisMappings</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61730,7 +61730,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendAxisMappingsGetAvaila
     // -- Send a command <code>AxisMappingsGetAvailableAxisMappings</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61765,7 +61765,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendAxisMappingsSetAxisMa
     // -- Send a command <code>AxisMappingsSetAxisMapping</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61800,7 +61800,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendAxisMappingsDefaultAx
     // -- Send a command <code>AxisMappingsDefaultAxisMapping</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61835,7 +61835,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendAxisFiltersGetCurrent
     // -- Send a command <code>AxisFiltersGetCurrentAxisFilters</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61870,7 +61870,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendAxisFiltersGetPresetA
     // -- Send a command <code>AxisFiltersGetPresetAxisFilters</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61905,7 +61905,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendAxisFiltersSetAxisFil
     // -- Send a command <code>AxisFiltersSetAxisFilter</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61940,7 +61940,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendAxisFiltersDefaultAxi
     // -- Send a command <code>AxisFiltersDefaultAxisFilters</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -61975,7 +61975,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendCoPilotingSetPiloting
     // -- Send a command <code>CoPilotingSetPilotingSource</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -62010,7 +62010,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendCalibrationEnableMagn
     // -- Send a command <code>CalibrationEnableMagnetoCalibrationQualityUpdates</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -62045,7 +62045,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_SkyController_SendFactoryReset (ARCONTR
     // -- Send a command <code>FactoryReset</code> in project <code>SkyController</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -70408,7 +70408,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_UnknownFeature1_SendGeographicRun (ARCO
     // -- Send a command <code>GeographicRun</code> in project <code>UnknownFeature1</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -70443,7 +70443,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_UnknownFeature1_SendRelativeRun (ARCONT
     // -- Send a command <code>RelativeRun</code> in project <code>UnknownFeature1</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -70478,7 +70478,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_UnknownFeature1_SendLookAtRun (ARCONTRO
     // -- Send a command <code>LookAtRun</code> in project <code>UnknownFeature1</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -70513,7 +70513,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_UnknownFeature1_SendSpiralAnimRun (ARCO
     // -- Send a command <code>SpiralAnimRun</code> in project <code>UnknownFeature1</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -70548,7 +70548,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_UnknownFeature1_SendSwingAnimRun (ARCON
     // -- Send a command <code>SwingAnimRun</code> in project <code>UnknownFeature1</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -70583,7 +70583,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_UnknownFeature1_SendBoomerangAnimRun (A
     // -- Send a command <code>BoomerangAnimRun</code> in project <code>UnknownFeature1</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -70618,7 +70618,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_UnknownFeature1_SendCandleAnimRun (ARCO
     // -- Send a command <code>CandleAnimRun</code> in project <code>UnknownFeature1</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -70653,7 +70653,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_UnknownFeature1_SendDollySlideAnimRun (
     // -- Send a command <code>DollySlideAnimRun</code> in project <code>UnknownFeature1</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -70688,7 +70688,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_UnknownFeature1_SendUserFramingPosition
     // -- Send a command <code>UserFramingPosition</code> in project <code>UnknownFeature1</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -70723,7 +70723,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_UnknownFeature1_SendUserGPSData (ARCONT
     // -- Send a command <code>UserGPSData</code> in project <code>UnknownFeature1</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -70758,7 +70758,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_UnknownFeature1_SendUserBaroData (ARCON
     // -- Send a command <code>UserBaroData</code> in project <code>UnknownFeature1</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -70793,7 +70793,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_UnknownFeature1_SendLynxDetection (ARCO
     // -- Send a command <code>LynxDetection</code> in project <code>UnknownFeature1</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -73776,7 +73776,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Wifi_SendScan (ARCONTROLLER_FEATURE_Wif
     // -- Send a command <code>Scan</code> in project <code>Wifi</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -73811,7 +73811,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Wifi_SendUpdateAuthorizedChannels (ARCO
     // -- Send a command <code>UpdateAuthorizedChannels</code> in project <code>Wifi</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -73846,7 +73846,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Wifi_SendSetApChannel (ARCONTROLLER_FEA
     // -- Send a command <code>SetApChannel</code> in project <code>Wifi</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -73881,7 +73881,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Wifi_SendSetSecurity (ARCONTROLLER_FEAT
     // -- Send a command <code>SetSecurity</code> in project <code>Wifi</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -73916,7 +73916,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Wifi_SendSetCountry (ARCONTROLLER_FEATU
     // -- Send a command <code>SetCountry</code> in project <code>Wifi</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;
@@ -73951,7 +73951,7 @@ eARCONTROLLER_ERROR ARCONTROLLER_FEATURE_Wifi_SendSetEnvironment (ARCONTROLLER_F
     // -- Send a command <code>SetEnvironment</code> in project <code>Wifi</code> --
     
     eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-    u_int8_t cmdBuffer[128];
+    uint8_t cmdBuffer[128];
     int32_t cmdSize = 0;
     eARCOMMANDS_GENERATOR_ERROR cmdError = ARCOMMANDS_GENERATOR_OK;
     eARNETWORK_ERROR netError = ARNETWORK_OK;

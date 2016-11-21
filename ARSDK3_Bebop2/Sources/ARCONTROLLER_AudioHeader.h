@@ -85,7 +85,7 @@ typedef struct {
                             */
     uint16_t codecData1; /**< Codec-specific data. */
     uint32_t codecData2; /**< Codec-specific data. */
-} __attribute__((packed)) ARCONTROLLER_AudioHeader_t;
+} ARCONTROLLER_AudioHeader_t;
 
 #define ARCONTROLLER_AUDIO_HEADER_SIZE (sizeof (ARCONTROLLER_AudioHeader_t))
 #define ARCONTROLLER_AUDIO_DATA_SIZE 256

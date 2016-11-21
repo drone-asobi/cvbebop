@@ -510,7 +510,7 @@ typedef eARCONTROLLER_ERROR (*ARCONTROLLER_FEATURE_ARDrone3_SetPilotingPCMD_t) (
  * @param cmdBufferSize size of the buffer
  * return executing error
  */
-eARCONTROLLER_ERROR ARCONTROLLER_ARDrone3_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_ARDrone3_t *feature, u_int8_t *cmdBuffer, int32_t cmdBufferSize);
+eARCONTROLLER_ERROR ARCONTROLLER_ARDrone3_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_ARDrone3_t *feature, uint8_t *cmdBuffer, int32_t cmdBufferSize);
 
 /**
  * @brief Set flag sent through the command <code>PilotingPCMD</code> in project <code>ARDrone3</code>
@@ -700,7 +700,7 @@ typedef eARCONTROLLER_ERROR (*ARCONTROLLER_FEATURE_ARDrone3_SetCameraOrientation
  * @param cmdBufferSize size of the buffer
  * return executing error
  */
-eARCONTROLLER_ERROR ARCONTROLLER_ARDrone3_SendCameraOrientationStruct (ARCONTROLLER_FEATURE_ARDrone3_t *feature, u_int8_t *cmdBuffer, int32_t cmdBufferSize);
+eARCONTROLLER_ERROR ARCONTROLLER_ARDrone3_SendCameraOrientationStruct (ARCONTROLLER_FEATURE_ARDrone3_t *feature, uint8_t *cmdBuffer, int32_t cmdBufferSize);
 
 /**
  * @brief Set tilt sent through the command <code>CameraOrientation</code> in project <code>ARDrone3</code>
@@ -2478,7 +2478,7 @@ typedef eARCONTROLLER_ERROR (*ARCONTROLLER_FEATURE_JumpingSumo_SetPilotingPCMD_t
  * @param cmdBufferSize size of the buffer
  * return executing error
  */
-eARCONTROLLER_ERROR ARCONTROLLER_JumpingSumo_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_JumpingSumo_t *feature, u_int8_t *cmdBuffer, int32_t cmdBufferSize);
+eARCONTROLLER_ERROR ARCONTROLLER_JumpingSumo_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_JumpingSumo_t *feature, uint8_t *cmdBuffer, int32_t cmdBufferSize);
 
 /**
  * @brief Set flag sent through the command <code>PilotingPCMD</code> in project <code>JumpingSumo</code>
@@ -3185,7 +3185,7 @@ typedef eARCONTROLLER_ERROR (*ARCONTROLLER_FEATURE_MiniDrone_SetPilotingPCMD_t) 
  * @param cmdBufferSize size of the buffer
  * return executing error
  */
-eARCONTROLLER_ERROR ARCONTROLLER_MiniDrone_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_MiniDrone_t *feature, u_int8_t *cmdBuffer, int32_t cmdBufferSize);
+eARCONTROLLER_ERROR ARCONTROLLER_MiniDrone_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_MiniDrone_t *feature, uint8_t *cmdBuffer, int32_t cmdBufferSize);
 
 /**
  * @brief Set flag sent through the command <code>PilotingPCMD</code> in project <code>MiniDrone</code>
@@ -3704,7 +3704,7 @@ typedef eARCONTROLLER_ERROR (*ARCONTROLLER_FEATURE_Powerup_SetPilotingPCMD_t) (A
  * @param cmdBufferSize size of the buffer
  * return executing error
  */
-eARCONTROLLER_ERROR ARCONTROLLER_Powerup_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_Powerup_t *feature, u_int8_t *cmdBuffer, int32_t cmdBufferSize);
+eARCONTROLLER_ERROR ARCONTROLLER_Powerup_SendPilotingPCMDStruct (ARCONTROLLER_FEATURE_Powerup_t *feature, uint8_t *cmdBuffer, int32_t cmdBufferSize);
 
 /**
  * @brief Set flag sent through the command <code>PilotingPCMD</code> in project <code>Powerup</code>

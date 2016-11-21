@@ -39,8 +39,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
-#include <unistd.h>
-#include <fcntl.h>
 #include <libARSAL/ARSAL_Print.h>
 #include <libARSAL/ARSAL_Socket.h>
 #include <libARSAL/ARSAL_Mutex.h>
@@ -74,7 +72,8 @@ static int ARCONTROLLER_Network_GetAvailableSocketPort(void)
     if (fd < 0)
         goto error;
 
-    ret = fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) | O_NONBLOCK);
+	u_long flags = 1;
+	ret = ioctlsocket(fd, FIONBIO, &flags);
     if (ret < 0)
         goto error;
 
@@ -86,7 +85,7 @@ static int ARCONTROLLER_Network_GetAvailableSocketPort(void)
     ret = ARSAL_Socket_Bind(fd, (struct sockaddr *)&addr, sizeof(addr));
     if (ret < 0) {
         ARSAL_PRINT(ARSAL_PRINT_ERROR, ARCONTROLLER_NETWORK_TAG,
-                    "bind fd=%d, addr='0.0.0.0', port=0: error='%s'", fd, strerror(errno));
+                    "bind fd=%d, addr='0.0.0.0', port=0: error='[%d] %s'", fd, WSAGetLastError(), strerror(errno));
         goto error;
     }
 
@@ -94,14 +93,14 @@ static int ARCONTROLLER_Network_GetAvailableSocketPort(void)
     addrlen = sizeof(addr);
     ret = ARSAL_Socket_Getsockname(fd, (struct sockaddr *)&addr, &addrlen);
     if (ret < 0) {
-        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARCONTROLLER_NETWORK_TAG, "getsockname fd=%d, error='%s'", fd, strerror(errno));
+        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARCONTROLLER_NETWORK_TAG, "getsockname fd=%d, error='[%d] %s'", fd, WSAGetLastError(), strerror(errno));
         goto error;
     }
 
     yes = 1;
     ret = ARSAL_Socket_Setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes));
     if (ret < 0) {
-        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARCONTROLLER_NETWORK_TAG, "Failed to set socket option SO_REUSEADDR: error=%d (%s)", errno, strerror(errno));
+        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARCONTROLLER_NETWORK_TAG, "Failed to set socket option SO_REUSEADDR: error=%d (%s)", WSAGetLastError(), strerror(errno));
         goto error;
     }
 
@@ -1273,7 +1272,7 @@ void *ARCONTROLLER_Network_ReaderRun (void *data)
             else
             {
                 //sleep
-                sleep (1); //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! replace by signal 
+                Sleep (1000); //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! replace by signal 
             }
         }
     }
