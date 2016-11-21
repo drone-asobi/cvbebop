@@ -47,7 +47,6 @@
 
 #include <errno.h>
 
-#include <unistd.h>
 #include <string.h>
 
 #include <libARSAL/ARSAL_Print.h>
