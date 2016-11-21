@@ -7,8 +7,8 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <arpa/inet.h>
 
+#include <libARSAL/ARSAL_Socket.h>
 #include <libARStream2/arstream2_h264_sei.h>
 
 

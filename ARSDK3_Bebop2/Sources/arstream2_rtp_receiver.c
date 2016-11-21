@@ -10,13 +10,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <errno.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <fcntl.h>
-#include <poll.h>
+#include <corecrt_io.h>
 #include <math.h>
 
 #include <libARStream2/arstream2_rtp_receiver.h>
@@ -404,7 +399,7 @@ static int ARSTREAM2_RtpReceiver_SetSocketReceiveBufferSize(ARSTREAM2_RtpReceive
     if (err != 0)
     {
         ret = -1;
-        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Failed to set socket receive buffer size to 2*%d bytes: error=%d (%s)", size, errno, strerror(errno));
+        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Failed to set socket receive buffer size to 2*%d bytes: error=%d (%s)", size, WSAGetLastError(), strerror(errno));
     }
 
     size = -1;
@@ -412,7 +407,7 @@ static int ARSTREAM2_RtpReceiver_SetSocketReceiveBufferSize(ARSTREAM2_RtpReceive
     if (err != 0)
     {
         ret = -1;
-        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Failed to get socket receive buffer size: error=%d (%s)", errno, strerror(errno));
+        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Failed to get socket receive buffer size: error=%d (%s)", WSAGetLastError(), strerror(errno));
     }
     else
     {
@@ -483,7 +478,7 @@ static int ARSTREAM2_RtpReceiver_StreamSocketSetup(ARSTREAM2_RtpReceiver_t *rece
         err = ARSAL_Socket_Setsockopt(receiver->net.streamSocket, SOL_SOCKET, SO_NOSIGPIPE, (void*)&set, sizeof(int));
         if (err != 0)
         {
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on setsockopt: error=%d (%s)", errno, strerror(errno));
+            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on setsockopt: error=%d (%s)", WSAGetLastError(), strerror(errno));
         }
     }
 #endif
@@ -494,15 +489,15 @@ static int ARSTREAM2_RtpReceiver_StreamSocketSetup(ARSTREAM2_RtpReceiver_t *rece
         err = ARSAL_Socket_Setsockopt(receiver->net.streamSocket, IPPROTO_IP, IP_TOS, (void*)&tos, sizeof(int));
         if (err != 0)
         {
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on setsockopt: error=%d (%s)", errno, strerror(errno));
+            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on setsockopt: error=%d (%s)", WSAGetLastError(), strerror(errno));
         }
     }
 
     if (ret == 0)
     {
         /* set to non-blocking */
-        int flags = fcntl(receiver->net.streamSocket, F_GETFL, 0);
-        fcntl(receiver->net.streamSocket, F_SETFL, flags | O_NONBLOCK);
+		u_long flags = 1;
+		ioctlsocket(receiver->net.streamSocket, FIONBIO, &flags);
 
         memset(&recvSin, 0, sizeof(struct sockaddr_in));
         recvSin.sin_family = AF_INET;
@@ -547,7 +542,7 @@ static int ARSTREAM2_RtpReceiver_StreamSocketSetup(ARSTREAM2_RtpReceiver_t *rece
                     err = ARSAL_Socket_Setsockopt(receiver->net.streamSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*)&mreq, sizeof(mreq));
                     if (err != 0)
                     {
-                        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Failed to join multacast group: error=%d (%s)", errno, strerror(errno));
+                        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Failed to join multacast group: error=%d (%s)", WSAGetLastError(), strerror(errno));
                         ret = -1;
                     }
                 }
@@ -569,7 +564,7 @@ static int ARSTREAM2_RtpReceiver_StreamSocketSetup(ARSTREAM2_RtpReceiver_t *rece
         err = ARSAL_Socket_Setsockopt(receiver->net.streamSocket, SOL_SOCKET, SO_REUSEADDR, (char*)&yes, sizeof(yes));
         if (err != 0)
         {
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Failed to set socket option SO_REUSEADDR: error=%d (%s)", errno, strerror(errno));
+            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Failed to set socket option SO_REUSEADDR: error=%d (%s)", WSAGetLastError(), strerror(errno));
             ret = -1;
         }
     }
@@ -580,7 +575,7 @@ static int ARSTREAM2_RtpReceiver_StreamSocketSetup(ARSTREAM2_RtpReceiver_t *rece
         err = ARSAL_Socket_Bind(receiver->net.streamSocket, (struct sockaddr*)&recvSin, sizeof(recvSin));
         if (err != 0)
         {
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on stream socket bind port=%d: error=%d (%s)", receiver->net.clientStreamPort, errno, strerror(errno));
+            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on stream socket bind port=%d: error=%d (%s)", receiver->net.clientStreamPort, WSAGetLastError(), strerror(errno));
             ret = -1;
         }
     }
@@ -635,7 +630,7 @@ static int ARSTREAM2_RtpReceiver_StreamMuxTeardown(ARSTREAM2_RtpReceiver_t *rece
 static int ARSTREAM2_RtpReceiver_StreamSocketTeardown(ARSTREAM2_RtpReceiver_t *receiver)
 {
     if (receiver == NULL)
-        return -EINVAL;
+        return -WSAEINVAL;
 
     if (receiver->net.streamSocket != -1)
     {
@@ -712,7 +707,7 @@ static int ARSTREAM2_RtpReceiver_ControlSocketSetup(ARSTREAM2_RtpReceiver_t *rec
         err = ARSAL_Socket_Setsockopt(receiver->net.controlSocket, SOL_SOCKET, SO_NOSIGPIPE, (void*)&set, sizeof(int));
         if (err != 0)
         {
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on setsockopt: error=%d (%s)", errno, strerror(errno));
+            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on setsockopt: error=%d (%s)", WSAGetLastError(), strerror(errno));
         }
     }
 #endif
@@ -723,15 +718,15 @@ static int ARSTREAM2_RtpReceiver_ControlSocketSetup(ARSTREAM2_RtpReceiver_t *rec
         err = ARSAL_Socket_Setsockopt(receiver->net.controlSocket, IPPROTO_IP, IP_TOS, (void*)&tos, sizeof(int));
         if (err != 0)
         {
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on setsockopt: error=%d (%s)", errno, strerror(errno));
+            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on setsockopt: error=%d (%s)", WSAGetLastError(), strerror(errno));
         }
     }
 
     if (ret == 0)
     {
         /* set to non-blocking */
-        int flags = fcntl(receiver->net.controlSocket, F_GETFL, 0);
-        fcntl(receiver->net.controlSocket, F_SETFL, flags | O_NONBLOCK);
+		u_long flags = 1;
+		ioctlsocket(receiver->net.controlSocket, FIONBIO, &flags);
 
         /* receive address */
         memset(&recvSin, 0, sizeof(struct sockaddr_in));
@@ -747,7 +742,7 @@ static int ARSTREAM2_RtpReceiver_ControlSocketSetup(ARSTREAM2_RtpReceiver_t *rec
         err = ARSAL_Socket_Setsockopt(receiver->net.controlSocket, SOL_SOCKET, SO_REUSEADDR, (char*)&yes, sizeof(yes));
         if (err != 0)
         {
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Failed to set socket option SO_REUSEADDR: error=%d (%s)", errno, strerror(errno));
+            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Failed to set socket option SO_REUSEADDR: error=%d (%s)", WSAGetLastError(), strerror(errno));
             ret = -1;
         }
     }
@@ -758,7 +753,7 @@ static int ARSTREAM2_RtpReceiver_ControlSocketSetup(ARSTREAM2_RtpReceiver_t *rec
         err = ARSAL_Socket_Bind(receiver->net.controlSocket, (struct sockaddr*)&recvSin, sizeof(recvSin));
         if (err != 0)
         {
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on control socket bind port=%d: error=%d (%s)", receiver->net.clientControlPort, errno, strerror(errno));
+            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on control socket bind port=%d: error=%d (%s)", receiver->net.clientControlPort, WSAGetLastError(), strerror(errno));
             ret = -1;
         }
     }
@@ -783,7 +778,7 @@ static int ARSTREAM2_RtpReceiver_ControlSocketSetup(ARSTREAM2_RtpReceiver_t *rec
         err = ARSAL_Socket_Connect(receiver->net.controlSocket, (struct sockaddr*)&sendSin, sizeof(sendSin));
         if (err != 0)
         {
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on control socket connect to addr='%s' port=%d: error=%d (%s)", receiver->net.serverAddr, receiver->net.serverControlPort, errno, strerror(errno));
+            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on control socket connect to addr='%s' port=%d: error=%d (%s)", receiver->net.serverAddr, receiver->net.serverControlPort, WSAGetLastError(), strerror(errno));
             ret = -1;
         }
     }
@@ -824,7 +819,7 @@ static int ARSTREAM2_RtpReceiver_ControlMuxTeardown(ARSTREAM2_RtpReceiver_t *rec
 static int ARSTREAM2_RtpReceiver_ControlSocketTeardown(ARSTREAM2_RtpReceiver_t *receiver)
 {
     if (receiver == NULL)
-        return -EINVAL;
+        return -WSAEINVAL;
 
     if (receiver->net.controlSocket != -1)
     {
@@ -930,25 +925,25 @@ static int ARSTREAM2_RtpReceiver_NetReadData(ARSTREAM2_RtpReceiver_t *receiver, 
     if (bytes < 0)
     {
         /* socket receive failed */
-        switch (errno)
+        switch (WSAGetLastError())
         {
-        case EAGAIN:
+        case WSAEWOULDBLOCK:
             /* poll */
             p.fd = receiver->net.streamSocket;
             p.events = POLLIN;
             p.revents = 0;
-            pollRet = poll(&p, 1, ARSTREAM2_RTP_RECEIVER_STREAM_DATAREAD_TIMEOUT_MS);
+            pollRet = WSAPoll(&p, 1, ARSTREAM2_RTP_RECEIVER_STREAM_DATAREAD_TIMEOUT_MS);
             if (pollRet == 0)
             {
                 /* failed: poll timeout */
                 ARSAL_PRINT(ARSAL_PRINT_DEBUG, ARSTREAM2_RTP_RECEIVER_TAG, "Polling timed out");
-                ret = -ETIMEDOUT;
+                ret = -WSAETIMEDOUT;
                 *recvSize = 0;
             }
             else if (pollRet < 0)
             {
                 /* failed: poll error */
-                ret = -errno;
+                ret = -WSAGetLastError();
                 ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Poll error: error=%d (%s)", -ret, strerror(-ret));
                 *recvSize = 0;
             }
@@ -960,17 +955,17 @@ static int ARSTREAM2_RtpReceiver_NetReadData(ARSTREAM2_RtpReceiver_t *receiver, 
                     /* success: save the number of bytes read */
                     *recvSize = bytes;
                 }
-                else if (errno == EAGAIN)
+                else if (WSAGetLastError() == WSAEWOULDBLOCK)
                 {
                     /* failed: socket not ready (this should not happen) */
                     ARSAL_PRINT(ARSAL_PRINT_WARNING, ARSTREAM2_RTP_RECEIVER_TAG, "Socket not ready for reading");
-                    ret = -EAGAIN;
+                    ret = -WSAEWOULDBLOCK;
                     *recvSize = 0;
                 }
                 else
                 {
                     /* failed: socket error */
-                    ret = -errno;
+                    ret = -WSAGetLastError();
                     ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Socket receive error #2 %d ('%s')", -ret, strerror(-ret));
                     *recvSize = 0;
                 }
@@ -988,7 +983,7 @@ static int ARSTREAM2_RtpReceiver_NetReadData(ARSTREAM2_RtpReceiver_t *receiver, 
             break;
         default:
             /* failed: socket error */
-            ret = -errno;
+            ret = -WSAGetLastError();
             ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Socket receive error %d ('%s')", -ret, strerror(-ret));
             *recvSize = 0;
             break;
@@ -1042,7 +1037,7 @@ static int ARSTREAM2_RtpReceiver_NetSendControlData(ARSTREAM2_RtpReceiver_t *rec
 {
     int ret = ARSAL_Socket_Send(receiver->net.controlSocket, buffer, size, 0);
     if (ret < 0)
-        ret = -errno;
+        ret = -WSAGetLastError();
     return ret;
 }
 
@@ -1110,18 +1105,18 @@ static int ARSTREAM2_RtpReceiver_NetReadControlData(ARSTREAM2_RtpReceiver_t *rec
         p.fd = receiver->net.controlSocket;
         p.events = POLLIN;
         p.revents = 0;
-        pollRet = poll(&p, 1, ARSTREAM2_RTP_RECEIVER_CLOCKSYNC_DATAREAD_TIMEOUT_MS);
+        pollRet = WSAPoll(&p, 1, ARSTREAM2_RTP_RECEIVER_CLOCKSYNC_DATAREAD_TIMEOUT_MS);
         if (pollRet == 0)
         {
             /* failed: poll timeout */
             ARSAL_PRINT(ARSAL_PRINT_DEBUG, ARSTREAM2_RTP_RECEIVER_TAG, "Polling timed out");
-            return -ETIMEDOUT;
+            return -WSAETIMEDOUT;
         }
         else if (pollRet < 0)
         {
             /* failed: poll error */
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Poll error: error=%d (%s)", errno, strerror(errno));
-            return -errno;
+            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Poll error: error=%d (%s)", WSAGetLastError(), strerror(errno));
+            return -WSAGetLastError();
         }
         else if (p.revents & POLLIN)
         {
@@ -1645,15 +1640,15 @@ ARSTREAM2_RtpReceiver_t* ARSTREAM2_RtpReceiver_New(ARSTREAM2_RtpReceiver_Config_
 
             if (net_config->serverAddr)
             {
-                retReceiver->net.serverAddr = strndup(net_config->serverAddr, 16);
+                retReceiver->net.serverAddr = _strdup(net_config->serverAddr);
             }
             if (net_config->mcastAddr)
             {
-                retReceiver->net.mcastAddr = strndup(net_config->mcastAddr, 16);
+                retReceiver->net.mcastAddr = _strdup(net_config->mcastAddr);
             }
             if (net_config->mcastIfaceAddr)
             {
-                retReceiver->net.mcastIfaceAddr = strndup(net_config->mcastIfaceAddr, 16);
+                retReceiver->net.mcastIfaceAddr = _strdup(net_config->mcastIfaceAddr);
             }
             retReceiver->net.serverStreamPort = net_config->serverStreamPort;
             retReceiver->net.serverControlPort = net_config->serverControlPort;
@@ -1763,31 +1758,31 @@ ARSTREAM2_RtpReceiver_t* ARSTREAM2_RtpReceiver_New(ARSTREAM2_RtpReceiver_Config_
         {
         }
 #ifdef ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_ALLOW_DRONE
-        else if ((access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_DRONE, F_OK) == 0) && (access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_DRONE, W_OK) == 0))
+        else if ((_access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_DRONE, F_OK) == 0) && (_access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_DRONE, W_OK) == 0))
         {
             pszFilePath = ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_DRONE;
         }
 #endif
 #ifdef ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_ALLOW_NAP_USB
-        else if ((access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_NAP_USB, F_OK) == 0) && (access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_NAP_USB, W_OK) == 0))
+        else if ((_access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_NAP_USB, F_OK) == 0) && (_access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_NAP_USB, W_OK) == 0))
         {
             pszFilePath = ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_NAP_USB;
         }
 #endif
 #ifdef ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_ALLOW_NAP_INTERNAL
-        else if ((access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_NAP_INTERNAL, F_OK) == 0) && (access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_NAP_INTERNAL, W_OK) == 0))
+        else if ((_access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_NAP_INTERNAL, F_OK) == 0) && (_access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_NAP_INTERNAL, W_OK) == 0))
         {
             pszFilePath = ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_NAP_INTERNAL;
         }
 #endif
 #ifdef ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_ALLOW_ANDROID_INTERNAL
-        else if ((access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_ANDROID_INTERNAL, F_OK) == 0) && (access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_ANDROID_INTERNAL, W_OK) == 0))
+        else if ((_access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_ANDROID_INTERNAL, F_OK) == 0) && (_access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_ANDROID_INTERNAL, W_OK) == 0))
         {
             pszFilePath = ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_ANDROID_INTERNAL;
         }
 #endif
 #ifdef ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_ALLOW_PCLINUX
-        else if ((access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_PCLINUX, F_OK) == 0) && (access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_PCLINUX, W_OK) == 0))
+        else if ((_access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_PCLINUX, F_OK) == 0) && (_access(ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_PCLINUX, W_OK) == 0))
         {
             pszFilePath = ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_PATH_PCLINUX;
         }
@@ -1797,7 +1792,7 @@ ARSTREAM2_RtpReceiver_t* ARSTREAM2_RtpReceiver_New(ARSTREAM2_RtpReceiver_Config_
             for (i = 0; i < 1000; i++)
             {
                 snprintf(szOutputFileName, 128, "%s/%s_%03d.dat", pszFilePath, ARSTREAM2_RTP_RECEIVER_MONITORING_OUTPUT_FILENAME, i);
-                if (access(szOutputFileName, F_OK) == -1)
+                if (_access(szOutputFileName, F_OK) == -1)
                 {
                     // file does not exist
                     break;
@@ -2066,7 +2061,7 @@ void* ARSTREAM2_RtpReceiver_RunStreamThread(void *ARSTREAM2_RtpReceiver_t_Param)
                 ARSAL_PRINT(ARSAL_PRINT_DEBUG, ARSTREAM2_RTP_RECEIVER_TAG, "Got an EPIPE for stream channel, stopping thread");
                 shouldStop = 1;
             }
-            if (ret != -ETIMEDOUT)
+            if (ret != -WSAETIMEDOUT)
             {
                 ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Failed to read data (%d)", ret);
             }
@@ -2139,7 +2134,7 @@ void* ARSTREAM2_RtpReceiver_RunControlThread(void *ARSTREAM2_RtpReceiver_t_Param
 
     while (shouldStop == 0)
     {
-        usleep(ARSTREAM2_RTP_RECEIVER_CLOCKSYNC_PERIOD_MS * 1000);
+        Sleep(ARSTREAM2_RTP_RECEIVER_CLOCKSYNC_PERIOD_MS);
 
         if (shouldStop == 0)
         {
