@@ -90,9 +90,6 @@
     <ClInclude Include="Includes\semaphore.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="Includes\libARDiscovery\ARDiscovery.h">
-      <Filter>Header files\libARDiscovery</Filter>
-    </ClInclude>
     <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Connection.h">
       <Filter>Header files\libARDiscovery</Filter>
     </ClInclude>
@@ -369,26 +366,17 @@
     <ClInclude Include="Sources\arstream2_rtp.h">
       <Filter>Source files\libARStream2</Filter>
     </ClInclude>
-    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_AvahiDiscovery.h">
-      <Filter>Header files\libARDiscovery</Filter>
-    </ClInclude>
-    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_BonjourDiscovery.h">
-      <Filter>Header files\libARDiscovery</Filter>
-    </ClInclude>
     <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_MuxDiscovery.h">
       <Filter>Header files\libARDiscovery</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\ARDISCOVERY_AvahiDiscovery.h">
-      <Filter>Source files\libARDiscovery</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\ARDISCOVERY_AvahiDiscovery_nodbus.h">
-      <Filter>Source files\libARDiscovery</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Usb\ARDISCOVERY_DEVICE_Usb.h">
       <Filter>Source files\libARDiscovery\Usb</Filter>
     </ClInclude>
     <ClInclude Include="Sources\BLE\ARDISCOVERY_DEVICE_Ble.h">
       <Filter>Source files\libARDiscovery\Ble</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDiscovery.h">
+      <Filter>Header files\libARDiscovery</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -565,12 +553,6 @@
     </ClCompile>
     <ClCompile Include="Sources\arstream2_error.c">
       <Filter>Source files\libARStream2</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\ARDISCOVERY_AvahiDiscovery.c">
-      <Filter>Source files\libARDiscovery</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\ARDISCOVERY_AvahiDiscovery_nodbus.c">
-      <Filter>Source files\libARDiscovery</Filter>
     </ClCompile>
     <ClCompile Include="Sources\ARDISCOVERY_MuxDiscovery.c">
       <Filter>Source files\libARDiscovery</Filter>

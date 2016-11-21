@@ -183,7 +183,7 @@ void ARDISCOVERY_Connection_getControllerIP (ARDISCOVERY_Connection_ConnectionDa
  */
 static inline  void ARDISCOVERY_Connection_ControllerConnectionAbort (ARDISCOVERY_Connection_ConnectionData_t *connectionData)
 {
-    return ARDISCOVERY_Connection_Device_StopListening (connectionData);
+    ARDISCOVERY_Connection_Device_StopListening (connectionData);
 }
 
 #endif /* _ARDISCOVERY_CONNECTION_H_ */

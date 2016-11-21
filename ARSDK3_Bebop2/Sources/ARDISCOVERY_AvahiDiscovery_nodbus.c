@@ -38,8 +38,8 @@
 
 #define __ARDISCOVERY_AVAHIDISCOVERY_TAG__ "ARDISCOVERY_AvahiDiscovery"
 
-#define ERR(...)    ARSAL_PRINT(ARSAL_PRINT_ERROR, __ARDISCOVERY_AVAHIDISCOVERY_TAG__, __VA_ARGS__)
-#define SAY(...)    ARSAL_PRINT(ARSAL_PRINT_WARNING, __ARDISCOVERY_AVAHIDISCOVERY_TAG__, __VA_ARGS__)
+// #define ERR(...)    ARSAL_PRINT(ARSAL_PRINT_ERROR, __ARDISCOVERY_AVAHIDISCOVERY_TAG__, __VA_ARGS__)
+// #define SAY(...)    ARSAL_PRINT(ARSAL_PRINT_WARNING, __ARDISCOVERY_AVAHIDISCOVERY_TAG__, __VA_ARGS__)
 
 static const char * ARDISCOVERY_CONFIG_FILE = "/etc/avahi/services/ardiscovery.service";
 
@@ -74,7 +74,7 @@ ARDISCOVERY_AvahiDiscovery_PublisherData_t* ARDISCOVERY_AvahiDiscovery_Publisher
 
     if (serviceName == NULL || serviceType == NULL)
     {
-        ERR("Null parameter");
+		ARSAL_PRINT(ARSAL_PRINT_ERROR, __ARDISCOVERY_AVAHIDISCOVERY_TAG__, "Null parameter");
         error = ARDISCOVERY_ERROR;
     }
 
@@ -136,7 +136,7 @@ ARDISCOVERY_AvahiDiscovery_PublisherData_t* ARDISCOVERY_AvahiDiscovery_Publisher
     /* Delete connection data if an error occurred */
     if (error != ARDISCOVERY_OK)
     {
-        ERR("error: %s", ARDISCOVERY_Error_ToString (error));
+		ARSAL_PRINT(ARSAL_PRINT_ERROR, __ARDISCOVERY_AVAHIDISCOVERY_TAG__, "error: %s", ARDISCOVERY_Error_ToString(error));
         ARDISCOVERY_AvahiDiscovery_Publisher_Delete(&serviceData);
     }
 
@@ -177,7 +177,7 @@ static eARDISCOVERY_ERROR ARDISCOVERY_AvahiDiscovery_CreateService(ARDISCOVERY_A
 
     if (serviceData == NULL)
     {
-        ERR("Null parameter");
+		ARSAL_PRINT(ARSAL_PRINT_ERROR, __ARDISCOVERY_AVAHIDISCOVERY_TAG__, "Null parameter");
         return ARDISCOVERY_ERROR;
     }
 
@@ -226,7 +226,7 @@ eARDISCOVERY_ERROR ARDISCOVERY_AvahiDiscovery_ResetService(ARDISCOVERY_AvahiDisc
 
     if (serviceData == NULL)
     {
-        ERR("Null parameter");
+		ARSAL_PRINT(ARSAL_PRINT_ERROR, __ARDISCOVERY_AVAHIDISCOVERY_TAG__, "Null parameter");
         error = ARDISCOVERY_ERROR;
     }
 
@@ -251,7 +251,7 @@ void ARDISCOVERY_AvahiDiscovery_Publish(ARDISCOVERY_AvahiDiscovery_PublisherData
 
     if (serviceData == NULL)
     {
-        ERR("Null parameter");
+		ARSAL_PRINT(ARSAL_PRINT_ERROR, __ARDISCOVERY_AVAHIDISCOVERY_TAG__, "Null parameter");
         error = ARDISCOVERY_ERROR;
     }
 
@@ -271,7 +271,7 @@ void ARDISCOVERY_AvahiDiscovery_Publish(ARDISCOVERY_AvahiDiscovery_PublisherData
 
     if (error != ARDISCOVERY_OK)
     {
-        ERR("error: %s", ARDISCOVERY_Error_ToString (error));
+		ARSAL_PRINT(ARSAL_PRINT_ERROR, __ARDISCOVERY_AVAHIDISCOVERY_TAG__, "error: %s", ARDISCOVERY_Error_ToString (error));
     }
 }
 

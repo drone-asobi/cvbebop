@@ -59,7 +59,7 @@ struct ARDISCOVERY_Connection_ConnectionData_t
     int32_t socket;                             /**< socket used to negociate */
     struct sockaddr_in address;                 /**< address used to negociate */
     
-    int abortPipe[2];
+    SOCKET abortPipe[2];
 };
 
 #endif /* _ARDISCOVERY_CONNECTION_PRIVATE_H_ */

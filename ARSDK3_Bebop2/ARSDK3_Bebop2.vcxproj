@@ -103,8 +103,6 @@
     <ClInclude Include="Includes\libARController\ARCONTROLLER_StreamQueue.h" />
     <ClInclude Include="Includes\libARController\ARCONTROLLER_StreamSender.h" />
     <ClInclude Include="Includes\libARDiscovery\ARDiscovery.h" />
-    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_AvahiDiscovery.h" />
-    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_BonjourDiscovery.h" />
     <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Connection.h" />
     <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Device.h" />
     <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Discovery.h" />
@@ -161,8 +159,6 @@
     <ClInclude Include="Sources\ARCONTROLLER_StreamPool.h" />
     <ClInclude Include="Sources\ARCONTROLLER_StreamQueue.h" />
     <ClInclude Include="Sources\ARCONTROLLER_StreamSender.h" />
-    <ClInclude Include="Sources\ARDISCOVERY_AvahiDiscovery.h" />
-    <ClInclude Include="Sources\ARDISCOVERY_AvahiDiscovery_nodbus.h" />
     <ClInclude Include="Sources\ARDISCOVERY_Connection.h" />
     <ClInclude Include="Sources\ARDISCOVERY_Device.h" />
     <ClInclude Include="Sources\ARDISCOVERY_NetworkConfiguration.h" />
@@ -204,8 +200,6 @@
     <ClCompile Include="Sources\ARCONTROLLER_StreamPool.c" />
     <ClCompile Include="Sources\ARCONTROLLER_StreamQueue.c" />
     <ClCompile Include="Sources\ARCONTROLLER_StreamSender.c" />
-    <ClCompile Include="Sources\ARDISCOVERY_AvahiDiscovery.c" />
-    <ClCompile Include="Sources\ARDISCOVERY_AvahiDiscovery_nodbus.c" />
     <ClCompile Include="Sources\ARDISCOVERY_Connection.c" />
     <ClCompile Include="Sources\ARDISCOVERY_Device.c" />
     <ClCompile Include="Sources\ARDISCOVERY_Discovery.c" />

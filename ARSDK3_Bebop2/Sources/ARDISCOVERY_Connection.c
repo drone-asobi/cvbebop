@@ -30,7 +30,6 @@
 */
 #include <errno.h>
 #include <stdlib.h>
-#include <fcntl.h>
 
 #include <libARSAL/ARSAL_Print.h>
 #include <libARSAL/ARSAL_Socket.h>
@@ -194,10 +193,24 @@ ARDISCOVERY_Connection_ConnectionData_t* ARDISCOVERY_Connection_New (ARDISCOVERY
     /* initialize the abortPipe */
     if (localError == ARDISCOVERY_OK)
     {
-        if (pipe(connectionData->abortPipe) != 0)
-        {
-            localError = ARDISCOVERY_ERROR_PIPE_INIT;
-        }
+		struct sockaddr_in inaddr;
+		struct sockaddr addr;
+		SOCKET lst = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+		memset(&inaddr, 0, sizeof(inaddr));
+		memset(&addr, 0, sizeof(addr));
+		inaddr.sin_family = AF_INET;
+		inaddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+		inaddr.sin_port = 0;
+		int yes = 1;
+		setsockopt(lst, SOL_SOCKET, SO_REUSEADDR, (char*)&yes, sizeof(yes));
+		bind(lst, (struct sockaddr *)&inaddr, sizeof(inaddr));
+		listen(lst, 1);
+		int len = sizeof(inaddr);
+		getsockname(lst, &addr, &len);
+		connectionData->abortPipe[0] = socket(AF_INET, SOCK_STREAM, 0);
+		connect(connectionData->abortPipe[0], &addr, len);
+		connectionData->abortPipe[1] = accept(lst, 0, 0);
+		closesocket(lst);
     }
     
     /* Delete connection data if an error occurred */
@@ -256,13 +269,13 @@ eARDISCOVERY_ERROR ARDISCOVERY_Connection_Delete (ARDISCOVERY_Connection_Connect
                 /* close the abortPipe */
                 if((*connectionData)->abortPipe[0] != -1)
                 {
-                    close ((*connectionData)->abortPipe[0]);
+                    closesocket ((*connectionData)->abortPipe[0]);
                     (*connectionData)->abortPipe[0] = -1;
                 }
                 
                 if((*connectionData)->abortPipe[1] != -1)
                 {
-                    close ((*connectionData)->abortPipe[1]);
+					closesocket((*connectionData)->abortPipe[1]);
                     (*connectionData)->abortPipe[1] = -1;
                 }
                 
@@ -502,11 +515,11 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Connection_DeviceInitSocket (int *deviceSo
 
         if (errorBind != 0)
         {
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "bind() failed: %s", strerror(errno));
+            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "bind() failed: [%d] %s", WSAGetLastError(), strerror(errno));
 
-            switch (errno)
+            switch (WSAGetLastError())
             {
-            case EACCES:
+            case WSAEACCES:
                 error = ARDISCOVERY_ERROR_SOCKET_PERMISSION_DENIED;
                 break;
 
@@ -520,11 +533,13 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Connection_DeviceInitSocket (int *deviceSo
 
         if (errorListen != 0)
         {
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "listen() failed: %s", strerror(errno));
+            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "listen() failed: [%d] %s", WSAGetLastError(), strerror(errno));
 
-            switch (errno)
+            switch (WSAGetLastError())
             {
-            case EINVAL:
+            case WSAEISCONN:
+			case WSAEADDRINUSE:
+			case WSAEINVAL:
                 error = ARDISCOVERY_ERROR_SOCKET_ALREADY_CONNECTED;
                 break;
 
@@ -551,7 +566,7 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Connection_ControllerInitSocket (ARDISCOVE
      */
     
     eARDISCOVERY_ERROR error = ARDISCOVERY_OK;
-    int flags = 0;
+    u_long flags = 1;
     fd_set readSet;
     fd_set writeSet;
     fd_set errorSet;
@@ -579,10 +594,9 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Connection_ControllerInitSocket (ARDISCOVE
         connectionData->address.sin_port = htons (port);
         
         /* set the socket non blocking */
-        flags = fcntl(connectionData->socket, F_GETFL, 0);
-        ret = fcntl(connectionData->socket, F_SETFL, flags | O_NONBLOCK);
+		ret = ioctlsocket(connectionData->socket, FIONBIO, &flags);
         if (ret < 0)
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "fcntl error: %s", strerror(errno));
+            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "ioctlsocket error: [%d] %s", WSAGetLastError(), strerror(errno));
 
         ARSAL_PRINT(ARSAL_PRINT_DEBUG, ARDISCOVERY_CONNECTION_TAG, "contoller try to connect ip:%s port:%d", ip, port);
         
@@ -593,7 +607,7 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Connection_ControllerInitSocket (ARDISCOVE
             // in that particular case, we retry a connection because the host may be not resolved after a very recent connection
             if (error == ARDISCOVERY_ERROR_SOCKET_UNREACHABLE)
             {
-                sleep(ARDISCOVERY_RECONNECTION_TIME_SEC);
+                Sleep(ARDISCOVERY_RECONNECTION_TIME_SEC * 1000);
             }
             error = ARDISCOVERY_Socket_Connect(connectionData->socket, (struct sockaddr*) &(connectionData->address), sizeof (connectionData->address));
             nbTryToConnect++;
@@ -648,8 +662,8 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Connection_ControllerInitSocket (ARDISCOVE
         }*/
         
         /* set the socket non blocking */
-        flags = fcntl(connectionData->socket, F_GETFL, 0);
-        fcntl(connectionData->socket, F_SETFL, flags & (~O_NONBLOCK));
+		flags = 0;
+		ioctlsocket(connectionData->socket, FIONBIO, &flags);
         
         /* Initialize set */
         FD_ZERO(&readSet);
@@ -693,7 +707,7 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Connection_ControllerInitSocket (ARDISCOVE
                 getsockoptRes = getsockopt(connectionData->socket, SOL_SOCKET, SO_ERROR, (void*)(&valopt), &lon);
                 if (getsockoptRes < 0)
                 {
-                    ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "getsockopt() error: %d %s", errno, strerror(errno));
+                    ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "getsockopt() error: %d %s", WSAGetLastError(), strerror(errno));
                     error = ARDISCOVERY_ERROR_SOCKET_PERMISSION_DENIED;
                 }
                 else
@@ -711,9 +725,9 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Connection_ControllerInitSocket (ARDISCOVE
             if (FD_ISSET(connectionData->abortPipe[0], &readSet))
             {
                 /* If the abortPipe is ready for a read, dump bytes from it (so it won't be ready next time) */
-                ret = read (connectionData->abortPipe[0], &dump, 10);
+                ret = recv (connectionData->abortPipe[0], &dump, 10, 0);
                 if (ret < 0)
-                    ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "read() error: %d %s", errno, strerror(errno));
+                    ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "read() error: %d %s", WSAGetLastError(), strerror(errno));
 
                 error = ARDISCOVERY_ERROR_ABORT;
             }
@@ -738,18 +752,19 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Socket_Connect(int sockfd, const struct so
     
     if (connectError != 0)
     {
-        switch (errno)
+        switch (WSAGetLastError())
         {
-            case EINPROGRESS:
+            case WSAEINPROGRESS:
+			case WSAEWOULDBLOCK:
                 /* in connection */
                 /* do nothing */
                 break;
-            case EACCES:
+            case WSAEACCES:
                 error = ARDISCOVERY_ERROR_SOCKET_PERMISSION_DENIED;
                 break;
-            case ENETUNREACH:
-            case EHOSTUNREACH:
-                ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "connect() failed: %d %s => Try reconnecting after %d seconds", errno, strerror(errno), ARDISCOVERY_RECONNECTION_TIME_SEC);
+			case WSAENETUNREACH:
+            case WSAEHOSTUNREACH:
+                ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "connect() failed: %d %s => Try reconnecting after %d seconds", WSAGetLastError(), strerror(errno), ARDISCOVERY_RECONNECTION_TIME_SEC);
                 error = ARDISCOVERY_ERROR_SOCKET_UNREACHABLE;
                 break;
             default:
@@ -759,7 +774,7 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Socket_Connect(int sockfd, const struct so
         
         if (error != ARDISCOVERY_OK)
         {
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "connect() failed: %d %s", errno, strerror(errno));
+            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "connect() failed: %d %s", WSAGetLastError(), strerror(errno));
         }
     }
     
@@ -805,7 +820,7 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Connection_DeviceAccept (ARDISCOVERY_Conne
             connectionData->socket = ARSAL_Socket_Accept (deviceSocket, (struct sockaddr*) &(connectionData->address), &clientLen);
             if (connectionData->socket < 0)
             {
-                ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "accept() failed: %s", strerror(errno));
+                ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "accept() failed: [%d] %s", WSAGetLastError(), strerror(errno));
                 error = ARDISCOVERY_ERROR_ACCEPT;
             }
         }
@@ -813,7 +828,7 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Connection_DeviceAccept (ARDISCOVERY_Conne
         if (FD_ISSET(connectionData->abortPipe[0], &set))
         {
             /* If the abortPipe is ready for a read, dump bytes from it (so it won't be ready next time) */
-            read (connectionData->abortPipe[0], &dump, 10);
+            recv (connectionData->abortPipe[0], &dump, 10, 0);
             error = ARDISCOVERY_ERROR_ABORT;
         }
     }
@@ -868,7 +883,7 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Connection_RxPending (ARDISCOVERY_Connecti
             else
             {
                 if ((readSize == 0 || readSize == -1) &&
-                    (errno == EAGAIN || errno == EWOULDBLOCK))
+                    (WSAGetLastError() == WSAEINPROGRESS || WSAGetLastError() == WSAEWOULDBLOCK))
                 {
                     ARSAL_PRINT(ARSAL_PRINT_DEBUG, ARDISCOVERY_CONNECTION_TAG, "No more data to read");
                     // Nothing to do here, it just means that we had a size which is a multiple of ARDISCOVERY_CONNECTION_RX_BUFFER_SIZE
@@ -904,7 +919,7 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Connection_RxPending (ARDISCOVERY_Connecti
                     else
                     {
                         if ((readSize == 0 || readSize == -1) &&
-                            (errno == EAGAIN || errno == EWOULDBLOCK))
+                            (WSAGetLastError() == WSAEINPROGRESS || WSAGetLastError() == WSAEWOULDBLOCK))
                         {
                             ARSAL_PRINT(ARSAL_PRINT_DEBUG, ARDISCOVERY_CONNECTION_TAG, "No more data to read");
                             // Nothing to do here, it just means that we had a size which is a multiple of ARDISCOVERY_CONNECTION_RX_BUFFER_SIZE
@@ -944,7 +959,7 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Connection_RxPending (ARDISCOVERY_Connecti
         if (FD_ISSET(connectionData->abortPipe[0], &set))
         {
             /* If the abortPipe is ready for a read, dump bytes from it (so it won't be ready next time) */
-            read (connectionData->abortPipe[0], &dump, 10);
+            recv (connectionData->abortPipe[0], &dump, 10, 0);
             error = ARDISCOVERY_ERROR_ABORT;
         }
     }
@@ -1013,9 +1028,9 @@ static eARDISCOVERY_ERROR ARDISCOVERY_Connection_TxPending (ARDISCOVERY_Connecti
             if (FD_ISSET(connectionData->abortPipe[0], &readSet))
             {
                 /* If the abortPipe is ready for a read, dump bytes from it (so it won't be ready next time) */
-                ret = read (connectionData->abortPipe[0], &dump, 10);
+                ret = recv (connectionData->abortPipe[0], &dump, 10, 0);
                 if (ret < 0)
-                    ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "read() error: %s", errno, strerror(errno));
+                    ARSAL_PRINT(ARSAL_PRINT_ERROR, ARDISCOVERY_CONNECTION_TAG, "read() error: %s", WSAGetLastError(), strerror(errno));
 
                 error = ARDISCOVERY_ERROR_ABORT;
             }
@@ -1033,7 +1048,7 @@ void ARDISCOVERY_Connection_Unlock (ARDISCOVERY_Connection_ConnectionData_t *con
     
     if (connectionData->abortPipe[1] != -1)
     {
-        write (connectionData->abortPipe[1], buff, 1);
+        send (connectionData->abortPipe[1], buff, 1, 0);
     }
 }
 

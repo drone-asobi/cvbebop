@@ -34,7 +34,6 @@
 #include <string.h>
 #include <stddef.h>
 #include <errno.h>
-#include <sys/uio.h>
 
 #ifdef BUILD_LIBMUX
 
