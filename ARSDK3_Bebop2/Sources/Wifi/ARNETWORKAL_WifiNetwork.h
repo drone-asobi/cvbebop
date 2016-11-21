@@ -158,7 +158,7 @@ eARNETWORKAL_MANAGER_RETURN ARNETWORKAL_WifiNetwork_Receive(ARNETWORKAL_Manager_
 /**
  * @brief set the OnDisconnect Callback
  * @param manager pointer on the Manager
- * @param onDisconnectCallbak function called on disconnect
+ * @param onDisconnectCallback function called on disconnect
  * @param customData custom data to send to the onDisconnectCallback
  */
 eARNETWORKAL_ERROR ARNETWORKAL_WifiNetwork_SetOnDisconnectCallback(ARNETWORKAL_Manager_t *manager, ARNETWORKAL_Manager_OnDisconnect_t onDisconnectCallback, void *customData);

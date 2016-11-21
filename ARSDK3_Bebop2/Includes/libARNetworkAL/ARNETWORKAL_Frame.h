@@ -64,11 +64,6 @@ typedef struct
     uint8_t seq; /**< sequence number of the frame */
     uint32_t size; /**< size of the frame */
     uint8_t *dataPtr; /**< pointer on the data of the frame */
-}
-// Doxygen does not like the __attribute__ tag
-#ifndef DOXYGEN
-__attribute__((__packed__))
-#endif
-ARNETWORKAL_Frame_t;
+}ARNETWORKAL_Frame_t;
 
 #endif /** _ARNETWORKAL_FRAME_H_ */

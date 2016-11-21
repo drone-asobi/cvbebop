@@ -86,7 +86,7 @@ ARNETWORKAL_Manager_t* ARNETWORKAL_Manager_New (eARNETWORKAL_ERROR *error)
     /** -- Create a new Manager -- */
 
     /** local declarations */
-    ARNETWORKAL_Manager_t *manager = NULL;
+    ARNETWORKAL_Manager_t *manager;
     eARNETWORKAL_ERROR localError = ARNETWORKAL_OK;
     /** Create the Manager */
     manager = calloc (1, sizeof(ARNETWORKAL_Manager_t));
@@ -314,7 +314,6 @@ void ARNETWORKAL_Manager_Delete (ARNETWORKAL_Manager_t **manager)
             if ((*manager)->dumpFile != NULL)
             {
                 fflush ((*manager)->dumpFile);
-                fsync (fileno ((*manager)->dumpFile));
                 fclose ((*manager)->dumpFile);
             }
             free (*manager);

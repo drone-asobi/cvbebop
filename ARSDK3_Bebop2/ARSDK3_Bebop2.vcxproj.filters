@@ -73,12 +73,6 @@
     <Filter Include="Source files\libARDiscovery\Ble">
       <UniqueIdentifier>{8c24485d-3116-4fb6-a3a9-83142df907a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source files\libARNetworkAL\Ble">
-      <UniqueIdentifier>{87bfda9e-eb09-44a2-b2f2-ca0e727b7c75}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source files\libARNetworkAL\Mux">
-      <UniqueIdentifier>{18c46a59-3dd4-4d87-a914-e88b94f30b93}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Includes\config.h">
@@ -384,9 +378,6 @@
     <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_MuxDiscovery.h">
       <Filter>Header files\libARDiscovery</Filter>
     </ClInclude>
-    <ClInclude Include="Includes\libARDiscovery\USBAccessoryManager.h">
-      <Filter>Header files\libARDiscovery</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\ARDISCOVERY_AvahiDiscovery.h">
       <Filter>Source files\libARDiscovery</Filter>
     </ClInclude>
@@ -398,12 +389,6 @@
     </ClInclude>
     <ClInclude Include="Sources\BLE\ARDISCOVERY_DEVICE_Ble.h">
       <Filter>Source files\libARDiscovery\Ble</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\BLE\ARNETWORKAL_BLENetwork.h">
-      <Filter>Source files\libARNetworkAL\Ble</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Mux\ARNETWORKAL_MuxNetwork.h">
-      <Filter>Source files\libARNetworkAL\Mux</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -596,22 +581,8 @@
     <ClCompile Include="Sources\BLE\ARDISCOVERY_DEVICE_Ble.c">
       <Filter>Source files\libARDiscovery\Ble</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Mux\ARNETWORKAL_MuxNetwork.c">
-      <Filter>Source files\libARNetworkAL\Mux</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\ARSAL_Error.c">
       <Filter>Source files\libARSAL</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Sources\ARDISCOVERY_BonjourDiscovery.m">
-      <Filter>Source files\libARDiscovery</Filter>
-    </None>
-    <None Include="Sources\BLE\ARNETWORKAL_BLENetwork.m">
-      <Filter>Source files\libARNetworkAL\Ble</Filter>
-    </None>
-    <None Include="Sources\USBAccessoryManager.m">
-      <Filter>Source files\libARDiscovery</Filter>
-    </None>
   </ItemGroup>
 </Project>
