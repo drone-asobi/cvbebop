@@ -712,15 +712,15 @@ static int ARSTREAM2_RtpReceiver_ControlSocketSetup(ARSTREAM2_RtpReceiver_t *rec
     }
 #endif
 
-    if (ret == 0)
-    {
-        int tos = receiver->net.classSelector;
-        err = ARSAL_Socket_Setsockopt(receiver->net.controlSocket, IPPROTO_IP, IP_TOS, (void*)&tos, sizeof(int));
-        if (err != 0)
-        {
-            ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on setsockopt: error=%d (%s)", WSAGetLastError(), strerror(errno));
-        }
-    }
+    //if (ret == 0)
+    //{
+    //    int tos = receiver->net.classSelector;
+    //    err = ARSAL_Socket_Setsockopt(receiver->net.controlSocket, IPPROTO_IP, IP_TOS, (void*)&tos, sizeof(int));
+    //    if (err != 0)
+    //    {
+    //        ARSAL_PRINT(ARSAL_PRINT_ERROR, ARSTREAM2_RTP_RECEIVER_TAG, "Error on setsockopt: error=%d (%s)", WSAGetLastError(), strerror(errno));
+    //    }
+    //}
 
     if (ret == 0)
     {

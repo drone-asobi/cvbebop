@@ -58,17 +58,10 @@ int ARSAL_Time_GetTime (struct timespec *res)
 
 #else
 
-    time_t t = time(NULL);
-    if (t < 0)
-    {
-        result = (int)t;
-    }
-    else
-    {
-        result = 0;
-        res->tv_sec = t;
-        res->tv_nsec = 0;
-    }
+	ULONGLONG t = GetTickCount64();
+	res->tv_sec = t / 1000;
+	res->tv_nsec = (t % 1000) * 1000;
+	result = 0;
 
 #endif
 
@@ -99,17 +92,10 @@ int ARSAL_Time_GetLocalTime (struct timespec *res, struct tm *localTime)
 
 #else
 
-    time_t t = time(NULL);
-    if (t < 0)
-    {
-        result = (int)t;
-    }
-    else
-    {
-        result = 0;
-        ts.tv_sec = t;
-        ts.tv_nsec = 0;
-    }
+	ULONGLONG t = GetTickCount64();
+	ts.tv_sec = t / 1000;
+	ts.tv_nsec = (t % 1000) * 1000;
+	result = 0;
 
 #endif
 

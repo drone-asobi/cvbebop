@@ -38,14 +38,16 @@ using namespace cv;
 
 void key_control(ARCONTROLLER_Device_t *deviceController)
 {
+	imshow("video", imread("kokuban.jpg"));
 	VideoCapture cam = VideoCapture("bebopvideo.bin");
 	bool control = true;
 	while (control) {
-		cv::Mat frame;
-		cam >> frame;
+		if (cam.isOpened()) {
+			cv::Mat frame;
+			cam >> frame;
 
-		imshow("video", frame);
-
+			imshow("video", frame);
+		}
 		char key = cv::waitKey(0);
 		// Manage IHM input events
 		eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
@@ -54,6 +56,11 @@ void key_control(ARCONTROLLER_Device_t *deviceController)
 		{
 		case 'q':
 		case 'Q':
+			if (deviceController != NULL)
+			{
+				// send a landing command to the drone
+				error = deviceController->aRDrone3->sendPilotingLanding(deviceController->aRDrone3);
+			}
 			control = false;
 			break;
 		case 'e':

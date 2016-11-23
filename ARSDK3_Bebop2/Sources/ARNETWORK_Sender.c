@@ -233,7 +233,7 @@ void* ARNETWORK_Sender_ThreadRun (void* data)
 
     while (senderPtr->isAlive)
     {
-        waitTimeMs = 500;
+        waitTimeMs = 100;
         for (inputBufferIndex = 0; inputBufferIndex < senderPtr->numberOfInputBuff && waitTimeMs > 0; ++inputBufferIndex)
         {
             inputBufferPtrTemp = senderPtr->inputBufferPtrArr[inputBufferIndex];

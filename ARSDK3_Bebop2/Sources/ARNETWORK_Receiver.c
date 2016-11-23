@@ -404,7 +404,10 @@ eARNETWORK_ERROR ARNETWORK_Receiver_ReturnACK (ARNETWORK_Receiver_t *receiverPtr
     if (ACKIOBufferPtr != NULL)
     {
         int isEmpty = ARNETWORK_RingBuffer_IsEmpty(ACKIOBufferPtr->dataDescriptorRBuffer);
+		error = ARNETWORK_IOBuffer_Lock(ACKIOBufferPtr);
         error = ARNETWORK_IOBuffer_AddData (ACKIOBufferPtr, (uint8_t*) &seq, sizeof(seq), NULL, NULL, 1);
+		ACKIOBufferPtr->waitTimeCount = 0;
+		ARNETWORK_IOBuffer_Unlock(ACKIOBufferPtr);
         if (error == ARNETWORK_OK && isEmpty > 0)
         {
             ARNETWORK_Sender_SignalNewData (receiverPtr->senderPtr);
