@@ -57,6 +57,7 @@ typedef enum
  * @brief Internal media-independant frame representation used by the ARNETWORKAL_Manager.
  * @warning The actual format of the frames exchanged on the network may differ.
  */
+#pragma pack(push, 1)
 typedef struct
 {
     uint8_t type; /**< frame type eARNETWORK_FRAME_TYPE */
@@ -65,5 +66,6 @@ typedef struct
     uint32_t size; /**< size of the frame */
     uint8_t *dataPtr; /**< pointer on the data of the frame */
 }ARNETWORKAL_Frame_t;
+#pragma pack(pop)
 
 #endif /** _ARNETWORKAL_FRAME_H_ */

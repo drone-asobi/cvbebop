@@ -111,7 +111,7 @@
 #define HAVE_PTHREAD_H 1
 
 /* Define to 1 if you have the <semaphore.h> header file. */
-#define HAVE_SEMAPHORE_H 1
+// #define HAVE_SEMAPHORE_H 1
 
 /* Define to 1 if you have the `sem_destroy' function. */
 #define HAVE_SEM_DESTROY 1

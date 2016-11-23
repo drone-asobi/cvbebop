@@ -171,6 +171,8 @@ static ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
 
 int ARSAL_Socket_Create(int domain, int type, int protocol)
 {
+	WSADATA wsaData;
+	WSAStartup(MAKEWORD(2, 2), &wsaData);
     return socket(domain, type, protocol);
 }
 
@@ -237,7 +239,9 @@ int ARSAL_Socket_Accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 
 int ARSAL_Socket_Close(int sockfd)
 {
-	return closesocket(sockfd);
+	int err = closesocket(sockfd);
+	WSACleanup();
+	return err;
 }
 
 int ARSAL_Socket_Setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen)

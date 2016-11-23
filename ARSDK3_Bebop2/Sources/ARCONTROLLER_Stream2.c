@@ -83,8 +83,10 @@ static int ARCONTROLLER_Stream2_Open_Socket(const char *name, int *sockfd, int *
     int yes;
 
     fd = ARSAL_Socket_Create (AF_INET, SOCK_DGRAM, 0);
-    if (fd < 0)
-        goto error;
+	if (fd < 0) {
+		ARSAL_PRINT(ARSAL_PRINT_ERROR, ARCONTROLLER_STREAM2_TAG, "Socket Create Error : %d", WSAGetLastError());
+		goto error;
+	}
 
 	u_long flags = 1;
 	ret = ioctlsocket(fd, FIONBIO, &flags);
