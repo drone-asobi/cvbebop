@@ -196,24 +196,15 @@ xcopy /y /d /s "$(SolutionDir)lib\opencv\build\etc" "$(OutDir)train"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bebopCommand.cpp" />
-    <ClCompile Include="BebopContoller.cpp" />
+    <ClCompile Include="bebop2_device.cpp" />
+    <ClCompile Include="bebop2_controller.cpp" />
     <ClCompile Include="bebop_video_decoder.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="TCPClient.cpp" />
-    <ClCompile Include="TCPServer.cpp" />
-    <ClCompile Include="UDPSocket.cpp" />
-    <ClCompile Include="VideoDataPool.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bebopCommand.h" />
-    <ClInclude Include="BebopController.h" />
+    <ClInclude Include="bebop2_controller.h" />
+    <ClInclude Include="bebop2_device.h" />
     <ClInclude Include="bebop_video_decoder.h" />
-    <ClInclude Include="picojson.h" />
-    <ClInclude Include="TCPClient.h" />
-    <ClInclude Include="TCPServer.h" />
-    <ClInclude Include="UDPSocket.h" />
-    <ClInclude Include="VideoDataPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ARSDK3_Bebop2\ARSDK3_Bebop2.vcxproj">

@@ -185,7 +185,7 @@
 // #define HAVE_SYS_MOUNT_H 1
 
 /* No-debug Mode */
-#define NDEBUG /**/
+// #define NDEBUG /* Already defined in VC++ */
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
