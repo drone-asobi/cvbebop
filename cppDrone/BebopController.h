@@ -1,9 +1,12 @@
 #ifndef _BEBOP_CONTROLLER_H_
 #define _BEBOP_CONTROLLER_H_
 
+extern "C" {
 #include "libARController/ARCONTROLLER.h"
+}
+#include "bebop_video_decoder.h"
 
-ARCONTROLLER_Device_t* start_control_bebop2(eARCONTROLLER_ERROR &error);
+eARCONTROLLER_ERROR start_control_bebop2(ARCONTROLLER_Device_t** aDeviceController, bebop_driver::VideoDecoder* aVideoDecoder, ARCONTROLLER_Stream_DidReceiveFrameCallback_t aDidReceiveFrameCallback);
 
 eARCONTROLLER_ERROR finish_control_bebop2(ARCONTROLLER_Device_t* deviceController);
 
@@ -16,11 +19,6 @@ void commandReceived(eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTROLLER_DICTI
 // IHM updates from commands
 void batteryStateChanged(uint8_t percent);
 
-// called when a streaming frame has been received
-eARCONTROLLER_ERROR didReceiveFrameCallback(ARCONTROLLER_Frame_t *frame, void *customData);
-
 eARCONTROLLER_ERROR decoderConfigCallback(ARCONTROLLER_Stream_Codec_t codec, void *customData);
-
-int customPrintCallback(eARSAL_PRINT_LEVEL level, const char *tag, const char *format, va_list va);
 
 #endif

@@ -198,6 +198,7 @@ xcopy /y /d /s "$(SolutionDir)lib\opencv\build\etc" "$(OutDir)train"</Command>
   <ItemGroup>
     <ClCompile Include="bebopCommand.cpp" />
     <ClCompile Include="BebopContoller.cpp" />
+    <ClCompile Include="bebop_video_decoder.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TCPClient.cpp" />
     <ClCompile Include="TCPServer.cpp" />
@@ -207,6 +208,7 @@ xcopy /y /d /s "$(SolutionDir)lib\opencv\build\etc" "$(OutDir)train"</Command>
   <ItemGroup>
     <ClInclude Include="bebopCommand.h" />
     <ClInclude Include="BebopController.h" />
+    <ClInclude Include="bebop_video_decoder.h" />
     <ClInclude Include="picojson.h" />
     <ClInclude Include="TCPClient.h" />
     <ClInclude Include="TCPServer.h" />

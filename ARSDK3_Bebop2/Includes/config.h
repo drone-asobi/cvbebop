@@ -3,7 +3,7 @@
 
 /* Debug Mode */
 /* #undef DEBUG */
-#define DEBUG
+// #define DEBUG
 
 /* Define to 1 if you have the declaration of `PRIi16', and to 0 if you don't.
    */
@@ -185,7 +185,7 @@
 // #define HAVE_SYS_MOUNT_H 1
 
 /* No-debug Mode */
-// #define NDEBUG /**/
+#define NDEBUG /**/
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1

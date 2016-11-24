@@ -30,24 +30,25 @@ extern "C" {
 
 using namespace std;
 using namespace cv;
+using namespace bebop_driver;
 
-#define KEY_DOWN        0x102   /* Down arrow key                */
-#define KEY_UP          0x103   /* Up arrow key                  */
-#define KEY_LEFT        0x104   /* Left arrow key                */
-#define KEY_RIGHT       0x105   /* Right arrow key               */
+#define TAG "Main"
+
+void key_control(ARCONTROLLER_Device_t *deviceController);
+eARCONTROLLER_ERROR didReceiveFrameCallback(ARCONTROLLER_Frame_t *frame, void *customData);
 
 void key_control(ARCONTROLLER_Device_t *deviceController)
 {
-	imshow("video", imread("kokuban.jpg"));
-	VideoCapture cam = VideoCapture("bebopvideo.bin");
-	bool control = true;
-	while (control) {
-		if (cam.isOpened()) {
-			cv::Mat frame;
-			cam >> frame;
+	if (deviceController == nullptr)
+	{
+		ARSAL_PRINT(ARSAL_PRINT_ERROR, TAG, "DeviceController is NULL.");
+		return;
+	}
 
-			imshow("video", frame);
-		}
+	cvNamedWindow("video");
+
+	auto control = true;
+	while (control) {
 		char key = cv::waitKey(0);
 		// Manage IHM input events
 		eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
@@ -56,99 +57,68 @@ void key_control(ARCONTROLLER_Device_t *deviceController)
 		{
 		case 'q':
 		case 'Q':
-			if (deviceController != NULL)
-			{
-				// send a landing command to the drone
-				error = deviceController->aRDrone3->sendPilotingLanding(deviceController->aRDrone3);
-			}
+			// send a landing command to the drone
+			error = deviceController->aRDrone3->sendPilotingLanding(deviceController->aRDrone3);
 			control = false;
 			break;
 		case 'e':
 		case 'E':
-			if (deviceController != NULL)
-			{
-				// send a Emergency command to the drone
-				error = deviceController->aRDrone3->sendPilotingEmergency(deviceController->aRDrone3);
-			}
+			// send a Emergency command to the drone
+			error = deviceController->aRDrone3->sendPilotingEmergency(deviceController->aRDrone3);
 			break;
 		case 'l':
 		case 'L':
-			if (deviceController != NULL)
-			{
-				// send a landing command to the drone
-				error = deviceController->aRDrone3->sendPilotingLanding(deviceController->aRDrone3);
-			}
+			// send a landing command to the drone
+			error = deviceController->aRDrone3->sendPilotingLanding(deviceController->aRDrone3);
 			break;
 		case 't':
 		case 'T':
-			if (deviceController != NULL)
-			{
-				// send a takeoff command to the drone
-				error = deviceController->aRDrone3->sendPilotingTakeOff(deviceController->aRDrone3);
-			}
+			// send a takeoff command to the drone
+			error = deviceController->aRDrone3->sendPilotingTakeOff(deviceController->aRDrone3);
 			break;
-		case KEY_UP:
-			if (deviceController != NULL)
-			{
-				// set the flag and speed value of the piloting command
-				error = deviceController->aRDrone3->setPilotingPCMDGaz(deviceController->aRDrone3, 50);
-			}
+		case 'u': // UP
+		case 'U':
+			// set the flag and speed value of the piloting command
+			// error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
+			error = deviceController->aRDrone3->setPilotingPCMDGaz(deviceController->aRDrone3, 10);
 			break;
-		case KEY_DOWN:
-			if (deviceController != NULL)
-			{
-				error = deviceController->aRDrone3->setPilotingPCMDGaz(deviceController->aRDrone3, -50);
-			}
+		case 'j': // DOWN
+		case 'J':
+			// error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
+			error = deviceController->aRDrone3->setPilotingPCMDGaz(deviceController->aRDrone3, -10);
 			break;
-		case KEY_RIGHT:
-			if (deviceController != NULL)
-			{
-				error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 50);
-			}
+		case 'k': // RIGHT
+		case 'K':
+			// error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
+			error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 10);
 			break;
-		case KEY_LEFT:
-			if (deviceController != NULL)
-			{
-				error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, -50);
-			}
+		case 'h':
+		case 'H':
+			// error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
+			error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, -10);
 			break;
 		case 'r': //IHM_INPUT_EVENT_FORWARD
 		case 'R':
-			if (deviceController != NULL)
-			{
-				error = deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, 50);
-				error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
-			}
+			error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
+			error = deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, 10);
 			break;
 		case 'f': //IHM_INPUT_EVENT_BACK:
 		case 'F':
-			if (deviceController != NULL)
-			{
-				error = deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, -50);
-				error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
-			}
+			error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
+			error = deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, -10);
 			break;
 		case 'd': //IHM_INPUT_EVENT_ROLL_LEFT:
 		case 'D':
-			if (deviceController != NULL)
-			{
-				error = deviceController->aRDrone3->setPilotingPCMDRoll(deviceController->aRDrone3, -50);
-				error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
-			}
+			error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
+			error = deviceController->aRDrone3->setPilotingPCMDRoll(deviceController->aRDrone3, -10);
 			break;
 		case 'g': //IHM_INPUT_EVENT_ROLL_RIGHT:
 		case 'G':
-			if (deviceController != NULL)
-			{
-				error = deviceController->aRDrone3->setPilotingPCMDRoll(deviceController->aRDrone3, 50);
-				error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
-			}
+			error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
+			error = deviceController->aRDrone3->setPilotingPCMDRoll(deviceController->aRDrone3, 10);
 			break;
 		default:
-			if (deviceController != NULL)
-			{
-				error = deviceController->aRDrone3->setPilotingPCMD(deviceController->aRDrone3, 0, 0, 0, 0, 0, 0);
-			}
+			error = deviceController->aRDrone3->setPilotingPCMD(deviceController->aRDrone3, 0, 0, 0, 0, 0, 0);
 			break;
 		}
 
@@ -158,19 +128,60 @@ void key_control(ARCONTROLLER_Device_t *deviceController)
 		if (error != ARCONTROLLER_OK)
 		{
 			printf("Error sending an event\n");
-			// IHM_PrintInfo(ihm, "Error sending an event");
 		}
 	}
+}
+
+eARCONTROLLER_ERROR didReceiveFrameCallback(ARCONTROLLER_Frame_t *frame, void *customData)
+{
+	auto *decoder = static_cast<VideoDecoder*>(customData);
+
+	if (decoder == nullptr)
+	{
+		ARSAL_PRINT(ARSAL_PRINT_WARNING, TAG, "VideoDecoder is NULL.");
+	}
+	else
+	{
+		if (frame != nullptr)
+		{
+			auto res = decoder->Decode(frame);
+			if (!res)
+			{
+				ARSAL_PRINT(ARSAL_PRINT_WARNING, TAG, "frame decode has failed.");
+			}
+			else
+			{
+				CvSize size;
+				size.width = decoder->GetFrameWidth();
+				size.height = decoder->GetFrameHeight();
+
+				Mat image(size, CV_8UC3, (void*)decoder->GetFrameRGBRawCstPtr());
+
+				imshow("video", image);
+			}
+		}
+		else
+		{
+			ARSAL_PRINT(ARSAL_PRINT_WARNING, TAG, "frame is NULL.");
+		}
+	}
+
+	return ARCONTROLLER_OK;
 }
 
 void process_bebop2()
 {
 	cout << "called process_bebop2()" << endl;
 
-	eARCONTROLLER_ERROR error = ARCONTROLLER_OK;
-	auto deviceController = start_control_bebop2(error);
+	ARCONTROLLER_Device_t* deviceController;
+	VideoDecoder* videoDecoder = new VideoDecoder();
+
+	auto error = start_control_bebop2(&deviceController, videoDecoder, didReceiveFrameCallback);
 
 	if (error == ARCONTROLLER_OK) {
+
+		deviceController->aRDrone3->sendPilotingSettingsMaxAltitude(deviceController->aRDrone3, 2.0);
+
 		key_control(deviceController);
 	}
 
