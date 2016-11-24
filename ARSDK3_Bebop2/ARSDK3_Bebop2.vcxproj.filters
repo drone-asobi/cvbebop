@@ -1,0 +1,570 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header files\libARDiscovery">
+      <UniqueIdentifier>{942f389c-0ec2-43e0-86f2-364c7c0c2590}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\libARNetwork">
+      <UniqueIdentifier>{300359a2-e2f1-4bef-afc7-44760a2bea9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\libARNetworkAL">
+      <UniqueIdentifier>{5588acc9-c5f5-4c06-8df6-1e87ade57f92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\libARSAL">
+      <UniqueIdentifier>{de90b5e3-aea9-4e7d-b96c-5e177017dfe0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARDiscovery">
+      <UniqueIdentifier>{bdf47828-9e81-4f37-b305-544a0489790a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARDiscovery\Wifi">
+      <UniqueIdentifier>{0d1431a5-5242-4980-816b-17f28082220a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARNetwork">
+      <UniqueIdentifier>{a293e6da-2b2c-497b-83d4-780c314d2c38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARNetworkAL">
+      <UniqueIdentifier>{c38c6ba5-50cd-48fc-96f2-953237ecddd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARNetworkAL\Wifi">
+      <UniqueIdentifier>{e4fab6ed-a706-46ea-a3b1-5b983c8a4fe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARSAL">
+      <UniqueIdentifier>{fe71671a-9861-4ccf-8410-e0d3ef88aa59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\libARController">
+      <UniqueIdentifier>{b5741044-7262-4bad-8d5d-2a023d3f4a51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARController">
+      <UniqueIdentifier>{87c3b8e7-8bb7-48a4-97cd-2b3548ef8371}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\libARCommands">
+      <UniqueIdentifier>{1184b0d4-d4fa-42d6-ac21-2d7de4adb7ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARCommands">
+      <UniqueIdentifier>{1823e52d-1e4f-4503-953b-1088563fdabd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\libARStream">
+      <UniqueIdentifier>{70fbc7cd-46cf-48ff-ab63-62c5c948654b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARStream">
+      <UniqueIdentifier>{b6838456-9dfe-46cf-b93e-b1eede7d063f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\libARStream2">
+      <UniqueIdentifier>{fd643bf0-6572-414b-8ada-9e624e0cea56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARStream2">
+      <UniqueIdentifier>{1829f52c-e11a-4e9a-8753-73378261a3a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARDiscovery\Usb">
+      <UniqueIdentifier>{08ba87f1-c5c3-44a1-ace8-530b08f035c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\libARDiscovery\Ble">
+      <UniqueIdentifier>{8c24485d-3116-4fb6-a3a9-83142df907a2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Includes\config.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\dirent.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\pthread.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\sched.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\semaphore.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Connection.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Device.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Discovery.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_Error.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_NetworkConfiguration.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetwork\ARNetwork.h">
+      <Filter>Header files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetwork\ARNETWORK_Error.h">
+      <Filter>Header files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetwork\ARNETWORK_IOBufferParam.h">
+      <Filter>Header files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetwork\ARNETWORK_Manager.h">
+      <Filter>Header files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetworkAL\ARNetworkAL.h">
+      <Filter>Header files\libARNetworkAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetworkAL\ARNETWORKAL_Error.h">
+      <Filter>Header files\libARNetworkAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetworkAL\ARNETWORKAL_Frame.h">
+      <Filter>Header files\libARNetworkAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARNetworkAL\ARNETWORKAL_Manager.h">
+      <Filter>Header files\libARNetworkAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Endianness.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Error.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Ftw.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_MD5_Manager.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Mutex.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Print.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Sem.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Singleton.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Socket.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Thread.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARSAL\ARSAL_Time.h">
+      <Filter>Header files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Wifi\ARDISCOVERY_DEVICE_Wifi.h">
+      <Filter>Source files\libARDiscovery\Wifi</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARDISCOVERY_Connection.h">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARDISCOVERY_NetworkConfiguration.h">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARNETWORK_DataDescriptor.h">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARNETWORK_IOBuffer.h">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARNETWORK_Manager.h">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARNETWORK_Receiver.h">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARNETWORK_RingBuffer.h">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARNETWORK_Sender.h">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARNETWORKAL_Manager.h">
+      <Filter>Source files\libARNetworkAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Wifi\ARNETWORKAL_WifiNetwork.h">
+      <Filter>Source files\libARNetworkAL\Wifi</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARSAL_Ftw.h">
+      <Filter>Source files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARSAL_MD5.h">
+      <Filter>Source files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\md5.h">
+      <Filter>Source files\libARSAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARDISCOVERY_Device.h">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARController\ARController.h">
+      <Filter>Header files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Dictionary.h">
+      <Filter>Header files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Error.h">
+      <Filter>Header files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Frame.h">
+      <Filter>Header files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Network.h">
+      <Filter>Header files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Stream.h">
+      <Filter>Header files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Stream1.h">
+      <Filter>Header files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Stream2.h">
+      <Filter>Header files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_StreamPool.h">
+      <Filter>Header files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_StreamQueue.h">
+      <Filter>Header files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_StreamSender.h">
+      <Filter>Header files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARCONTROLLER_AudioHeader.h">
+      <Filter>Source files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARCONTROLLER_Dictionary.h">
+      <Filter>Source files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARCONTROLLER_Frame.h">
+      <Filter>Source files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARCONTROLLER_Network.h">
+      <Filter>Source files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARCONTROLLER_Stream.h">
+      <Filter>Source files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARCONTROLLER_Stream1.h">
+      <Filter>Source files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARCONTROLLER_Stream2.h">
+      <Filter>Source files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARCONTROLLER_StreamPool.h">
+      <Filter>Source files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARCONTROLLER_StreamQueue.h">
+      <Filter>Source files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARCONTROLLER_StreamSender.h">
+      <Filter>Source files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Device.h">
+      <Filter>Header files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_DICTIONARY_Key.h">
+      <Filter>Header files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARController\ARCONTROLLER_Feature.h">
+      <Filter>Header files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARCONTROLLER_Device.h">
+      <Filter>Source files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARCONTROLLER_Feature.h">
+      <Filter>Source files\libARController</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARCommands\ARCommands.h">
+      <Filter>Header files\libARCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARCommands\ARCOMMANDS_Version.h">
+      <Filter>Header files\libARCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARCommands\ARCOMMANDS_Decoder.h">
+      <Filter>Header files\libARCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARCommands\ARCOMMANDS_Filter.h">
+      <Filter>Header files\libARCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARCommands\ARCOMMANDS_Generator.h">
+      <Filter>Header files\libARCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARCommands\ARCOMMANDS_Ids.h">
+      <Filter>Header files\libARCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARCommands\ARCOMMANDS_Types.h">
+      <Filter>Header files\libARCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARCOMMANDS_ReadWrite.h">
+      <Filter>Source files\libARCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARStream\ARStream.h">
+      <Filter>Header files\libARStream</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARStream\ARSTREAM_Error.h">
+      <Filter>Header files\libARStream</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARStream\ARSTREAM_Filter.h">
+      <Filter>Header files\libARStream</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARStream\ARSTREAM_Reader.h">
+      <Filter>Header files\libARStream</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARStream\ARSTREAM_Sender.h">
+      <Filter>Header files\libARStream</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARSTREAM_Buffers.h">
+      <Filter>Source files\libARStream</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ARSTREAM_NetworkHeaders.h">
+      <Filter>Source files\libARStream</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARStream2\arstream2_error.h">
+      <Filter>Header files\libARStream2</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARStream2\arstream2_h264_filter.h">
+      <Filter>Header files\libARStream2</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARStream2\arstream2_h264_parser.h">
+      <Filter>Header files\libARStream2</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARStream2\arstream2_h264_sei.h">
+      <Filter>Header files\libARStream2</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARStream2\arstream2_h264_writer.h">
+      <Filter>Header files\libARStream2</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARStream2\arstream2_rtp_receiver.h">
+      <Filter>Header files\libARStream2</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARStream2\arstream2_rtp_sender.h">
+      <Filter>Header files\libARStream2</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARStream2\arstream2_stream_receiver.h">
+      <Filter>Header files\libARStream2</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARStream2\arstream2_stream_recorder.h">
+      <Filter>Header files\libARStream2</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\arstream2_h264.h">
+      <Filter>Source files\libARStream2</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\arstream2_rtp.h">
+      <Filter>Source files\libARStream2</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDISCOVERY_MuxDiscovery.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Usb\ARDISCOVERY_DEVICE_Usb.h">
+      <Filter>Source files\libARDiscovery\Usb</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\BLE\ARDISCOVERY_DEVICE_Ble.h">
+      <Filter>Source files\libARDiscovery\Ble</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\libARDiscovery\ARDiscovery.h">
+      <Filter>Header files\libARDiscovery</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\Wifi\ARDISCOVERY_DEVICE_Wifi.c">
+      <Filter>Source files\libARDiscovery\Wifi</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARDISCOVERY_Connection.c">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARDISCOVERY_Device.c">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARDISCOVERY_Discovery.c">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARDISCOVERY_Error.c">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARDISCOVERY_NetworkConfiguration.c">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORK_Error.c">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORK_IOBuffer.c">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORK_IOBufferParam.c">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORK_Manager.c">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORK_Receiver.c">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORK_RingBuffer.c">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORK_Sender.c">
+      <Filter>Source files\libARNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORKAL_Error.c">
+      <Filter>Source files\libARNetworkAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARNETWORKAL_Manager.c">
+      <Filter>Source files\libARNetworkAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Wifi\ARNETWORKAL_WifiNetwork.c">
+      <Filter>Source files\libARNetworkAL\Wifi</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Ftw.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_MD5.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_MD5_Manager.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Mutex.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Print.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Sem.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Socket.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Thread.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Time.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\md5.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCONTROLLER_Dictionary.c">
+      <Filter>Source files\libARController</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCONTROLLER_Frame.c">
+      <Filter>Source files\libARController</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCONTROLLER_Network.c">
+      <Filter>Source files\libARController</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCONTROLLER_Stream.c">
+      <Filter>Source files\libARController</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCONTROLLER_Stream1.c">
+      <Filter>Source files\libARController</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCONTROLLER_Stream2.c">
+      <Filter>Source files\libARController</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCONTROLLER_StreamPool.c">
+      <Filter>Source files\libARController</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCONTROLLER_StreamQueue.c">
+      <Filter>Source files\libARController</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCONTROLLER_StreamSender.c">
+      <Filter>Source files\libARController</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCONTROLLER_Device.c">
+      <Filter>Source files\libARController</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCONTROLLER_DICTIONARY_Key.c">
+      <Filter>Source files\libARController</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCONTROLLER_Error.c">
+      <Filter>Source files\libARController</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCONTROLLER_Feature.c">
+      <Filter>Source files\libARController</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCOMMANDS_Version.c">
+      <Filter>Source files\libARCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCOMMANDS_Decoder.c">
+      <Filter>Source files\libARCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCOMMANDS_Filter.c">
+      <Filter>Source files\libARCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCOMMANDS_Generator.c">
+      <Filter>Source files\libARCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARCOMMANDS_ReadWrite.c">
+      <Filter>Source files\libARCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSTREAM_Buffers.c">
+      <Filter>Source files\libARStream</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSTREAM_NetworkHeaders.c">
+      <Filter>Source files\libARStream</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSTREAM_Reader.c">
+      <Filter>Source files\libARStream</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSTREAM_Sender.c">
+      <Filter>Source files\libARStream</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSTREAM_Error.c">
+      <Filter>Source files\libARStream</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\arstream2_h264_filter.c">
+      <Filter>Source files\libARStream2</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\arstream2_h264_parser.c">
+      <Filter>Source files\libARStream2</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\arstream2_h264_sei.c">
+      <Filter>Source files\libARStream2</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\arstream2_h264_writer.c">
+      <Filter>Source files\libARStream2</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\arstream2_rtp_receiver.c">
+      <Filter>Source files\libARStream2</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\arstream2_rtp_sender.c">
+      <Filter>Source files\libARStream2</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\arstream2_stream_receiver.c">
+      <Filter>Source files\libARStream2</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\arstream2_stream_recorder.c">
+      <Filter>Source files\libARStream2</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\arstream2_error.c">
+      <Filter>Source files\libARStream2</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARDISCOVERY_MuxDiscovery.c">
+      <Filter>Source files\libARDiscovery</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Usb\ARDISCOVERY_DEVICE_Usb.c">
+      <Filter>Source files\libARDiscovery\Usb</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\BLE\ARDISCOVERY_DEVICE_Ble.c">
+      <Filter>Source files\libARDiscovery\Ble</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ARSAL_Error.c">
+      <Filter>Source files\libARSAL</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

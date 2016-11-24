@@ -9,6 +9,11 @@
 #include <set>
 #include <time.h>
 
+extern "C" {
+#include <libARSAL/ARSAL.h>
+#include <libARController/ARController.h>
+}
+
 #include <opencv2\core.hpp>
 #include <opencv2\imgproc.hpp>
 #include <opencv2\objdetect.hpp>
@@ -17,35 +22,72 @@
 #include <opencv2\video.hpp>
 #include <opencv2\videoio.hpp>
 #include <opencv2\calib3d.hpp>
-#include "bebopCommand.h"
+
+#include "bebop2_device.h"
+#include "bebop2_controller.h"
 
 using namespace std;
 using namespace cv;
+using namespace bebop_driver;
 
-void process_bebop()
+#define TAG "Main"
+
+eARCONTROLLER_ERROR receive_frame_callback(ARCONTROLLER_Frame_t *frame, void *customData);
+
+eARCONTROLLER_ERROR receive_frame_callback(ARCONTROLLER_Frame_t *frame, void *customData)
 {
-	bebopCommand bebop;
-	cv::Mat img;
-	bebop.takeOff();
+	auto *decoder = static_cast<VideoDecoder*>(customData);
 
-	while (1)
+	if (decoder == nullptr)
 	{
-		img = bebop.getImage();
-		if (img.empty()) continue;
-		cv::imshow("image", img);
-		char key = cv::waitKey(10);
-		int x, y, z, r = 0;
-		if (key == 'q') break;
-		if (key == 'w') x = 1;
-		if (key == 'z') x = -1;
-		if (key == 'a') y = 1;
-		if (key == 's') y = -1;
-		if (key == 'd') z = 1;
-		if (key == 'x') z = -1;
-		if (key == 'r') r = 1;
-		bebop.move(x, y, z, r);
+		ARSAL_PRINT(ARSAL_PRINT_WARNING, TAG, "VideoDecoder is NULL.");
 	}
-	bebop.landing();
+	else
+	{
+		if (frame != nullptr)
+		{
+			auto res = decoder->Decode(frame);
+			if (!res)
+			{
+				ARSAL_PRINT(ARSAL_PRINT_WARNING, TAG, "frame decode has failed.");
+			}
+			else
+			{
+				CvSize size;
+				size.width = decoder->GetFrameWidth();
+				size.height = decoder->GetFrameHeight();
+
+				Mat image(size, CV_8UC3, (void*)decoder->GetFrameRGBRawCstPtr());
+
+				imshow("video", image);
+			}
+		}
+		else
+		{
+			ARSAL_PRINT(ARSAL_PRINT_WARNING, TAG, "frame is NULL.");
+		}
+	}
+
+	return ARCONTROLLER_OK;
+}
+
+void process_bebop2()
+{
+	cout << "called process_bebop2()" << endl;
+
+	ARCONTROLLER_Device_t* deviceController;
+	auto* videoDecoder = new VideoDecoder();
+
+	auto error = start_bebop2(&deviceController, command_received_callback, videoDecoder, receive_frame_callback);
+
+	if (error == ARCONTROLLER_OK) {
+
+		deviceController->aRDrone3->sendPilotingSettingsMaxAltitude(deviceController->aRDrone3, 2.0);
+
+		keyboard_controller_loop(deviceController, "video");
+	}
+
+	finish_bebop2(deviceController);
 }
 
 void opencv_detect_person(Mat img, cv::Rect &r)
@@ -285,7 +327,8 @@ void process_opencv()
 
 int main(void)
 {
-	process_opencv();
+	// process_opencv();
 	// process_bebop();
+	process_bebop2();
 	return 0;
 }
