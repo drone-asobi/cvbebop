@@ -301,10 +301,7 @@ void process_opencv()
 			list[k] = n;
 
 			k++;
-
-			std::cout << "list[k-1]" << list[k - 1] << std::endl;
-
-		
+	
 			if (k == 3*f_memory){ //監視するフレーム数をfpsから考慮する必要がある
 				double avg = accumulate(&list[0], &list[k -1], 0.0) / (k - 1);
 				std::cout << "avg:" << avg << std::endl;
@@ -315,25 +312,7 @@ void process_opencv()
 				flag = 0;
 			}
 
-			
 
-
-
-//			opencv_detect_person(frame2,result,n);
-	//		list[count] = n;
-	//		if (count == 9)
-	//			count = 0;  //countの値をリセットして配列をループさせる
-               
-
-//		    cout << list.size() << std::endl;
-//		    cout << accumulate(list.begin(), list.end(), 0.0) << std::endl;
-//			cout << avg << std::endl;  数値チェック用
-		
-//			count++;
-			
-//			if(avg < 0.5)//ここの値を変えることで警告の出やすさを調節する
-//				cout << "Stop Drone!!!" << std::endl;
-				
 		}
 
 
