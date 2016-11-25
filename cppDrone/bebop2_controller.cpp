@@ -1,5 +1,6 @@
 #define TAG "bebop2_controller"
-extern "C" {
+
+extern "C" {
 #include <libARSAL/ARSAL.h>
 #include <libARController/ARController.h>
 }
