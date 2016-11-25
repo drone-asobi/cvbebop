@@ -93,8 +93,10 @@ void process_bebop2()
 	auto error = start_bebop2(&deviceController, command_received_callback, videoDecoder, receive_frame_callback);
 
 	if (error == ARCONTROLLER_OK) {
-
+		deviceController->aRDrone3->sendPilotingSettingsNoFlyOverMaxDistance(deviceController->aRDrone3, 1);
+		deviceController->aRDrone3->sendPilotingSettingsMaxDistance(deviceController->aRDrone3, 10.0);
 		deviceController->aRDrone3->sendPilotingSettingsMaxAltitude(deviceController->aRDrone3, 2.0);
+		deviceController->aRDrone3->sendSpeedSettingsMaxPitchRollRotationSpeed(deviceController->aRDrone3, 10);
 
 		keyboard_controller_loop(deviceController, "video");
 	}
@@ -623,16 +625,6 @@ void process_opencv()
 		{
 			flag_detect_distance = !flag_detect_distance;
 			cout << "Distance Measurement ON" << endl;
-		}
-		else if (key == 'x') //fps計測
-		{
-			flag_measure_fps = !flag_measure_fps;
-			cout << "fps Measurement ON" << endl;
-		}
-		else if (key == 'y') //追跡開始
-		{
-			flag_track_something = !flag_track_something;
-			cout << "Tracking start" << endl;
 		}
 
 		if (flag_detect_people)

@@ -168,6 +168,8 @@ eARCONTROLLER_ERROR start_bebop2(ARCONTROLLER_Device_t** aDeviceController, ARCO
 	{
 		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "- send StreamingVideoEnable ... ");
 		error = deviceController->aRDrone3->sendMediaStreamingVideoEnable(deviceController->aRDrone3, 1);
+		error = deviceController->aRDrone3->sendMediaStreamingVideoStreamMode(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_MEDIASTREAMING_VIDEOSTREAMMODE_MODE_HIGH_RELIABILITY);
+		error = deviceController->aRDrone3->sendMediaRecordVideoV2(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_MEDIARECORD_VIDEOV2_RECORD_START);
 		if (error != ARCONTROLLER_OK)
 		{
 			ARSAL_PRINT(ARSAL_PRINT_ERROR, TAG, "- error :%s", ARCONTROLLER_Error_ToString(error));
@@ -232,6 +234,7 @@ void keyboard_controller_loop(ARCONTROLLER_Device_t *deviceController, const cha
 		case 'Q':
 			// send a landing command to the drone
 			error = deviceController->aRDrone3->sendPilotingLanding(deviceController->aRDrone3);
+			error = deviceController->aRDrone3->sendMediaRecordVideoV2(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_MEDIARECORD_VIDEOV2_RECORD_START);
 			control = false;
 			break;
 		case 'e':
