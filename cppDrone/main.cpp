@@ -140,28 +140,17 @@ int flag = 0;
 int f_memory = 0;
 int k = 0;
 
-int distance_measurement(int S) {
-
+double distance_measurement(int S) {
 	/////距離計測/////
 	double reference_d = 2.33;	//基準の距離(m)
 	double reference_size = 15225; //基準の人領域の大きさ
 	double distance = 0;	//距離(m)
 
-	/////距離の度合い/////
-	double near_range = 2.3;
-	double middle_range = 2.7;
-
 	distance = reference_d*sqrt(reference_size) / sqrt(S);
 	cout << "distance" << distance << endl;
 
-	if (distance <= near_range) {
-		return(0);
-	}
-	else if (distance <= middle_range && distance > near_range) {
-		return(1);
-	}
+	return(distance);
 
-	return(2);
 }
 
 void opencv_detect_person(Mat &img, cv::Rect &r,int &n)
@@ -177,7 +166,11 @@ void opencv_detect_person(Mat &img, cv::Rect &r,int &n)
 	// 探索窓のスケール変化係数，グルーピング係数
 	hog.detectMultiScale(img, found, 0.2, cv::Size(8, 8), cv::Size(16, 16), 1.05, 2);
 
-	int d;
+	double d=0;
+
+	/////距離の度合い/////
+	double near_range = 2.3;
+	double middle_range = 2.7;
 
 	std::cout << "found:" << found.size() << std::endl;
 	n = (int) found.size(); //size_t型をint型にキャスト
@@ -192,11 +185,11 @@ void opencv_detect_person(Mat &img, cv::Rect &r,int &n)
 		r.area();
 		d = distance_measurement(r.area());
 
-		if (d == 0) {	//近いと赤色の四角
+		if (d <= near_range) {	//近いと赤色の四角
 			cv::rectangle(img, r.tl(), r.br(), cv::Scalar(0, 0, 255), 3);
 			cv::putText(img, "near_range", cv::Point(r.tl().x, r.tl().y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 0, 255), 2, CV_AA);
 		}
-		else if (d == 1) {	//中間の距離は緑の四角
+		else if (d <=middle_range && d > near_range) {	//中間の距離は緑の四角
 			cv::rectangle(img, r.tl(), r.br(), cv::Scalar(0, 255, 0), 3);
 			cv::putText(img, "middle_range", cv::Point(r.tl().x, r.tl().y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2, CV_AA);
 		}
@@ -556,17 +549,6 @@ void process_opencv()
 	cv::Rect_<float> r_predict;
 	cv::Rect_<float> rect_keep;
 	
-	/////distance_part1/////
-	double f_s = 1062.9;	//カメラの焦点距離(pixel)
-	double distance = 0;	//カメラとの距離(m)
-	double H = 240;	//撮影される画像の縦の長さ(pixel)
-	double h = 0.53;	//カメラの高さ(m)
-	Point tyumoku;	//注目点の座標(pixel)
-
-	/////distance_part2/////
-	double reference_d = 2.33;	//基準の距離(m)
-	double reference_size = 15225; //基準の人領域の大きさ
-
 	/////検出結果チェック/////
 	int count = 0; //配列の番号を指す
 	int i = 0;
@@ -578,6 +560,10 @@ void process_opencv()
 	int64 start = 0;
 	int64 end = 0;
 	double fps = 0;
+
+	///distance////
+	int l = 0;
+	double distance[5] = { 100,100,100,100,100 };	//距離(m)
 
 	while (true)//無限ループ
 	{
@@ -641,36 +627,50 @@ void process_opencv()
 			//opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
 			opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
 
-			if (flag_detect_distance)
-			{
-				tyumoku.y = result.br().y;	//注目点は人領域の下辺の真ん中
-				tyumoku.x = (result.tl().x + result.br().x) / 2;
+			opencv_detect_person(frame2, result, n);
+			end = cv::getTickCount();
+			fps = measure_fps(start, end, fps);
+			std::cout << "::" << fps << "fps" << std::endl;
 
-				//				distance = (2*f_s*h) / (2*tyumoku.y - H);				
-				//				cout << "distance_part1" << endl;
-				//				cout << (2 * f_s*h) / (2 * tyumoku.y - H) << endl;
 
-				//				distance = reference_d*sqrt(reference_size) / sqrt(result.area());
-				cout << "distance_part2" << std::endl;
-				cout << reference_d*sqrt(reference_size) / sqrt(result.area()) << endl;
+			if (flag == 0) {
+				f_memory = fps;
+				flag = 1;
 			}
+
+			list[k] = n;
+			
+			k++;
+
+		
+			if (k == 3*f_memory){ //監視するフレーム数をfpsから考慮する必要がある
+				double avg = accumulate(&list[0], &list[k -1], 0.0) / (k - 1);
+				std::cout << "avg:" << avg << std::endl;
+				if (avg < 0.1)//ここの値を変えることで警告の出やすさを調節する
+				//	std::cout << "::" << avg << "avg" << std::endl;
+					cout << "Stop Drone!!!" << std::endl;
+				k = 0;
+				flag = 0;
+			}
+
+			distance[l % 5] = distance_measurement(result.area());
+			l++;
+
+			double d_avg = accumulate(&distance[0], &distance[4], 0.0) / 4;
+			//	cout << "avg:" << avg << endl;
+
+			if (d_avg < 2.0)//ここの値を変えることで警告の出やすさを調節する
+						  //	std::cout << "::" << avg << "avg" << std::endl;
+				cout << "Stop Drone!!!" << endl;
+
+
+			if (frame2.cols / 2 < (result.br().x + result.tl().x) / 2) {
+				//右に人がいるときは右に曲がる
+			}if ((result.br().x + result.tl().x) / 2 < frame2.cols / 2) {
+				//左に人がいるときは左に曲がる
+			}
+
 		}
-
-
-		//if (flag_detect_people)
-		//{
-		//	opencv_detect_person(frame2, result, n);
-		//	end = cv::getTickCount();
-		//	fps = measure_fps(start, end, fps);
-		//	std::cout << "::" << fps << "fps" << std::endl;
-
-
-		//	if (flag == 0) {
-		//		f_memory = fps;
-		//		flag = 1;
-		//	}
-
-		//	list[k] = n;
 
 		//	k++;
 	
