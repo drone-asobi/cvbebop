@@ -1,6 +1,8 @@
 cppDrone.sdf
 cppDrone.VC.opendb
-cppDrone/x64/Release/
-cppDrone/*.vcxproj.user
-x64/Release/
+cppDrone/x64/
+ARSDK3_Bebop2/x64/
+json/x64/
+*/*.vcxproj.user
+x64/
 .vs/
