@@ -95,6 +95,7 @@ void process_bebop2()
 	if (error == ARCONTROLLER_OK) {
 
 		deviceController->aRDrone3->sendPilotingSettingsMaxAltitude(deviceController->aRDrone3, 2.0);
+		deviceController->aRDrone3->sendMediaStreamingVideoStreamMode(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_MEDIASTREAMING_VIDEOSTREAMMODE_MODE_HIGH_RELIABILITY);
 
 		keyboard_controller_loop(deviceController, "video");
 	}
@@ -429,7 +430,7 @@ void process_opencv_from_image(Mat &frame1)
 
 	start = cv::getTickCount(); //fps計測基準時取得
 
-	cv::resize(frame1, frame2, cv::Size(), 0.6, 0.6);
+	cv::resize(frame1, frame2, cv::Size(), 0.25, 0.25);
 	cv::imshow("window", frame2);//画像を表示．
 
 	int key = cv::waitKey(1);
