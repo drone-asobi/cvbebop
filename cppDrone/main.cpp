@@ -121,6 +121,17 @@ cv::Rect_<float> r_keep;
 cv::Rect_<float> r_predict;
 cv::Rect_<float> rect_keep;
 
+/////distance_part1/////
+double f_s = 1062.9;	//カメラの焦点距離(pixel)
+double distance = 0;	//カメラとの距離(m)
+double H = 240;	//撮影される画像の縦の長さ(pixel)
+double h = 0.53;	//カメラの高さ(m)
+Point tyumoku;	//注目点の座標(pixel)
+
+/////distance_part2/////
+double reference_d = 2.33;	//基準の距離(m)
+double reference_size = 15225; //基準の人領域の大きさ
+
 /////検出結果チェック/////
 int count = 0; //配列の番号を指す
 int i = 0;
@@ -194,6 +205,143 @@ void opencv_detect_person(Mat &img, cv::Rect &r,int &n)
 			cv::putText(img, "far_range", cv::Point(r.tl().x, r.tl().y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 0, 0), 2, CV_AA);
 		}
 	}
+	// 結果の描画
+	cv::namedWindow("result", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
+	cv::imshow("result", img);
+}
+
+void opencv_detect_person_hogsvm(Mat img, cv::Rect &r)
+{
+	// ref: http://opencv.jp/cookbook/opencv_img.html#id43
+	HOGDescriptor hog;
+	hog.setSVMDetector(HOGDescriptor::getDefaultPeopleDetector());
+
+	std::vector<cv::Rect> found;
+	// 画像，検出結果，閾値（SVMのhyper-planeとの距離），
+	// 探索窓の移動距離（Block移動距離の倍数），
+	// 画像外にはみ出た対象を探すためのpadding，
+	// 探索窓のスケール変化係数，グルーピング係数
+	hog.detectMultiScale(img, found, 0.2, cv::Size(8, 8), cv::Size(16, 16), 1.05, 2);
+
+	std::cout << "found:" << found.size() << std::endl;
+	for (auto it = found.begin(); it != found.end(); ++it)
+	{
+		r = *it;
+		// 描画に際して，検出矩形を若干小さくする
+		r.x += cvRound(r.width * 0.1);
+		r.width = cvRound(r.width * 0.8);
+		r.y += cvRound(r.height * 0.07);
+		r.height = cvRound(r.height * 0.8);
+		cv::rectangle(img, r.tl(), r.br(), cv::Scalar(0, 255, 0), 3);
+		r.area();
+	}
+
+	// 結果の描画
+	cv::namedWindow("result", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
+	cv::imshow("result", img);
+}
+
+void opencv_detect_person_haarcascade(Mat img, cv::Rect &r)
+{
+
+	//全身を大きめに検知して、その中に上半身があれば出力とか、誤認識は減るかもしれんが認識率そのものも減る可能性
+
+	Mat gray_img; //グレイ画像変換
+	cvtColor(img, gray_img, CV_BGR2GRAY);
+	equalizeHist(gray_img, gray_img);
+
+	std::vector<cv::Rect> people;
+	CascadeClassifier cascade("haarcascade_fullbody.xml"); //haar
+	cascade.detectMultiScale(gray_img, people); //条件設定
+
+	std::cout << "found:" << people.size() << std::endl; //発見数の表示
+
+	for (auto it = people.begin(); it != people.end(); ++it) {
+		r = *it;
+		r.x += cvRound(r.width * 0.1);
+		r.width = cvRound(r.width * 0.8);
+		r.y += cvRound(r.height * 0.07);
+		r.height = cvRound(r.height * 0.8);
+		cv::rectangle(img, it->tl(), it->br(), Scalar(0, 0, 255), 2, 8, 0);
+		r.area();
+	}
+
+	cv::namedWindow("result", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
+	cv::imshow("result", img);
+}
+
+void opencv_detect_person_hogcascade(Mat img, cv::Rect &r)
+{
+	Mat gray_img; //グレイ画像変換
+	cvtColor(img, gray_img, CV_BGR2GRAY);
+	equalizeHist(gray_img, gray_img);
+
+	std::vector<cv::Rect> people;
+	CascadeClassifier cascade("hogcascade_pedestrians.xml"); //hog
+	cascade.detectMultiScale(gray_img, people, 1.1, 2); //条件設定
+
+	std::cout << "found:" << people.size() << std::endl; //発見数の表示
+
+	for (auto it = people.begin(); it != people.end(); ++it) {
+		r = *it;
+		r.x += cvRound(r.width * 0.1);
+		r.width = cvRound(r.width * 0.8);
+		r.y += cvRound(r.height * 0.07);
+		r.height = cvRound(r.height * 0.8);
+		cv::rectangle(img, it->tl(), it->br(), Scalar(0, 0, 255), 2, 8, 0);
+		r.area();
+	}
+
+	cv::namedWindow("result", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
+	cv::imshow("result", img);
+}
+
+void opencv_track_person(Mat img, cv::Rect_<float> &r_keep, cv::Rect &r, cv::Rect_<float> &r_predict, cv::Rect_<float> &rect_keep, int64 start) //物体追跡
+{
+	cv::Rect_<float> rect;
+	float x_aft = r.x;
+	float y_aft = r.y;
+	float wid_aft = r.width;
+	float hei_aft = r.height;
+	float x_bef = r_keep.x;
+	float y_bef = r_keep.y;
+	float wid_bef = r_keep.width;
+	float hei_bef = r_keep.height;
+	int64 end = cv::getTickCount();
+	double sec = (end - start) / cv::getTickFrequency();
+	double fps = cv::getTickFrequency() / (end - start);
+
+	if (x_aft != 0 && x_aft != x_bef)
+	{
+		//1sあたりの変化量
+		r_predict.x = (x_aft - x_bef) * fps;
+		r_predict.y = (y_aft - y_bef) * fps;
+		r_predict.width = (wid_aft - wid_bef) * fps;
+		r_predict.height = 2 * r_predict.width;
+
+		rect_keep.x = x_aft;
+		rect_keep.y = y_aft;
+		rect_keep.width = wid_aft;
+		rect_keep.height = 2 * wid_aft;
+	}
+
+	rect.x += cvRound(rect_keep.x + r_predict.x * sec);
+	rect.y += cvRound(rect_keep.y + r_predict.y * sec);
+	rect.width = cvRound(rect_keep.width + r_predict.width * sec);
+	rect.height = 2 * rect.width;
+	cv::rectangle(img, rect.tl(), rect.br(), cv::Scalar(200, 200, 200), 3);
+	rect.area();
+
+	r_keep.x = r.x;
+	r_keep.y = r.y;
+	r_keep.width = r.width;
+	r_keep.height = 2 * r.width;
+
+	rect_keep.x = rect.x;
+	rect_keep.y = rect.y;
+	rect_keep.width = rect.width;
+	rect_keep.height = 2 * rect.width;
+
 	// 結果の描画
 	cv::namedWindow("result", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
 	cv::imshow("result", img);
@@ -301,6 +449,11 @@ void process_opencv_from_image(Mat &frame1)
 		flag_detect_people = !flag_detect_people;
 		cout << "Detect People ON" << endl;
 	}
+	else if (key == 'd') //距離計測
+	{
+		flag_detect_distance = !flag_detect_distance;
+		cout << "Distance Measurement ON" << endl;
+	}
 	else if (key == 'x') //fps計測
 	{
 		flag_measure_fps = !flag_measure_fps;
@@ -314,30 +467,51 @@ void process_opencv_from_image(Mat &frame1)
 
 	if (flag_detect_people)
 	{
-		opencv_detect_person(frame2, result, n);
-		end = cv::getTickCount();
-		fps = measure_fps(start, end, fps);
-		std::cout << "::" << fps << "fps" << std::endl;
+		//opencv_detect_person_haarcascade(frame2, result); //haar+cascade(赤)
+		//opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
+		opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
 
-		if (flag == 0) {
-			f_memory = fps;
-			flag = 1;
-		}
+		if (flag_detect_distance)
+		{
+			tyumoku.y = result.br().y;	//注目点は人領域の下辺の真ん中
+			tyumoku.x = (result.tl().x + result.br().x) / 2;
 
-		list[k] = n;
+			//				distance = (2*f_s*h) / (2*tyumoku.y - H);				
+			//				cout << "distance_part1" << endl;
+			//				cout << (2 * f_s*h) / (2 * tyumoku.y - H) << endl;
 
-		k++;
-
-		if (k == 3 * f_memory) { //監視するフレーム数をfpsから考慮する必要がある
-			double avg = accumulate(&list[0], &list[k - 1], 0.0) / (k - 1);
-			std::cout << "avg:" << avg << std::endl;
-			if (avg < 0.1)//ここの値を変えることで警告の出やすさを調節する
-						  //	std::cout << "::" << avg << "avg" << std::endl;
-				cout << "Stop Drone!!!" << std::endl;
-			k = 0;
-			flag = 0;
+			//				distance = reference_d*sqrt(reference_size) / sqrt(result.area());
+			cout << "distance_part2" << std::endl;
+			cout << reference_d*sqrt(reference_size) / sqrt(result.area()) << endl;
 		}
 	}
+
+	//if (flag_detect_people)
+	//{
+	//	opencv_detect_person(frame2, result, n);
+	//	end = cv::getTickCount();
+	//	fps = measure_fps(start, end, fps);
+	//	std::cout << "::" << fps << "fps" << std::endl;
+
+	//	if (flag == 0) {
+	//		f_memory = fps;
+	//		flag = 1;
+	//	}
+
+	//	list[k] = n;
+
+	//	k++;
+
+	//	if (k == 3 * f_memory) { //監視するフレーム数をfpsから考慮する必要がある
+	//		double avg = accumulate(&list[0], &list[k - 1], 0.0) / (k - 1);
+	//		std::cout << "avg:" << avg << std::endl;
+	//		if (avg < 0.1)//ここの値を変えることで警告の出やすさを調節する
+	//					  //	std::cout << "::" << avg << "avg" << std::endl;
+	//			cout << "Stop Drone!!!" << std::endl;
+	//		k = 0;
+	//		flag = 0;
+	//	}
+	//}
 
 	if (flag_measure_fps) //fps計測と表示
 	{
@@ -382,6 +556,17 @@ void process_opencv()
 	cv::Rect_<float> r_predict;
 	cv::Rect_<float> rect_keep;
 	
+	/////distance_part1/////
+	double f_s = 1062.9;	//カメラの焦点距離(pixel)
+	double distance = 0;	//カメラとの距離(m)
+	double H = 240;	//撮影される画像の縦の長さ(pixel)
+	double h = 0.53;	//カメラの高さ(m)
+	Point tyumoku;	//注目点の座標(pixel)
+
+	/////distance_part2/////
+	double reference_d = 2.33;	//基準の距離(m)
+	double reference_size = 15225; //基準の人領域の大きさ
+
 	/////検出結果チェック/////
 	int count = 0; //配列の番号を指す
 	int i = 0;
@@ -434,15 +619,10 @@ void process_opencv()
 			flag_detect_people = !flag_detect_people;
 			cout << "Detect People ON" << endl;
 		}
-		else if (key == 'x') //fps計測
+		else if (key == 'd') //距離計測
 		{
-			flag_measure_fps = !flag_measure_fps;
-			cout << "fps Measurement ON" << endl;
-		}
-		else if (key == 'y') //追跡開始
-		{
-			flag_tracking_something = !flag_tracking_something;
-			cout << "Tracking start" << endl;
+			flag_detect_distance = !flag_detect_distance;
+			cout << "Distance Measurement ON" << endl;
 		}
 		else if (key == 'x') //fps計測
 		{
@@ -457,31 +637,53 @@ void process_opencv()
 
 		if (flag_detect_people)
 		{
-			opencv_detect_person(frame2, result, n);
-			end = cv::getTickCount();
-			fps = measure_fps(start, end, fps);
-			std::cout << "::" << fps << "fps" << std::endl;
+			//opencv_detect_person_haarcascade(frame2, result); //haar+cascade(赤)
+			//opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
+			opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
 
+			if (flag_detect_distance)
+			{
+				tyumoku.y = result.br().y;	//注目点は人領域の下辺の真ん中
+				tyumoku.x = (result.tl().x + result.br().x) / 2;
 
-			if (flag == 0) {
-				f_memory = fps;
-				flag = 1;
-			}
+				//				distance = (2*f_s*h) / (2*tyumoku.y - H);				
+				//				cout << "distance_part1" << endl;
+				//				cout << (2 * f_s*h) / (2 * tyumoku.y - H) << endl;
 
-			list[k] = n;
-
-			k++;
-	
-			if (k == 3*f_memory){ //監視するフレーム数をfpsから考慮する必要がある
-				double avg = accumulate(&list[0], &list[k -1], 0.0) / (k - 1);
-				std::cout << "avg:" << avg << std::endl;
-				if (avg < 0.1)//ここの値を変えることで警告の出やすさを調節する
-				//	std::cout << "::" << avg << "avg" << std::endl;
-					cout << "Stop Drone!!!" << std::endl;
-				k = 0;
-				flag = 0;
+				//				distance = reference_d*sqrt(reference_size) / sqrt(result.area());
+				cout << "distance_part2" << std::endl;
+				cout << reference_d*sqrt(reference_size) / sqrt(result.area()) << endl;
 			}
 		}
+
+
+		//if (flag_detect_people)
+		//{
+		//	opencv_detect_person(frame2, result, n);
+		//	end = cv::getTickCount();
+		//	fps = measure_fps(start, end, fps);
+		//	std::cout << "::" << fps << "fps" << std::endl;
+
+
+		//	if (flag == 0) {
+		//		f_memory = fps;
+		//		flag = 1;
+		//	}
+
+		//	list[k] = n;
+
+		//	k++;
+	
+		//	if (k == 3*f_memory){ //監視するフレーム数をfpsから考慮する必要がある
+		//		double avg = accumulate(&list[0], &list[k -1], 0.0) / (k - 1);
+		//		std::cout << "avg:" << avg << std::endl;
+		//		if (avg < 0.1)//ここの値を変えることで警告の出やすさを調節する
+		//		//	std::cout << "::" << avg << "avg" << std::endl;
+		//			cout << "Stop Drone!!!" << std::endl;
+		//		k = 0;
+		//		flag = 0;
+		//	}
+		//}
 
 		if (flag_measure_fps) //fps計測と表示
 		{
