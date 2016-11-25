@@ -58,7 +58,7 @@ void opencv_detect_face(Mat img)
 	// グレースケール画像に変換
 	cv::cvtColor(img, gray, CV_BGR2GRAY);
 	// 処理時間短縮のために画像を縮小
-	cv::resize(gray, smallImg, smallImg.size(), 0, 0, cv::INTER_LINEAR);
+	cv::resize(gray, smallImg, smallImg.size(), 0.1, 0.1, cv::INTER_LINEAR);
 	cv::equalizeHist(smallImg, smallImg);
 
 	// 分類器の読み込み
@@ -97,6 +97,16 @@ void opencv_detect_face(Mat img)
 void opencv_detect_person(Mat img, cv::Rect &r)
 {
 	// ref: http://opencv.jp/cookbook/opencv_img.html#id43
+	/*
+
+	double scale = 4.0;
+	cv::Mat gray, smallImg(cv::saturate_cast<int>(img.rows / scale), cv::saturate_cast<int>(img.cols / scale), CV_8UC1);
+
+	// グレースケール画像に変換
+	cv::cvtColor(img, gray, CV_BGR2GRAY);
+
+	*/
+
 	HOGDescriptor hog;
 	hog.setSVMDetector(HOGDescriptor::getDefaultPeopleDetector());
 
@@ -105,7 +115,7 @@ void opencv_detect_person(Mat img, cv::Rect &r)
 	// 探索窓の移動距離（Block移動距離の倍数），
 	// 画像外にはみ出た対象を探すためのpadding，
 	// 探索窓のスケール変化係数，グルーピング係数
-	hog.detectMultiScale(img, found, 0.2, cv::Size(8, 8), cv::Size(16, 16), 1.05, 2);
+	hog.detectMultiScale(img, found, 0.2, cv::Size(16, 16), cv::Size(16, 16), 1.05, 2);
 
 	std::cout << "found:" << found.size() << std::endl;
 	for (auto it = found.begin(); it != found.end(); ++it)
@@ -185,19 +195,45 @@ void process_opencv()
 	int64 end = 0;
 	double fps = 0;
 
+	int i = 0;
+
+	Mat gray;
+
 	while (true)//無限ループ
 	{
+		i++;
 		cv::Mat frame1;
 		cv::Mat frame2;
 
 		start = cv::getTickCount(); //fps計測基準時取得
-		
+
+
+
+
+
 		cap >> frame1; // get a new frame from camera
+
+
+
+
+
+
+
 
 		//
 		//取得したフレーム画像に対して，クレースケール変換や2値化などの処理を書き込む．
 		//
-		cv::resize(frame1, frame2, cv::Size(), 0.6, 0.6);
+
+		/*
+		if (frame1.data) {
+			cvtColor(frame1, gray, CV_RGB2GRAY);
+			waitKey(0);						            // 入力待機
+		}
+		*/
+
+
+
+		cv::resize(frame1, frame2, cv::Size(), 0.5, 0.5);
 		cv::imshow("window", frame2);//画像を表示．
 
 		int key = cv::waitKey(1);
@@ -248,20 +284,22 @@ void process_opencv()
 
 		if (flag_detect_people)
 		{
-			opencv_detect_person(frame2, result);
+			if (i%2) {
+				opencv_detect_person(frame2, result);
 
-			if (flag_detect_distance)
-			{
-				tyumoku.y = result.br().y;	//注目点は人領域の下辺の真ん中
-				tyumoku.x = (result.tl().x + result.br().x) / 2;
+				if (flag_detect_distance)
+				{
+					tyumoku.y = result.br().y;	//注目点は人領域の下辺の真ん中
+					tyumoku.x = (result.tl().x + result.br().x) / 2;
 
-				//				distance = (2*f_s*h) / (2*tyumoku.y - H);				
-				//				cout << "distance_part1" << endl;
-				//				cout << (2 * f_s*h) / (2 * tyumoku.y - H) << endl;
+					//				distance = (2*f_s*h) / (2*tyumoku.y - H);				
+					//				cout << "distance_part1" << endl;
+					//				cout << (2 * f_s*h) / (2 * tyumoku.y - H) << endl;
 
-				//				distance = reference_d*sqrt(reference_size) / sqrt(result.area());
-				cout << "distance_part2" << std::endl;
-				cout << reference_d*sqrt(reference_size) / sqrt(result.area()) << endl;
+					//				distance = reference_d*sqrt(reference_size) / sqrt(result.area());
+					cout << "distance_part2" << std::endl;
+					cout << reference_d*sqrt(reference_size) / sqrt(result.area()) << endl;
+				}
 			}
 		}
 
