@@ -10,6 +10,9 @@
 #include <time.h>
 #include <vector>
 #include <numeric>
+#include <chrono>
+
+
 
 #include <opencv2\core.hpp>
 #include <opencv2\imgproc.hpp>
@@ -120,7 +123,7 @@ int distance_measurement(int S) {
 	return(2);
 }
 
-void opencv_detect_person(Mat img, cv::Rect &r,double &n)
+void opencv_detect_person(Mat img, cv::Rect &r,int &n)
 {
 	// ref: http://opencv.jp/cookbook/opencv_img.html#id43
 	HOGDescriptor hog;
@@ -136,7 +139,7 @@ void opencv_detect_person(Mat img, cv::Rect &r,double &n)
 	int d;
 
 	std::cout << "found:" << found.size() << std::endl;
-	n = (double) found.size(); //size_t型をdouble型にキャスト
+	n = (int) found.size(); //size_t型をint型にキャスト
 	for (auto it = found.begin(); it != found.end(); ++it)
 	{
 		r = *it;
@@ -208,17 +211,22 @@ void process_opencv()
 	bool flag_measure_fps = false;
 	bool flag_tracking_something = false;
 
+	vector<double> list(200,1); 
+
 	cv::Rect result;	//人認識の領域
 	
 	/////検出結果チェック/////
 	int count = 0; //配列の番号を指す
-	vector<double> list(10, 1); //要素数10中身1で初期化.
-	double n = 0;
-	double avg; //平均値
+	int i = 0;
+	int n = 0;
+	int flag = 0;
+	int f_memory = 0;
+	int k = 0;
 	////measure_fps////
 	int64 start = 0;
 	int64 end = 0;
 	double fps = 0;
+
 
 	while (true)//無限ループ
 	{
@@ -277,27 +285,57 @@ void process_opencv()
 
 		if (flag_detect_people)
 		{
-			opencv_detect_person(frame2,result,n);
-			list[count] = n;
-			if (count == 9)
-				count = 0;  //countの値をリセットして配列をループさせる
-                
-			avg = accumulate(list.begin(), list.end(), 0.0) /(list.size()-1); //平均値を出す
+
+
+			opencv_detect_person(frame2, result, n);
+			end = cv::getTickCount();
+			fps = measure_fps(start, end, fps);
+			std::cout << "::" << fps << "fps" << std::endl;
+
+
+			if (flag == 0) {
+				f_memory = fps;
+				flag = 1;
+			}
+
+			list[k] = n;
+
+			k++;
+
+			std::cout << "list[k-1]" << list[k - 1] << std::endl;
+
+		
+			if (k == 3*f_memory){ //監視するフレーム数をfpsから考慮する必要がある
+				double avg = accumulate(&list[0], &list[k -1], 0.0) / (k - 1);
+				std::cout << "avg:" << avg << std::endl;
+				if (avg < 0.1)//ここの値を変えることで警告の出やすさを調節する
+				//	std::cout << "::" << avg << "avg" << std::endl;
+					cout << "Stop Drone!!!" << std::endl;
+				k = 0;
+				flag = 0;
+			}
+
+			
+
+
+
+//			opencv_detect_person(frame2,result,n);
+	//		list[count] = n;
+	//		if (count == 9)
+	//			count = 0;  //countの値をリセットして配列をループさせる
+               
 
 //		    cout << list.size() << std::endl;
 //		    cout << accumulate(list.begin(), list.end(), 0.0) << std::endl;
 //			cout << avg << std::endl;  数値チェック用
 		
-			count++;
+//			count++;
 			
-			if(avg < 0.5)//ここの値を変えることで警告の出やすさを調節する
-				cout << "Stop Drone!!!" << std::endl;
+//			if(avg < 0.5)//ここの値を変えることで警告の出やすさを調節する
+//				cout << "Stop Drone!!!" << std::endl;
 				
 		}
-		else if (flag_detect_face)
-		{
-			opencv_detect_face(frame2);
-		}
+
 
 		if (flag_tracking_something) //対象の追跡を開始
 		{
