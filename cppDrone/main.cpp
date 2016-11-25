@@ -108,7 +108,6 @@ void process_bebop2()
 
 /////フラグ/////
 bool flag_detect_people = false;
-bool flag_detect_distance = false;
 bool flag_measure_fps = false;
 bool flag_track_something = false;
 bool flag_detect_face = false;
@@ -418,9 +417,21 @@ void process_opencv_from_image(Mat &frame1)
 	int64 end = 0;
 	double fps = 0;
 
+	/////検出結果チェック/////
+	int count = 0; //配列の番号を指す
+	int i = 0;
+	int n = 0;
+	int flag = 0;
+	int f_memory = 0;
+	int k = 0;
+
 	cv::Mat frame2;
 
 	start = cv::getTickCount(); //fps計測基準時取得
+
+	///distance////
+	int l = 0;
+	double distance[5] = { 100,100,100,100,100 };	//距離(m)
 
 	cv::resize(frame1, frame2, cv::Size(), 0.6, 0.6);
 	cv::imshow("window", frame2);//画像を表示．
@@ -442,11 +453,6 @@ void process_opencv_from_image(Mat &frame1)
 		flag_detect_people = !flag_detect_people;
 		cout << "Detect People ON" << endl;
 	}
-	else if (key == 'd') //距離計測
-	{
-		flag_detect_distance = !flag_detect_distance;
-		cout << "Distance Measurement ON" << endl;
-	}
 	else if (key == 'x') //fps計測
 	{
 		flag_measure_fps = !flag_measure_fps;
@@ -464,47 +470,49 @@ void process_opencv_from_image(Mat &frame1)
 		//opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
 		opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
 
-		if (flag_detect_distance)
-		{
-			tyumoku.y = result.br().y;	//注目点は人領域の下辺の真ん中
-			tyumoku.x = (result.tl().x + result.br().x) / 2;
+		opencv_detect_person(frame2, result, n);
+		end = cv::getTickCount();
+		fps = measure_fps(start, end, fps);
+		std::cout << "::" << fps << "fps" << std::endl;
 
-			//				distance = (2*f_s*h) / (2*tyumoku.y - H);				
-			//				cout << "distance_part1" << endl;
-			//				cout << (2 * f_s*h) / (2 * tyumoku.y - H) << endl;
 
-			//				distance = reference_d*sqrt(reference_size) / sqrt(result.area());
-			cout << "distance_part2" << std::endl;
-			cout << reference_d*sqrt(reference_size) / sqrt(result.area()) << endl;
+		if (flag == 0) {
+			f_memory = fps;
+			flag = 1;
 		}
+
+		list[k] = n;
+
+		k++;
+
+		if (k == 3 * f_memory) { //監視するフレーム数をfpsから考慮する必要がある
+			double avg = accumulate(&list[0], &list[k - 1], 0.0) / (k - 1);
+			std::cout << "avg:" << avg << std::endl;
+			if (avg < 0.1)//ここの値を変えることで警告の出やすさを調節する
+						  //	std::cout << "::" << avg << "avg" << std::endl;
+				cout << "Stop Drone!!!" << std::endl;
+			k = 0;
+			flag = 0;
+		}
+
+		distance[l % 5] = distance_measurement(result.area());
+		l++;
+
+		double d_avg = accumulate(&distance[0], &distance[4], 0.0) / 4;
+		//	cout << "avg:" << avg << endl;
+
+		if (d_avg < 2.0)//ここの値を変えることで警告の出やすさを調節する
+						//	std::cout << "::" << avg << "avg" << std::endl;
+			cout << "Stop Drone!!!" << endl;
+
+
+		if (frame2.cols / 2 < (result.br().x + result.tl().x) / 2) {
+			//右に人がいるときは右に曲がる
+		}if ((result.br().x + result.tl().x) / 2 < frame2.cols / 2) {
+			//左に人がいるときは左に曲がる
+		}
+
 	}
-
-	//if (flag_detect_people)
-	//{
-	//	opencv_detect_person(frame2, result, n);
-	//	end = cv::getTickCount();
-	//	fps = measure_fps(start, end, fps);
-	//	std::cout << "::" << fps << "fps" << std::endl;
-
-	//	if (flag == 0) {
-	//		f_memory = fps;
-	//		flag = 1;
-	//	}
-
-	//	list[k] = n;
-
-	//	k++;
-
-	//	if (k == 3 * f_memory) { //監視するフレーム数をfpsから考慮する必要がある
-	//		double avg = accumulate(&list[0], &list[k - 1], 0.0) / (k - 1);
-	//		std::cout << "avg:" << avg << std::endl;
-	//		if (avg < 0.1)//ここの値を変えることで警告の出やすさを調節する
-	//					  //	std::cout << "::" << avg << "avg" << std::endl;
-	//			cout << "Stop Drone!!!" << std::endl;
-	//		k = 0;
-	//		flag = 0;
-	//	}
-	//}
 
 	if (flag_measure_fps) //fps計測と表示
 	{
@@ -536,7 +544,6 @@ void process_opencv()
 
 	/////フラグ/////
 	bool flag_detect_people = false;
-	bool flag_detect_distance = false;
 	bool flag_measure_fps = false;
 	bool flag_track_something = false;
 	bool flag_detect_face = false;
@@ -605,11 +612,6 @@ void process_opencv()
 			flag_detect_people = !flag_detect_people;
 			cout << "Detect People ON" << endl;
 		}
-		else if (key == 'd') //距離計測
-		{
-			flag_detect_distance = !flag_detect_distance;
-			cout << "Distance Measurement ON" << endl;
-		}
 		else if (key == 'x') //fps計測
 		{
 			flag_measure_fps = !flag_measure_fps;
@@ -671,19 +673,6 @@ void process_opencv()
 			}
 
 		}
-
-		//	k++;
-	
-		//	if (k == 3*f_memory){ //監視するフレーム数をfpsから考慮する必要がある
-		//		double avg = accumulate(&list[0], &list[k -1], 0.0) / (k - 1);
-		//		std::cout << "avg:" << avg << std::endl;
-		//		if (avg < 0.1)//ここの値を変えることで警告の出やすさを調節する
-		//		//	std::cout << "::" << avg << "avg" << std::endl;
-		//			cout << "Stop Drone!!!" << std::endl;
-		//		k = 0;
-		//		flag = 0;
-		//	}
-		//}
 
 		if (flag_measure_fps) //fps計測と表示
 		{
