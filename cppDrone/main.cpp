@@ -60,15 +60,15 @@ eARCONTROLLER_ERROR receive_frame_callback(ARCONTROLLER_Frame_t *frame, void *cu
 			}
 			else
 			{
-				CvSize size;
-				size.width = decoder->GetFrameWidth();
-				size.height = decoder->GetFrameHeight();
-
-				Mat image(size, CV_8UC3, (void*)decoder->GetFrameRGBRawCstPtr());
-				imshow("video", image);
-
 				uint64_t cur_timestamp = GetTickCount64();
 				if (cur_timestamp - prev_timestamp < 1000) {
+					CvSize size;
+					size.width = decoder->GetFrameWidth();
+					size.height = decoder->GetFrameHeight();
+
+					Mat image(size, CV_8UC3, (void*)decoder->GetFrameRGBRawCstPtr());
+					imshow("video", image);
+
 					process_opencv_from_image(image);
 				}
 				prev_timestamp = cur_timestamp;
