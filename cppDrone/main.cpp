@@ -112,6 +112,7 @@ bool flag_measure_fps = false;
 bool flag_track_something = false;
 bool flag_detect_face = false;
 bool flag_tracking_something = false;
+bool flag_save_image = false;
 
 vector<double> list(200, 1);
 
@@ -119,17 +120,6 @@ cv::Rect result;	//人認識の領域
 cv::Rect_<float> r_keep;
 cv::Rect_<float> r_predict;
 cv::Rect_<float> rect_keep;
-
-/////distance_part1/////
-double f_s = 1062.9;	//カメラの焦点距離(pixel)
-double distance = 0;	//カメラとの距離(m)
-double H = 240;	//撮影される画像の縦の長さ(pixel)
-double h = 0.53;	//カメラの高さ(m)
-Point tyumoku;	//注目点の座標(pixel)
-
-/////distance_part2/////
-double reference_d = 2.33;	//基準の距離(m)
-double reference_size = 15225; //基準の人領域の大きさ
 
 /////検出結果チェック/////
 int count = 0; //配列の番号を指す
@@ -425,6 +415,10 @@ void process_opencv_from_image(Mat &frame1)
 	int f_memory = 0;
 	int k = 0;
 
+	///save_image///
+	int counter = 0;
+	char filename[256];
+
 	cv::Mat frame2;
 
 	start = cv::getTickCount(); //fps計測基準時取得
@@ -442,6 +436,8 @@ void process_opencv_from_image(Mat &frame1)
 	{
 		//フレーム画像を保存する．
 		cv::imwrite("img.png", frame2);
+		flag_save_image = !flag_save_image;
+		cout << "Save  Image ON" << endl;
 	}
 	else if (key == 't') //tが押されたとき
 	{
@@ -525,6 +521,12 @@ void process_opencv_from_image(Mat &frame1)
 		track_something(frame2, r_keep, result, r_predict, rect_keep, start);
 		std::cout << "x = " << result.x << std::endl;
 	}
+	if (flag_save_image)	//画像の保存
+	{
+		sprintf(filename, "image\\image_%04d.png", counter);
+		cv::imwrite(filename, frame2);
+		counter++;
+	}
 }
 
 /**** ここを実装してイメージ処理をする ****/
@@ -548,6 +550,7 @@ void process_opencv()
 	bool flag_track_something = false;
 	bool flag_detect_face = false;
 	bool flag_tracking_something = false;
+	bool flag_save_image = false;
 
 	vector<double> list(200,1); 
 
@@ -571,6 +574,10 @@ void process_opencv()
 	///distance////
 	int l = 0;
 	double distance[5] = { 100,100,100,100,100 };	//距離(m)
+
+	///save_image///
+	int counter = 0;
+	char filename[256];
 
 	while (true)//無限ループ
 	{
@@ -596,6 +603,8 @@ void process_opencv()
 		{
 			//フレーム画像を保存する．
 			cv::imwrite("img.png", frame2);
+			flag_save_image = !flag_save_image;
+			cout << "Save  Image ON" << endl;
 		}
 		else if (key == 't') //tが押されたとき
 		{
@@ -626,8 +635,8 @@ void process_opencv()
 		if (flag_detect_people)
 		{
 			//opencv_detect_person_haarcascade(frame2, result); //haar+cascade(赤)
-			//opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
-			opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
+			opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
+			//opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
 
 			opencv_detect_person(frame2, result, n);
 			end = cv::getTickCount();
@@ -644,7 +653,6 @@ void process_opencv()
 			
 			k++;
 
-		
 			if (k == 3*f_memory){ //監視するフレーム数をfpsから考慮する必要がある
 				double avg = accumulate(&list[0], &list[k -1], 0.0) / (k - 1);
 				std::cout << "avg:" << avg << std::endl;
@@ -685,13 +693,19 @@ void process_opencv()
 			track_something(frame2, r_keep, result, r_predict, rect_keep, start);
 			std::cout << "x = " << result.x << std::endl;
 		}
-
+		if (flag_save_image) 
+		{
+			sprintf(filename,"image\\image_%04d.png",counter);
+			cv::imwrite(filename,frame2);
+			counter++;
+		}
 	}
 	cv::destroyAllWindows();
 }
 
 int main(void)
 {
-	process_bebop2();
+//	process_bebop2();
+	process_opencv();
 	return 0;
 }
