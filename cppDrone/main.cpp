@@ -638,8 +638,8 @@ void process_opencv()
 		if (flag_detect_people)
 		{
 			//opencv_detect_person_haarcascade(frame2, result); //haar+cascade(赤)
-			//opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
-			opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
+			opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
+			//opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
 
 			if (flag_detect_distance)
 			{
