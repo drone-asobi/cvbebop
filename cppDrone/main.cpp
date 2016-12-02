@@ -136,6 +136,7 @@ char filename[256];
 ///distance////
 int l = 0;
 double d[5] = { 100,100,100,100,100 };	//距離(m)
+double d_avg = 100;
 
 double distance_measurement(int S) {
 	/////距離計測/////
@@ -502,12 +503,11 @@ void process_opencv_from_image(Mat &frame1)
 			flag = 0;
 		}
 
-		d[l % 5] = distance_measurement(result.area());
-		l++;
-
-		double d_avg = accumulate(&d[0], &d[4], 0.0) / 4;
-		//	cout << "avg:" << avg << endl;
-
+		if (n != 0) {
+			d[l % 5] = distance_measurement(result.area());
+			l++;
+			d_avg = accumulate(&d[0], &d[4], 0.0) / 4;
+		}
 		if (d_avg < 2.0)//ここの値を変えることで警告の出やすさを調節する
 						//	std::cout << "::" << avg << "avg" << std::endl;
 			cout << "Stop Drone!!!" << endl;
@@ -585,10 +585,15 @@ void process_opencv()
 	///distance////
 	int l = 0;
 	double distance[5] = { 100,100,100,100,100 };	//距離(m)
+	double d_avg = 100;
 
 	///save_image///
 	int counter = 0;
 	char filename[256];
+
+	///人検出学習用変数///
+	int counter2 = 0;
+	char filename2[256];
 
 	while (true)//無限ループ
 	{
@@ -677,10 +682,11 @@ void process_opencv()
 				flag = 0;
 			}
 
-			distance[l % 5] = distance_measurement(result.area());
-			l++;
-
-			double d_avg = accumulate(&distance[0], &distance[4], 0.0) / 4;
+			if (n != 0) {
+				distance[l % 5] = distance_measurement(result.area());
+				l++;
+				d_avg = accumulate(&distance[0], &distance[4], 0.0) / 4;
+			}
 			//	cout << "avg:" << avg << endl;
 
 			if (d_avg < 2.0)//ここの値を変えることで警告の出やすさを調節する
@@ -694,6 +700,15 @@ void process_opencv()
 				//左に人がいるときは左に曲がる
 			}
 
+			if (n != 0) {
+				cv::Rect rect(result.tl().x, result.tl().y, result.br().x - result.tl().x, result.br().y - result.tl().y);	//切り取り範囲設定
+				cv::Mat imgSub(frame2, rect);	//切り取り
+				cv::Mat gray;
+				cvtColor(imgSub, gray, CV_RGB2GRAY);	//グレースケールに変換
+				sprintf(filename2, "image_person\\image_%04d.png", counter2);
+				cv::imwrite(filename2, gray);
+				counter2++;
+			}
 		}
 
 		if (flag_measure_fps) //fps計測と表示
