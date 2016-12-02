@@ -129,6 +129,14 @@ int flag = 0;
 int f_memory = 0;
 int k = 0;
 
+///save_image///
+int counter = 0;
+char filename[256];
+
+///distance////
+int l = 0;
+double d[5] = { 100,100,100,100,100 };	//距離(m)
+
 double distance_measurement(int S) {
 	/////距離計測/////
 	double reference_d = 2.33;	//基準の距離(m)
@@ -408,24 +416,24 @@ void process_opencv_from_image(Mat &frame1)
 	double fps = 0;
 
 	/////検出結果チェック/////
-	int count = 0; //配列の番号を指す
-	int i = 0;
-	int n = 0;
-	int flag = 0;
-	int f_memory = 0;
-	int k = 0;
+//	int count = 0; //配列の番号を指す
+//	int i = 0;
+//	int n = 0;
+//	int flag = 0;
+//	int f_memory = 0;
+//	int k = 0;
 
 	///save_image///
-	int counter = 0;
-	char filename[256];
+//	int counter = 0;
+//	char filename[256];
 
 	cv::Mat frame2;
 
 	start = cv::getTickCount(); //fps計測基準時取得
 
 	///distance////
-	int l = 0;
-	double distance[5] = { 100,100,100,100,100 };	//距離(m)
+//	int l = 0;
+//	double distance[5] = { 100,100,100,100,100 };	//距離(m)
 
 	cv::resize(frame1, frame2, cv::Size(), 0.6, 0.6);
 	cv::imshow("window", frame2);//画像を表示．
@@ -435,9 +443,12 @@ void process_opencv_from_image(Mat &frame1)
 	if (key == 's')//sが押されたとき
 	{
 		//フレーム画像を保存する．
-		cv::imwrite("img.png", frame2);
-		flag_save_image = !flag_save_image;
-		cout << "Save  Image ON" << endl;
+//		cv::imwrite("img.png", frame2);
+//		flag_save_image = !flag_save_image;
+//		cout << "Save  Image ON" << endl;
+		sprintf(filename, "image\\image_%04d.png", counter);
+		cv::imwrite(filename, frame2);
+		counter++;
 	}
 	else if (key == 't') //tが押されたとき
 	{
@@ -463,8 +474,8 @@ void process_opencv_from_image(Mat &frame1)
 	if (flag_detect_people)
 	{
 		//opencv_detect_person_haarcascade(frame2, result); //haar+cascade(赤)
-		//opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
-		opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
+		opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
+		//opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
 
 		opencv_detect_person(frame2, result, n);
 		end = cv::getTickCount();
@@ -491,10 +502,10 @@ void process_opencv_from_image(Mat &frame1)
 			flag = 0;
 		}
 
-		distance[l % 5] = distance_measurement(result.area());
+		d[l % 5] = distance_measurement(result.area());
 		l++;
 
-		double d_avg = accumulate(&distance[0], &distance[4], 0.0) / 4;
+		double d_avg = accumulate(&d[0], &d[4], 0.0) / 4;
 		//	cout << "avg:" << avg << endl;
 
 		if (d_avg < 2.0)//ここの値を変えることで警告の出やすさを調節する
@@ -602,9 +613,12 @@ void process_opencv()
 		else if (key == 's')//sが押されたとき
 		{
 			//フレーム画像を保存する．
-			cv::imwrite("img.png", frame2);
-			flag_save_image = !flag_save_image;
-			cout << "Save  Image ON" << endl;
+//			cv::imwrite("img.png", frame2);
+//			flag_save_image = !flag_save_image;
+//			cout << "Save  Image ON" << endl;
+			sprintf(filename, "image\\image_%04d.png", counter);
+			cv::imwrite(filename, frame2);
+			counter++;
 		}
 		else if (key == 't') //tが押されたとき
 		{
