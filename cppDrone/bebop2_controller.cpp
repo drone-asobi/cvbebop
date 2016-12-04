@@ -193,4 +193,88 @@ void command_received_callback(eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTRO
 			}
 		}
 	}
+
+	if ((commandKey == ARCONTROLLER_DICTIONARY_KEY_COMMON_CAMERASETTINGSSTATE_CAMERASETTINGSCHANGED) && (elementDictionary != NULL))
+	{
+		ARCONTROLLER_DICTIONARY_ARG_t *arg = NULL;
+		ARCONTROLLER_DICTIONARY_ELEMENT_t *element = NULL;
+		HASH_FIND_STR(elementDictionary, ARCONTROLLER_DICTIONARY_SINGLE_KEY, element);
+		if (element != NULL)
+		{
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_COMMON_CAMERASETTINGSSTATE_CAMERASETTINGSCHANGED_FOV, arg);
+			if (arg != NULL)
+			{
+				float fov = arg->value.Float;
+				printf("fov: %f\n", fov);
+			}
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_COMMON_CAMERASETTINGSSTATE_CAMERASETTINGSCHANGED_PANMAX, arg);
+			if (arg != NULL)
+			{
+				float panMax = arg->value.Float;
+				printf("panMax: %f\n", panMax);
+			}
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_COMMON_CAMERASETTINGSSTATE_CAMERASETTINGSCHANGED_PANMIN, arg);
+			if (arg != NULL)
+			{
+				float panMin = arg->value.Float;
+				printf("panMin: %f\n", panMin);
+			}
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_COMMON_CAMERASETTINGSSTATE_CAMERASETTINGSCHANGED_TILTMAX, arg);
+			if (arg != NULL)
+			{
+				float tiltMax = arg->value.Float;
+				printf("tiltMax: %f\n", tiltMax);
+			}
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_COMMON_CAMERASETTINGSSTATE_CAMERASETTINGSCHANGED_TILTMIN, arg);
+			if (arg != NULL)
+			{
+				float tiltMin = arg->value.Float;
+				printf("tiltMin: %f\n", tiltMin);
+			}
+		}
+	}
+
+	if ((commandKey == ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_CAMERASTATE_ORIENTATION) && (elementDictionary != NULL))
+	{
+		ARCONTROLLER_DICTIONARY_ARG_t *arg = NULL;
+		ARCONTROLLER_DICTIONARY_ELEMENT_t *element = NULL;
+		HASH_FIND_STR(elementDictionary, ARCONTROLLER_DICTIONARY_SINGLE_KEY, element);
+		if (element != NULL)
+		{
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_CAMERASTATE_ORIENTATION_TILT, arg);
+			if (arg != NULL)
+			{
+				int8_t tilt = arg->value.I8;
+				printf("orient_tilt: %4d\n", tilt);
+			}
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_CAMERASTATE_ORIENTATION_PAN, arg);
+			if (arg != NULL)
+			{
+				int8_t pan = arg->value.I8;
+				printf("orient_pan: %4d\n", pan);
+			}
+		}
+	}
+
+	if ((commandKey == ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_CAMERASTATE_DEFAULTCAMERAORIENTATION) && (elementDictionary != NULL))
+	{
+		ARCONTROLLER_DICTIONARY_ARG_t *arg = NULL;
+		ARCONTROLLER_DICTIONARY_ELEMENT_t *element = NULL;
+		HASH_FIND_STR(elementDictionary, ARCONTROLLER_DICTIONARY_SINGLE_KEY, element);
+		if (element != NULL)
+		{
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_CAMERASTATE_DEFAULTCAMERAORIENTATION_TILT, arg);
+			if (arg != NULL)
+			{
+				int8_t tilt = arg->value.I8;
+				printf("cent_tilt: %4d\n", tilt);
+			}
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_CAMERASTATE_DEFAULTCAMERAORIENTATION_PAN, arg);
+			if (arg != NULL)
+			{
+				int8_t pan = arg->value.I8;
+				printf("cent_pan: %4d\n", pan);
+			}
+		}
+	}
 }

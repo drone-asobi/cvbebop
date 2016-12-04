@@ -173,6 +173,11 @@ eARCONTROLLER_ERROR start_bebop2(ARCONTROLLER_Device_t** aDeviceController, ARCO
 		error = deviceController->aRDrone3->sendPictureSettingsVideoFramerate(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_PICTURESETTINGS_VIDEOFRAMERATE_FRAMERATE_24_FPS);
 		error = deviceController->aRDrone3->sendPictureSettingsVideoResolutions(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_PICTURESETTINGS_VIDEORESOLUTIONS_TYPE_REC720_STREAM720);
 		error = deviceController->aRDrone3->sendMediaStreamingVideoStreamMode(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_MEDIASTREAMING_VIDEOSTREAMMODE_MODE_HIGH_RELIABILITY);
+		for(int cur_tilt = 0; cur_tilt >= -40; cur_tilt -= 5)
+		{
+			deviceController->aRDrone3->setCameraOrientationTilt(deviceController->aRDrone3, cur_tilt);
+			Sleep(200);
+		}
 		error = deviceController->aRDrone3->sendMediaRecordVideoV2(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_MEDIARECORD_VIDEOV2_RECORD_START);
 		error = deviceController->aRDrone3->sendMediaStreamingVideoEnable(deviceController->aRDrone3, 1);
 		if (error != ARCONTROLLER_OK)
@@ -187,22 +192,8 @@ eARCONTROLLER_ERROR start_bebop2(ARCONTROLLER_Device_t** aDeviceController, ARCO
 	{
 		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "- send SettingsMax ... ");
 		error = deviceController->aRDrone3->sendPilotingSettingsNoFlyOverMaxDistance(deviceController->aRDrone3, 1);
-		error = deviceController->aRDrone3->sendPilotingSettingsMaxDistance(deviceController->aRDrone3, 10.0);
+		error = deviceController->aRDrone3->sendPilotingSettingsMaxDistance(deviceController->aRDrone3, 5.0);
 		error = deviceController->aRDrone3->sendPilotingSettingsMaxAltitude(deviceController->aRDrone3, 2.0);
-		if (error != ARCONTROLLER_OK)
-		{
-			failed = 1;
-			ARSAL_PRINT(ARSAL_PRINT_ERROR, TAG, "- error :%s", ARCONTROLLER_Error_ToString(error));
-		}
-	}
-
-	// send the command that for circling
-	if (!failed)
-	{
-		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "- send SettingsCircling ... ");
-		error = deviceController->aRDrone3->sendPilotingSettingsCirclingRadius(deviceController->aRDrone3, 1.5);
-		error = deviceController->aRDrone3->sendPilotingSettingsCirclingAltitude(deviceController->aRDrone3, 2.0);
-		error = deviceController->aRDrone3->sendPilotingSettingsCirclingDirection(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_PILOTINGSETTINGS_CIRCLINGDIRECTION_VALUE_CCW);
 		if (error != ARCONTROLLER_OK)
 		{
 			failed = 1;
@@ -248,6 +239,9 @@ eARCONTROLLER_ERROR finish_bebop2(ARCONTROLLER_Device_t* deviceController)
 
 void keyboard_controller_loop(ARCONTROLLER_Device_t *deviceController, const char *cvWindowName)
 {
+	static int cur_pan = 0;
+	static int cur_tilt = 0;
+
 	if (deviceController == nullptr)
 	{
 		ARSAL_PRINT(ARSAL_PRINT_ERROR, TAG, "DeviceController is NULL.");
@@ -327,6 +321,38 @@ void keyboard_controller_loop(ARCONTROLLER_Device_t *deviceController, const cha
 			break;
 		case '2':
 			error = deviceController->aRDrone3->sendMediaStreamingVideoEnable(deviceController->aRDrone3, 0);
+			break;
+		case 'n':
+		case 'N':
+			if(--cur_tilt < -83)
+			{
+				cur_tilt = -83;
+			}
+			deviceController->aRDrone3->setCameraOrientationTilt(deviceController->aRDrone3, cur_tilt);
+			break;
+		case 'm':
+		case 'M':
+			if(++cur_tilt > 17)
+			{
+				cur_tilt = 17;
+			}
+			deviceController->aRDrone3->setCameraOrientationTilt(deviceController->aRDrone3, cur_tilt);
+			break;
+		case 'v':
+		case 'V':
+			if(--cur_pan < -35)
+			{
+				cur_pan = -35;
+			}
+			deviceController->aRDrone3->setCameraOrientationPan(deviceController->aRDrone3, cur_pan);
+			break;
+		case 'b':
+		case 'B':
+			if(++cur_pan > 35)
+			{
+				cur_pan = 35;
+			}
+			deviceController->aRDrone3->setCameraOrientationPan(deviceController->aRDrone3, cur_pan);
 			break;
 		default:
 			error = deviceController->aRDrone3->setPilotingPCMD(deviceController->aRDrone3, 0, 0, 0, 0, 0, 0);
