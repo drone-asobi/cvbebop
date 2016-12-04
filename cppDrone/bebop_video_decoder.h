@@ -81,10 +81,10 @@ namespace bebop_driver
 		static void ThrowOnCondition(const bool cond, const std::string& message);
 		bool InitCodec();
 		bool ReallocateBuffers();
-		void CleanupBuffers();
+		void CleanupBuffers() const;
 		void Reset();
 
-		void ConvertFrameToRGB();
+		void ConvertFrameToRGB() const;
 
 	public:
 		VideoDecoder();

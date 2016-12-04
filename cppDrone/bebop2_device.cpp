@@ -12,6 +12,8 @@ extern "C" {
 
 #include "bebop2_device.h"
 
+static bool isBebopRunning;
+
 ARSAL_Sem_t stateSem;
 
 eARCONTROLLER_ERROR start_bebop2(ARCONTROLLER_Device_t** aDeviceController, ARCONTROLLER_DICTIONARY_CALLBACK_t aCommandReceivedCallback, bebop_driver::VideoDecoder* aVideoDecoder, ARCONTROLLER_Stream_DidReceiveFrameCallback_t aDidReceiveFrameCallback)
@@ -286,44 +288,39 @@ void keyboard_controller_loop(ARCONTROLLER_Device_t *deviceController, const cha
 		case 'u': // UP
 		case 'U':
 			// set the flag and speed value of the piloting command
-			error = deviceController->aRDrone3->setPilotingPCMDGaz(deviceController->aRDrone3, 50);
+			error = deviceController->aRDrone3->setPilotingPCMDGaz(deviceController->aRDrone3, 100);
 			break;
 		case 'j': // DOWN
 		case 'J':
-			error = deviceController->aRDrone3->setPilotingPCMDGaz(deviceController->aRDrone3, -50);
+			error = deviceController->aRDrone3->setPilotingPCMDGaz(deviceController->aRDrone3, -100);
 			break;
 		case 'k': // RIGHT
 		case 'K':
-			error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 50);
+			error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 100);
 			break;
 		case 'h':
 		case 'H':
-			error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, -50);
+			error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, -100);
 			break;
 		case 'r': //IHM_INPUT_EVENT_FORWARD
 		case 'R':
 			error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
-			error = deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, 50);
+			error = deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, 100);
 			break;
 		case 'f': //IHM_INPUT_EVENT_BACK:
 		case 'F':
 			error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
-			error = deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, -50);
+			error = deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, -100);
 			break;
 		case 'd': //IHM_INPUT_EVENT_ROLL_LEFT:
 		case 'D':
 			error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
-			error = deviceController->aRDrone3->setPilotingPCMDRoll(deviceController->aRDrone3, -50);
+			error = deviceController->aRDrone3->setPilotingPCMDRoll(deviceController->aRDrone3, -100);
 			break;
 		case 'g': //IHM_INPUT_EVENT_ROLL_RIGHT:
 		case 'G':
 			error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
-			error = deviceController->aRDrone3->setPilotingPCMDRoll(deviceController->aRDrone3, 50);
-			break;
-		case 'c':
-		case 'C':
-			// error = deviceController->aRDrone3->sendPilotingCircle(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_PILOTING_CIRCLE_DIRECTION_CCW);
-			error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, -80);
+			error = deviceController->aRDrone3->setPilotingPCMDRoll(deviceController->aRDrone3, 100);
 			break;
 		case '1':
 			error = deviceController->aRDrone3->sendMediaStreamingVideoEnable(deviceController->aRDrone3, 1);
@@ -353,10 +350,12 @@ static void state_changed_callback(eARCONTROLLER_DEVICE_STATE newState, eARCONTR
 	switch (newState)
 	{
 	case ARCONTROLLER_DEVICE_STATE_STOPPED:
+		isBebopRunning = false;
 		ARSAL_Sem_Post(&(stateSem));
 		break;
 
 	case ARCONTROLLER_DEVICE_STATE_RUNNING:
+		isBebopRunning = true;
 		ARSAL_Sem_Post(&(stateSem));
 		break;
 

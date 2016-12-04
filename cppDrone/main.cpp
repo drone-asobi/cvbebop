@@ -69,7 +69,7 @@ eARCONTROLLER_ERROR receive_frame_callback(ARCONTROLLER_Frame_t *frame, void *cu
 					Mat image(size, CV_8UC3, (void*)decoder->GetFrameRGBRawCstPtr());
 					imshow("video", image);
 
-					process_opencv_from_image(image);
+					// process_opencv_from_image(image);
 				}
 				prev_timestamp = cur_timestamp;
 			}
