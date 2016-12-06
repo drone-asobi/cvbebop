@@ -30,6 +30,8 @@ extern "C" {
 #include "bebop2_device.h"
 #include "bebop2_controller.h"
 
+#include "Oni.h"
+
 using namespace std;
 using namespace cv;
 using namespace bebop_driver;
@@ -703,6 +705,15 @@ void process_opencv()
 
 int main(void)
 {
-	process_bebop2();
+	//process_bebop2();
+
+	auto oni = Oni::createOni();
+
+	if(oni != nullptr)
+	{
+		printf("Start oni!");
+		oni->startOni();
+	}
+
 	return 0;
 }

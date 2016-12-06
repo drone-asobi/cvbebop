@@ -159,7 +159,9 @@ xcopy /y /d "$(SolutionDir)lib\opencv\x86\vc14\bin\opencv_xphoto310d.dll" "$(Out
 xcopy /y /d "$(SolutionDir)lib\ffmpeg\dll\*.dll" "$(OutDir)"
 xcopy /y /d "$(SolutionDir)lib\pthread\*.dll" "$(OutDir)"
 mkdir "$(OutDir)train"
-xcopy /y /d /s "$(SolutionDir)lib\opencv\etc" "$(OutDir)train"</Command>
+xcopy /y /d /s "$(SolutionDir)lib\opencv\etc" "$(OutDir)train"
+xcopy /y /d "$(ProjectDir)controller.png" "$(OutDir)"
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -234,12 +236,14 @@ xcopy /y /d "$(SolutionDir)lib\opencv\x86\vc14\bin\opencv_xphoto310.dll" "$(OutD
 xcopy /y /d "$(SolutionDir)lib\ffmpeg\dll\*.dll" "$(OutDir)"
 xcopy /y /d "$(SolutionDir)lib\pthread\*.dll" "$(OutDir)"
 mkdir "$(OutDir)train"
-xcopy /y /d /s "$(SolutionDir)lib\opencv\etc" "$(OutDir)train"</Command>
+xcopy /y /d /s "$(SolutionDir)lib\opencv\etc" "$(OutDir)train"
+xcopy /y /d "$(ProjectDir)controller.png" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bebop2_device.cpp" />
     <ClCompile Include="bebop2_controller.cpp" />
+    <ClCompile Include="Oni.cpp" />
     <ClCompile Include="StateController.cpp" />
     <ClCompile Include="bebop_video_decoder.cpp" />
     <ClCompile Include="main.cpp" />
@@ -248,6 +252,7 @@ xcopy /y /d /s "$(SolutionDir)lib\opencv\etc" "$(OutDir)train"</Command>
     <ClInclude Include="bebop2_controller.h" />
     <ClInclude Include="bebop2_device.h" />
     <ClInclude Include="bebop_video_decoder.h" />
+    <ClInclude Include="Oni.h" />
     <ClInclude Include="StateController.h" />
   </ItemGroup>
   <ItemGroup>
@@ -260,6 +265,11 @@ xcopy /y /d /s "$(SolutionDir)lib\opencv\etc" "$(OutDir)train"</Command>
     <ProjectReference Include="..\uthash\uthash.vcxproj">
       <Project>{567b2722-d722-4b42-bb3b-bc1e8fed9614}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="controller.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
