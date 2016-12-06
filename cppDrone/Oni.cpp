@@ -1,9 +1,9 @@
 #define TAG "Oni"
 
 #include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 
 #include "Oni.h"
-#include <opencv2/video/tracking.hpp>
 
 void Oni::oni_event_loop(eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTROLLER_DICTIONARY_ELEMENT_t *elementDictionary, void *customData)
 {
@@ -358,7 +358,10 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 			auto image = oni->getCameraImage();
 
 			// TODO: Trackerが人を検出したらfoundをtrueにする
-			bool found = false;
+			// 例えば、下のように実装する。
+			auto peopleList = oni->mTracker->getPeople(image);
+
+			bool found = !peopleList.empty();
 
 			oni->mStateController->processState(
 				new StateController::STATE_PARAMETER_SEARCHING(tick, found)
@@ -369,9 +372,44 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 		{
 			auto image = oni->getCameraImage();
 
-			// TODO: Trackerからの情報を用いてドローンをどのように動かすか決める
 			auto status = StateController::STATE_PARAMETER_TRACKING::STATUS_NONE;
 			auto direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_NONE;
+
+			// TODO: Trackerからの情報を用いてドローンをどのように動かすか決める
+			// 例えば、下のように実装する。
+			auto peopleList = oni->mTracker->getPeople(image);
+
+			if(peopleList.empty())
+			{
+				status = StateController::STATE_PARAMETER_TRACKING::STATUS_MISSED;
+			}
+			else
+			{
+				int trackingPerson = 0;
+				auto person = peopleList[trackingPerson];
+
+				if (oni->mTracker->isPersonInBorder(image, person))
+				{
+					status = StateController::STATE_PARAMETER_TRACKING::STATUS_CAPTURED;
+				}
+				else
+				{
+					status = StateController::STATE_PARAMETER_TRACKING::STATUS_FOUND;
+
+					if ((person.x + person.width / 2) < image.cols / 2)
+					{
+						direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_LEFT;
+					}
+					else if (image.cols / 2 < (person.x + person.width / 2))
+					{
+						direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_RIGHT;
+					}
+					else if (image.cols / 2 == (person.x + person.width))
+					{
+						direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_FORWARD;
+					}
+				}
+			}
 
 			oni->mStateController->processState(
 				new StateController::STATE_PARAMETER_TRACKING(
@@ -387,7 +425,10 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 			auto image = oni->getCameraImage();
 
 			// TODO: Trackerが人を検出したらfoundをtrueにする
-			bool found = false;
+			// 例えば、下のように実装する。
+			auto peopleList = oni->mTracker->getPeople(image);
+
+			bool found = !peopleList.empty();
 
 			oni->mStateController->processState(
 				new StateController::STATE_PARAMETER_MISSING(

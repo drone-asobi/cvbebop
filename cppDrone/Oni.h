@@ -2,6 +2,7 @@
 #include "bebop2_device.h"
 #include "bebop_video_decoder.h"
 #include "StateController.h"
+#include "OniTracker.h"
 
 #define MONITOR_WINDOW_NAME "Drone Monitor"
 
@@ -28,6 +29,7 @@ private:
 	bebop_driver::VideoDecoder* mVideoDecoder;
 	StateController* mStateController;
 	OniCommand mReceivedCommand = None;
+	OniTracker* mTracker;
 
 	ARCONTROLLER_DICTIONARY_CALLBACK_t cEvent;
 	ARCONTROLLER_Stream_DidReceiveFrameCallback_t cFrame;
@@ -80,5 +82,6 @@ private:
 	{
 		mVideoDecoder = new bebop_driver::VideoDecoder();
 		mStateController = new StateController(mDeviceController);
+		mTracker = new OniTracker();
 	}
 };

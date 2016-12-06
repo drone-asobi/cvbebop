@@ -244,6 +244,7 @@ xcopy /y /d "$(ProjectDir)controller.png" "$(OutDir)"</Command>
     <ClCompile Include="bebop2_device.cpp" />
     <ClCompile Include="bebop2_controller.cpp" />
     <ClCompile Include="Oni.cpp" />
+    <ClCompile Include="OniTracker.cpp" />
     <ClCompile Include="StateController.cpp" />
     <ClCompile Include="bebop_video_decoder.cpp" />
     <ClCompile Include="main.cpp" />
@@ -253,6 +254,7 @@ xcopy /y /d "$(ProjectDir)controller.png" "$(OutDir)"</Command>
     <ClInclude Include="bebop2_device.h" />
     <ClInclude Include="bebop_video_decoder.h" />
     <ClInclude Include="Oni.h" />
+    <ClInclude Include="OniTracker.h" />
     <ClInclude Include="StateController.h" />
   </ItemGroup>
   <ItemGroup>
