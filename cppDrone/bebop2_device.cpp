@@ -12,6 +12,8 @@ extern "C" {
 
 #include "bebop2_device.h"
 
+static bool isBebopRunning;
+
 ARSAL_Sem_t stateSem;
 
 eARCONTROLLER_ERROR start_bebop2(ARCONTROLLER_Device_t** aDeviceController, ARCONTROLLER_DICTIONARY_CALLBACK_t aCommandReceivedCallback, bebop_driver::VideoDecoder* aVideoDecoder, ARCONTROLLER_Stream_DidReceiveFrameCallback_t aDidReceiveFrameCallback)
@@ -167,9 +169,34 @@ eARCONTROLLER_ERROR start_bebop2(ARCONTROLLER_Device_t** aDeviceController, ARCO
 	if (!failed)
 	{
 		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "- send StreamingVideoEnable ... ");
+		error = deviceController->aRDrone3->sendPictureSettingsVideoStabilizationMode(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_PICTURESETTINGS_VIDEOSTABILIZATIONMODE_MODE_NONE);
+		error = deviceController->aRDrone3->sendPictureSettingsVideoFramerate(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_PICTURESETTINGS_VIDEOFRAMERATE_FRAMERATE_24_FPS);
+		error = deviceController->aRDrone3->sendPictureSettingsVideoResolutions(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_PICTURESETTINGS_VIDEORESOLUTIONS_TYPE_REC720_STREAM720);
+		error = deviceController->aRDrone3->sendMediaStreamingVideoStreamMode(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_MEDIASTREAMING_VIDEOSTREAMMODE_MODE_HIGH_RELIABILITY);
+		for(int cur_tilt = 0; cur_tilt >= -40; cur_tilt -= 5)
+		{
+			deviceController->aRDrone3->setCameraOrientationTilt(deviceController->aRDrone3, cur_tilt);
+			Sleep(200);
+		}
+		error = deviceController->aRDrone3->sendMediaRecordVideoV2(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_MEDIARECORD_VIDEOV2_RECORD_START);
 		error = deviceController->aRDrone3->sendMediaStreamingVideoEnable(deviceController->aRDrone3, 1);
 		if (error != ARCONTROLLER_OK)
 		{
+			failed = 1;
+			ARSAL_PRINT(ARSAL_PRINT_ERROR, TAG, "- error :%s", ARCONTROLLER_Error_ToString(error));
+		}
+	}
+
+	// send the command that for safety
+	if (!failed)
+	{
+		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "- send SettingsMax ... ");
+		error = deviceController->aRDrone3->sendPilotingSettingsNoFlyOverMaxDistance(deviceController->aRDrone3, 1);
+		error = deviceController->aRDrone3->sendPilotingSettingsMaxDistance(deviceController->aRDrone3, 5.0);
+		error = deviceController->aRDrone3->sendPilotingSettingsMaxAltitude(deviceController->aRDrone3, 2.0);
+		if (error != ARCONTROLLER_OK)
+		{
+			failed = 1;
 			ARSAL_PRINT(ARSAL_PRINT_ERROR, TAG, "- error :%s", ARCONTROLLER_Error_ToString(error));
 		}
 	}
@@ -212,6 +239,9 @@ eARCONTROLLER_ERROR finish_bebop2(ARCONTROLLER_Device_t* deviceController)
 
 void keyboard_controller_loop(ARCONTROLLER_Device_t *deviceController, const char *cvWindowName)
 {
+	static int cur_pan = 0;
+	static int cur_tilt = 0;
+
 	if (deviceController == nullptr)
 	{
 		ARSAL_PRINT(ARSAL_PRINT_ERROR, TAG, "DeviceController is NULL.");
@@ -252,45 +282,77 @@ void keyboard_controller_loop(ARCONTROLLER_Device_t *deviceController, const cha
 		case 'u': // UP
 		case 'U':
 			// set the flag and speed value of the piloting command
-			error = deviceController->aRDrone3->setPilotingPCMDGaz(deviceController->aRDrone3, 50);
+			error = deviceController->aRDrone3->setPilotingPCMDGaz(deviceController->aRDrone3, 100);
 			break;
 		case 'j': // DOWN
 		case 'J':
-			error = deviceController->aRDrone3->setPilotingPCMDGaz(deviceController->aRDrone3, -50);
+			error = deviceController->aRDrone3->setPilotingPCMDGaz(deviceController->aRDrone3, -100);
 			break;
 		case 'k': // RIGHT
 		case 'K':
-			error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 50);
+			error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 100);
 			break;
 		case 'h':
 		case 'H':
-			error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, -50);
+			error = deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, -100);
 			break;
 		case 'r': //IHM_INPUT_EVENT_FORWARD
 		case 'R':
 			error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
-			error = deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, 50);
+			error = deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, 100);
 			break;
 		case 'f': //IHM_INPUT_EVENT_BACK:
 		case 'F':
 			error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
-			error = deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, -50);
+			error = deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, -100);
 			break;
 		case 'd': //IHM_INPUT_EVENT_ROLL_LEFT:
 		case 'D':
 			error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
-			error = deviceController->aRDrone3->setPilotingPCMDRoll(deviceController->aRDrone3, -50);
+			error = deviceController->aRDrone3->setPilotingPCMDRoll(deviceController->aRDrone3, -100);
 			break;
 		case 'g': //IHM_INPUT_EVENT_ROLL_RIGHT:
 		case 'G':
 			error = deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
-			error = deviceController->aRDrone3->setPilotingPCMDRoll(deviceController->aRDrone3, 50);
+			error = deviceController->aRDrone3->setPilotingPCMDRoll(deviceController->aRDrone3, 100);
 			break;
 		case '1':
 			error = deviceController->aRDrone3->sendMediaStreamingVideoEnable(deviceController->aRDrone3, 1);
 			break;
 		case '2':
 			error = deviceController->aRDrone3->sendMediaStreamingVideoEnable(deviceController->aRDrone3, 0);
+			break;
+		case 'n':
+		case 'N':
+			if(--cur_tilt < -83)
+			{
+				cur_tilt = -83;
+			}
+			deviceController->aRDrone3->setCameraOrientationTilt(deviceController->aRDrone3, cur_tilt);
+			break;
+		case 'm':
+		case 'M':
+			if(++cur_tilt > 17)
+			{
+				cur_tilt = 17;
+			}
+			deviceController->aRDrone3->setCameraOrientationTilt(deviceController->aRDrone3, cur_tilt);
+			break;
+		case 'v':
+		case 'V':
+			if(--cur_pan < -35)
+			{
+				cur_pan = -35;
+			}
+			deviceController->aRDrone3->setCameraOrientationPan(deviceController->aRDrone3, cur_pan);
+			break;
+		case 'b':
+		case 'B':
+			if(++cur_pan > 35)
+			{
+				cur_pan = 35;
+			}
+			deviceController->aRDrone3->setCameraOrientationPan(deviceController->aRDrone3, cur_pan);
 			break;
 		default:
 			error = deviceController->aRDrone3->setPilotingPCMD(deviceController->aRDrone3, 0, 0, 0, 0, 0, 0);
@@ -314,10 +376,12 @@ static void state_changed_callback(eARCONTROLLER_DEVICE_STATE newState, eARCONTR
 	switch (newState)
 	{
 	case ARCONTROLLER_DEVICE_STATE_STOPPED:
+		isBebopRunning = false;
 		ARSAL_Sem_Post(&(stateSem));
 		break;
 
 	case ARCONTROLLER_DEVICE_STATE_RUNNING:
+		isBebopRunning = true;
 		ARSAL_Sem_Post(&(stateSem));
 		break;
 

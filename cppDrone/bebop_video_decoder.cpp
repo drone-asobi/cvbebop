@@ -48,14 +48,14 @@ namespace bebop_driver
 	VideoDecoder::VideoDecoder()
 		: codec_initialized_(false),
 		first_iframe_recv_(false),
-		format_ctx_ptr_(NULL),
-		codec_ctx_ptr_(NULL),
-		codec_ptr_(NULL),
-		frame_ptr_(NULL),
-		frame_rgb_ptr_(NULL),
-		img_convert_ctx_ptr_(NULL),
-		input_format_ptr_(NULL),
-		frame_rgb_raw_ptr_(NULL),
+		format_ctx_ptr_(nullptr),
+		codec_ctx_ptr_(nullptr),
+		codec_ptr_(nullptr),
+		frame_ptr_(nullptr),
+		frame_rgb_ptr_(nullptr),
+		img_convert_ctx_ptr_(nullptr),
+		input_format_ptr_(nullptr),
+		frame_rgb_raw_ptr_(nullptr),
 		update_codec_params_(false)
 	{}
 
@@ -74,7 +74,7 @@ namespace bebop_driver
 			av_log_set_level(AV_LOG_QUIET);
 
 			codec_ptr_ = avcodec_find_decoder(AV_CODEC_ID_H264);
-			ThrowOnCondition(codec_ptr_ == NULL, "Codec H264 not found!");
+			ThrowOnCondition(codec_ptr_ == nullptr, "Codec H264 not found!");
 
 			codec_ctx_ptr_ = avcodec_alloc_context3(codec_ptr_);
 			codec_ctx_ptr_->pix_fmt = AV_PIX_FMT_YUV420P;
@@ -98,7 +98,7 @@ namespace bebop_driver
 			ThrowOnCondition(!frame_ptr_, "Can not allocate memory for frames!");
 
 			ThrowOnCondition(
-				avcodec_open2(codec_ctx_ptr_, codec_ptr_, NULL) < 0,
+				avcodec_open2(codec_ctx_ptr_, codec_ptr_, nullptr) < 0,
 				"Can not open the decoder!");
 
 			av_init_packet(&packet_);
@@ -137,7 +137,7 @@ namespace bebop_driver
 			ThrowOnCondition(!frame_rgb_ptr_, "Can not allocate memory for frames!");
 
 			frame_rgb_raw_ptr_ = reinterpret_cast<uint8_t*>(av_malloc(num_bytes * sizeof(uint8_t)));
-			ThrowOnCondition(frame_rgb_raw_ptr_ == NULL,
+			ThrowOnCondition(frame_rgb_raw_ptr_ == nullptr,
 				std::string("Can not allocate memory for the buffer: ") +
 				std::to_string(num_bytes));
 			ThrowOnCondition(0 == avpicture_fill(
@@ -147,7 +147,7 @@ namespace bebop_driver
 
 			img_convert_ctx_ptr_ = sws_getContext(codec_ctx_ptr_->width, codec_ctx_ptr_->height, codec_ctx_ptr_->pix_fmt,
 				codec_ctx_ptr_->width, codec_ctx_ptr_->height, AV_PIX_FMT_BGR24,
-				SWS_FAST_BILINEAR, NULL, NULL, NULL);
+				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr);
 		}
 		catch (const std::runtime_error& e)
 		{
@@ -159,7 +159,7 @@ namespace bebop_driver
 		return true;
 	}
 
-	void VideoDecoder::CleanupBuffers()
+	void VideoDecoder::CleanupBuffers() const
 	{
 		if (frame_rgb_ptr_)
 		{
@@ -204,7 +204,7 @@ namespace bebop_driver
 		ARSAL_PRINT(ARSAL_PRINT_INFO, LOG_TAG, "Dstr!");
 	}
 
-	void VideoDecoder::ConvertFrameToRGB()
+	void VideoDecoder::ConvertFrameToRGB() const
 	{
 		if (!codec_ctx_ptr_->width || !codec_ctx_ptr_->height) return;
 		sws_scale(img_convert_ctx_ptr_, frame_ptr_->data, frame_ptr_->linesize, 0,

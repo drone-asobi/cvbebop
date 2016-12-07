@@ -31,6 +31,8 @@ extern "C" {
 #include "bebop2_device.h"
 #include "bebop2_controller.h"
 
+#include "Oni.h"
+
 using namespace std;
 using namespace cv;
 using namespace bebop_driver;
@@ -154,7 +156,7 @@ eARCONTROLLER_ERROR receive_frame_callback(ARCONTROLLER_Frame_t *frame, void *cu
 					Mat image(size, CV_8UC3, (void*)decoder->GetFrameRGBRawCstPtr());
 					imshow("video", image);
 
-					process_opencv_from_image(image);
+					// process_opencv_from_image(image);
 				}
 				prev_timestamp = cur_timestamp;
 			}
@@ -582,8 +584,8 @@ void process_opencv_from_image(Mat &frame1)
 	if (flag_detect_people)
 	{
 		//opencv_detect_person_haarcascade(frame2, result); //haar+cascade(赤)
-		//opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
-		opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
+		opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
+		//opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
 
 		if (flag_detect_distance)
 		{
@@ -817,6 +819,15 @@ void process_opencv()
 
 int main(void)
 {
-	process_bebop2();
+	//process_bebop2();
+
+	auto oni = Oni::createOni();
+
+	if(oni != nullptr)
+	{
+		printf("Start oni!");
+		oni->startOni();
+	}
+
 	return 0;
 }
