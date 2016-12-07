@@ -168,7 +168,7 @@ eARCONTROLLER_ERROR Oni::oni_image_loop(ARCONTROLLER_Frame_t *frame, void *custo
 		return ARCONTROLLER_ERROR;
 	}
 
-	if (true)
+	if (!true)
 	{
 		cv::Size size(decoder->GetFrameWidth(), decoder->GetFrameHeight());
 		cv::Mat image(size, CV_8UC3, (void*)decoder->GetFrameRGBRawCstPtr());
@@ -355,13 +355,16 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 		break;
 		case StateController::STATE_SEARCHING:
 		{
-			auto image = oni->getCameraImage();
+			auto image = oni->getCameraImage(0.3, 0.3);
 
 			// TODO: Trackerが人を検出したらfoundをtrueにする
 			// 例えば、下のように実装する。
 			auto peopleList = oni->mTracker->getPeople(image);
 
 			bool found = !peopleList.empty();
+
+			cv::imshow("debug_search", image);
+			cv::waitKey(1);
 
 			oni->mStateController->processState(
 				new StateController::STATE_PARAMETER_SEARCHING(tick, found)
@@ -370,7 +373,7 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 		break;
 		case StateController::STATE_TRACKING:
 		{
-			auto image = oni->getCameraImage();
+			auto image = oni->getCameraImage(0.3, 0.3);
 
 			auto status = StateController::STATE_PARAMETER_TRACKING::STATUS_NONE;
 			auto direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_NONE;
@@ -378,6 +381,9 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 			// TODO: Trackerからの情報を用いてドローンをどのように動かすか決める
 			// 例えば、下のように実装する。
 			auto peopleList = oni->mTracker->getPeople(image);
+
+			cv::imshow("debug_search", image);
+			cv::waitKey(1);
 
 			if(peopleList.empty())
 			{
@@ -391,22 +397,30 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 				if (oni->mTracker->isPersonInBorder(image, person))
 				{
 					status = StateController::STATE_PARAMETER_TRACKING::STATUS_CAPTURED;
+					printf("STATUS_CAPTURED\n");
 				}
 				else
 				{
 					status = StateController::STATE_PARAMETER_TRACKING::STATUS_FOUND;
 
-					if ((person.x + person.width / 2) < image.cols / 2)
+					double leftBorder = image.cols / 3.0;
+					double rightBorder = image.cols * 2.0 / 3.0;
+					double personLocation = person.x + person.width / 2;
+
+					if (personLocation < leftBorder)
 					{
 						direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_LEFT;
+						printf("STATUS_FOUND: DIRECTION_LEFT\n");
 					}
-					else if (image.cols / 2 < (person.x + person.width / 2))
+					else if (rightBorder < personLocation)
 					{
 						direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_RIGHT;
+						printf("STATUS_FOUND: DIRECTION_RIGHT\n");
 					}
-					else if (image.cols / 2 == (person.x + person.width))
+					else if (leftBorder <= personLocation && personLocation <= rightBorder)
 					{
 						direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_FORWARD;
+						printf("STATUS_FOUND: DIRECTION_FORWARD\n");
 					}
 				}
 			}
@@ -429,6 +443,9 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 			auto peopleList = oni->mTracker->getPeople(image);
 
 			bool found = !peopleList.empty();
+
+			cv::imshow("debug_search", image);
+			cv::waitKey(1);
 
 			oni->mStateController->processState(
 				new StateController::STATE_PARAMETER_MISSING(

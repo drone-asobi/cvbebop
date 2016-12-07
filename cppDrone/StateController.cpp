@@ -150,7 +150,7 @@ void StateController::processState(STATE_PARAMETER* arg)
 			else
 			{
 				// Rotate to right
-				deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 100);
+				//deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 100);
 			}
 		}
 	}

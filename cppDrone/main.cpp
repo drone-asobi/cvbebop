@@ -26,6 +26,7 @@ extern "C" {
 #include <opencv2\videoio.hpp>
 #include <opencv2\calib3d.hpp>
 #include <opencv2\video\tracking.hpp>
+#include <opencv2/tracking.hpp>
 
 
 #include "bebop2_device.h"
@@ -809,8 +810,7 @@ void process_opencv()
 		}
 		if (flag_track_something) //対象の追跡を開始
 		{
-			track_something(frame2, r_keep, result, r_predict, rect_keep, start);
-			std::cout << "x = " << result.x << std::endl;
+			tracking(frame2, result);
 		}
 
 	}
@@ -829,5 +829,6 @@ int main(void)
 		oni->startOni();
 	}
 
+	//process_opencv();
 	return 0;
 }
