@@ -397,6 +397,20 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 				if (oni->mTracker->isPersonInBorder(image, person))
 				{
 					status = StateController::STATE_PARAMETER_TRACKING::STATUS_CAPTURED;
+
+					cv::Rect rect(person.tl().x,person.tl().y,person.br().x - person.tl().x,person.br().y - person.tl().y);
+					cv::Mat imgSub(image,rect);	//êlóÃàÊ
+                    cvtColor(imgSub, imgSub, CV_RGB2GRAY);
+					cv::Mat imgSub2;
+					cv::resize(imgSub,imgSub2,cv::Size(325,270),0,0);
+					cv::Mat base = cv::imread("tehai.png",1);
+					cv::Mat comb(cv::Size(base.cols,base.rows),CV_8UC3);
+					cv::Mat im1(comb,cv::Rect(0,0,base.cols,base.rows));
+					cv::Mat im2(comb,cv::Rect(40,140,imgSub2.cols,imgSub2.rows));
+					base.copyTo(im1);
+					imgSub2.copyTo(im2);
+					cv::resize(comb,comb,cv::Size(180,320));
+					imshow("tehai",comb);
 					printf("STATUS_CAPTURED\n");
 				}
 				else
@@ -405,8 +419,8 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 
 					double leftBorder = image.cols / 3.0;
 					double rightBorder = image.cols * 2.0 / 3.0;
-					double personLocation = person.x + person.width / 2;
-
+					double personLocation = person.x + person.width/2;
+					
 					if (personLocation < leftBorder)
 					{
 						direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_LEFT;
