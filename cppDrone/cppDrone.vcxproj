@@ -248,6 +248,7 @@ xcopy /y /d "$(ProjectDir)controller.png" "$(OutDir)"</Command>
     <ClCompile Include="StateController.cpp" />
     <ClCompile Include="bebop_video_decoder.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="TrainHOG-master\FileIO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bebop2_controller.h" />
@@ -256,6 +257,7 @@ xcopy /y /d "$(ProjectDir)controller.png" "$(OutDir)"</Command>
     <ClInclude Include="Oni.h" />
     <ClInclude Include="OniTracker.h" />
     <ClInclude Include="StateController.h" />
+    <ClInclude Include="TrainHOG-master\FileIO.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ARSDK3_Bebop2\ARSDK3_Bebop2.vcxproj">
