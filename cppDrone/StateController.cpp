@@ -150,7 +150,7 @@ void StateController::processState(STATE_PARAMETER* arg)
 			else
 			{
 				// Rotate to right
-				//deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 100);
+				deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 20);
 			}
 		}
 	}
@@ -188,21 +188,21 @@ void StateController::processState(STATE_PARAMETER* arg)
 				// go forward
 				ARSAL_PRINT(ARSAL_PRINT_DEBUG, TAG, "State[Tracking]: Found, go forward");
 				deviceController->aRDrone3->setPilotingPCMDFlag(deviceController->aRDrone3, 1);
-				deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, 100);
+				deviceController->aRDrone3->setPilotingPCMDPitch(deviceController->aRDrone3, 20);
 			}
 			break;
 			case STATE_PARAMETER_TRACKING::DIRECTION_LEFT:
 			{
 				// turn left
 				ARSAL_PRINT(ARSAL_PRINT_DEBUG, TAG, "State[Tracking]: Found, turn left");
-				deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, -100);
+				deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, -20);
 			}
 			break;
 			case STATE_PARAMETER_TRACKING::DIRECTION_RIGHT:
 			{
 				// turn right
 				ARSAL_PRINT(ARSAL_PRINT_DEBUG, TAG, "State[Tracking]: Found, turn right");
-				deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 100);
+				deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 20);
 			}
 			break;
 			default: break;
@@ -221,7 +221,11 @@ void StateController::processState(STATE_PARAMETER* arg)
 			ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "State[Tracking => Searching]: Captured a person! Back to searching");
 			// TODO: 追跡が終わったらドローンをどのように動かすか決める
 			deviceController->aRDrone3->setPilotingPCMD(deviceController->aRDrone3, 0, 0, 0, 0, 0, 0);
-			setState(STATE_SEARCHING);
+
+		//	auto peopleList = oni->mTracker->getPeople(image);
+			//勝手にコメントアウトしたのであとからはずす
+
+			setState(STATE_HOVERING);
 		}
 		break;
 		default: break;

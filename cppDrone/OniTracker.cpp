@@ -25,8 +25,8 @@ bool OniTracker::isPersonInBorder(cv::Mat image, cv::Rect person)
 {
 
 	/////距離計測/////
-	double reference_d = 2.33;	//基準の距離(m)
-	double reference_size = 15225; //基準の人領域の大きさ
+	double reference_d = 2.5;	//基準の距離(m)
+	double reference_size = 7938; //基準の人領域の大きさ
 	double distance = 0;	//距離(m)
 
 							/////距離の度合い/////
@@ -68,6 +68,5 @@ std::vector<cv::Rect> OniTracker::getPeople(cv::Mat image)
 		cv::rectangle(image, r.tl(), r.br(), cv::Scalar(0, 255, 0), 3);
 		r.area();
 	}
-
 	return found;
 }

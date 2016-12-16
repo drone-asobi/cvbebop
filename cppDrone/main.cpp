@@ -328,6 +328,7 @@ void opencv_detect_person_hogsvm(Mat img, cv::Rect &r)
 	// 結果の描画
 	cv::namedWindow("result", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
 	cv::imshow("result", img);
+
 }
 
 void opencv_detect_person_haarcascade(Mat img, cv::Rect &r)
@@ -585,8 +586,9 @@ void process_opencv_from_image(Mat &frame1)
 	if (flag_detect_people)
 	{
 		//opencv_detect_person_haarcascade(frame2, result); //haar+cascade(赤)
-		opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
+		//opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
 		//opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
+		opencv_detect_person(frame2, result, n);
 
 		if (flag_detect_distance)
 		{
@@ -701,6 +703,12 @@ void process_opencv()
 		cv::Mat frame1;
 		cv::Mat frame2;
 
+		//テスト
+		cv::Mat channels[3];
+		cv::Mat hsv_image;
+		cv::Mat hsv_image1;
+		//テスト
+
 		start = cv::getTickCount(); //fps計測基準時取得
 		
 		cap >> frame1; // get a new frame from camera
@@ -756,7 +764,41 @@ void process_opencv()
 		{
 			//opencv_detect_person_haarcascade(frame2, result); //haar+cascade(赤)
 			//opencv_detect_person_hogsvm(frame2, result); //hog+svm(緑)
-			opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
+			//opencv_detect_person_hogcascade(frame2, result); //hog+cascade(青)
+
+			opencv_detect_person(frame2, result, n);
+
+			if (n != 0) {
+				//ここからテスト
+				cv::Rect rect(result.tl().x, result.tl().y, result.br().x - result.tl().x, result.br().y - result.tl().y);
+				cv::Mat imgSub(frame2, rect);	//人領域
+				cvtColor(imgSub, hsv_image, CV_RGB2HSV);
+				cv::split(hsv_image, channels);
+				int width = result.br().x - result.tl().x;
+				int hight = result.br().y - result.tl().y;
+
+				//HとSの値を変更
+		
+				channels[0] = Mat(Size(width,hight),CV_8UC1,100);
+				channels[1] = Mat(Size(width, hight), CV_8UC1, 90);
+				
+				cv::merge(channels, 3, hsv_image1);
+				cvtColor(hsv_image1, imgSub, CV_HSV2RGB);
+				cv::imshow("sepia", imgSub);
+
+				cv::Mat imgSub2;
+				cv::resize(imgSub, imgSub2, cv::Size(325, 270), 0, 0);
+				cv::Mat base = cv::imread("tehai.png", 1);
+				cv::Mat comb(cv::Size(base.cols, base.rows), CV_8UC3);
+				cv::Mat im1(comb, cv::Rect(0, 0, base.cols, base.rows));
+				cv::Mat im2(comb, cv::Rect(40, 140, imgSub2.cols, imgSub2.rows));
+				base.copyTo(im1);
+				imgSub2.copyTo(im2);
+				cv::resize(comb, comb, cv::Size(180, 320));
+				cv::imshow("tehai", comb);
+					//ここまでテスト
+					
+			}
 
 			if (flag_detect_distance)
 			{
@@ -828,7 +870,7 @@ int main(void)
 		printf("Start oni!");
 		oni->startOni();
 	}
-
+	
 	//process_opencv();
 	return 0;
 }

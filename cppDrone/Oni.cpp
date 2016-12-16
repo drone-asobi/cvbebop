@@ -2,8 +2,12 @@
 
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
+#include <vector>
 
 #include "Oni.h"
+
+int64 start = 0;
+int64 end = 0;
 
 void Oni::oni_event_loop(eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTROLLER_DICTIONARY_ELEMENT_t *elementDictionary, void *customData)
 {
@@ -230,6 +234,7 @@ DWORD WINAPI Oni::user_command_loop(LPVOID lpParam)
 		case 's':
 		{
 			oni->mReceivedCommand = OniCommand::Search;
+			start = cv::getTickCount();//追跡時間計測開始
 		}
 		break;
 
@@ -355,7 +360,7 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 		break;
 		case StateController::STATE_SEARCHING:
 		{
-			auto image = oni->getCameraImage(0.3, 0.3);
+			auto image = oni->getCameraImage(0.7, 0.7);
 
 			// TODO: Trackerが人を検出したらfoundをtrueにする
 			// 例えば、下のように実装する。
@@ -373,7 +378,7 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 		break;
 		case StateController::STATE_TRACKING:
 		{
-			auto image = oni->getCameraImage(0.3, 0.3);
+			auto image = oni->getCameraImage(0.7, 0.7);
 
 			auto status = StateController::STATE_PARAMETER_TRACKING::STATUS_NONE;
 			auto direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_NONE;
@@ -398,19 +403,41 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 				{
 					status = StateController::STATE_PARAMETER_TRACKING::STATUS_CAPTURED;
 
-					cv::Rect rect(person.tl().x,person.tl().y,person.br().x - person.tl().x,person.br().y - person.tl().y);
-					cv::Mat imgSub(image,rect);	//人領域
-                    cvtColor(imgSub, imgSub, CV_RGB2GRAY);
+					cv::Mat channels[3];
+					cv::Mat hsv_image;
+					cv::Mat hsv_image1;
+
+					end = cv::getTickCount();
+					//ここでstart - endを出力
+					
+					//ここからテスト
+					cv::Rect rect(person.tl().x, person.tl().y, person.br().x - person.tl().x, person.br().y - person.tl().y);
+					cv::Mat imgSub(image, rect);	//人領域
+					cvtColor(imgSub, hsv_image, CV_RGB2HSV);
+					cv::split(hsv_image, channels);
+					int width = person.br().x - person.tl().x;
+					int hight = person.br().y - person.tl().y;
+
+					//HとSの値を変更
+
+					channels[0] = cv::Mat(cv::Size(width,hight),CV_8UC1,100);
+					channels[1] = cv::Mat(cv::Size(width,hight), CV_8UC1, 90);
+
+					cv::merge(channels, 3, hsv_image1);
+					cvtColor(hsv_image1, imgSub, CV_HSV2RGB);
+
 					cv::Mat imgSub2;
-					cv::resize(imgSub,imgSub2,cv::Size(325,270),0,0);
-					cv::Mat base = cv::imread("tehai.png",1);
-					cv::Mat comb(cv::Size(base.cols,base.rows),CV_8UC3);
-					cv::Mat im1(comb,cv::Rect(0,0,base.cols,base.rows));
-					cv::Mat im2(comb,cv::Rect(40,140,imgSub2.cols,imgSub2.rows));
+					cv::resize(imgSub, imgSub2, cv::Size(325, 270), 0, 0);
+					cv::Mat base = cv::imread("tehai.png", 1);
+					cv::Mat comb(cv::Size(base.cols, base.rows), CV_8UC3);
+					cv::Mat im1(comb, cv::Rect(0, 0, base.cols, base.rows));
+					cv::Mat im2(comb, cv::Rect(40, 140, imgSub2.cols, imgSub2.rows));
 					base.copyTo(im1);
 					imgSub2.copyTo(im2);
-					cv::resize(comb,comb,cv::Size(180,320));
-					imshow("tehai",comb);
+					cv::resize(comb, comb, cv::Size(180, 320));
+					cv::imshow("tehai", comb);
+					//ここまでテスト
+					
 					printf("STATUS_CAPTURED\n");
 				}
 				else
