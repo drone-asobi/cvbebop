@@ -548,7 +548,6 @@ void process_opencv()
 
 	VideoCapture cap(0);//デバイスのオープン //cap.open(0); //こっちでも良い．
 
-
 	if (!cap.isOpened())//カメラデバイスが正常にオープンしたか確認．
 	{
 		//読み込みに失敗したときの処理
@@ -595,14 +594,14 @@ void process_opencv()
 	int counter2 = 0;
 	char filename2[256];
 
+	VideoCapture cap2("pc\\pc_1.mp4");	//ファイル名を変える
+
 	while (true)//無限ループ
 	{
 		cv::Mat frame1;
 		cv::Mat frame2;
 
-		start = cv::getTickCount(); //fps計測基準時取得
-		
-		cap >> frame1; // get a new frame from camera
+		cap2 >> frame1; // get a new frame from camera
 
 		//
 		//取得したフレーム画像に対して，クレースケール変換や2値化などの処理を書き込む．
@@ -619,11 +618,11 @@ void process_opencv()
 		{
 			//フレーム画像を保存する．
 //			cv::imwrite("img.png", frame2);
-//			flag_save_image = !flag_save_image;
-//			cout << "Save  Image ON" << endl;
-			sprintf(filename, "image\\image_%04d.png", counter);
-			cv::imwrite(filename, frame2);
-			counter++;
+			flag_save_image = !flag_save_image;
+			cout << "Save  Image ON" << endl;
+//			sprintf(filename, "image\\image_%04d.png", counter);
+//			cv::imwrite(filename, frame2);
+//			counter++;
 		}
 		else if (key == 't') //tが押されたとき
 		{
@@ -724,10 +723,13 @@ void process_opencv()
 		}
 		if (flag_save_image) 
 		{
-			sprintf(filename,"image\\image_%04d.png",counter);
-			cv::imwrite(filename,frame2);
-			counter++;
+			if (counter2%29 == 0) {	//保存する頻度(今1秒)
+				sprintf(filename, "image\\image_%04d.png", counter);
+				cv::imwrite(filename, frame2);
+				counter++;
+			}
 		}
+		counter2++;	//フレーム計算用
 	}
 	cv::destroyAllWindows();
 }
