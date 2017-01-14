@@ -61,5 +61,8 @@
     <Image Include="controller.png">
       <Filter>リソース ファイル</Filter>
     </Image>
+    <Image Include="tehai.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
 </Project>

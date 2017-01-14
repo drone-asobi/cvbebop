@@ -5,7 +5,7 @@ extern "C" {
 }
 
 #define TAKING_OFF_WAIT_TICK 10000
-#define SEARCHING_WAIT_TICK 100000
+#define SEARCHING_WAIT_TICK 10000
 #define MISSING_WAIT_TICK 5000
 #define LANDING_WAIT_TICK 5000
 
@@ -48,6 +48,18 @@ public:
 
 	void processState(STATE_PARAMETER* arg);
 
+private:
+	void processStateEmergency();
+	void processStateStart(STATE_PARAMETER_START* param);
+	void processStateReady(STATE_PARAMETER_READY* param);
+	void processStateTakingOff(STATE_PARAMETER_TAKINGOFF* param);
+	void processStateHovering(STATE_PARAMETER_HOVERING* param);
+	void processStateSearching(STATE_PARAMETER_SEARCHING* param);
+	void processStateTracking(STATE_PARAMETER_TRACKING* param);
+	void processStateMissing(STATE_PARAMETER_MISSING* param);
+	void processStateLanding(STATE_PARAMETER_LANDING* param);
+	void processStateFinished(STATE_PARAMETER_FINISHED* param);
+
 public:
 	StateController(ARCONTROLLER_Device_t* deviceController) : deviceController(deviceController)
 	{
@@ -55,7 +67,10 @@ public:
 	}
 };
 
-struct StateController::STATE_PARAMETER { };
+struct StateController::STATE_PARAMETER
+{
+	virtual ~STATE_PARAMETER() { }
+};
 
 struct StateController::STATE_PARAMETER_START : STATE_PARAMETER
 {
@@ -80,14 +95,10 @@ struct StateController::STATE_PARAMETER_READY : STATE_PARAMETER
 
 struct StateController::STATE_PARAMETER_TAKINGOFF : STATE_PARAMETER
 {
+	bool status_takenOff;
 	ULONGLONG takenOffTick;
 
-	STATE_PARAMETER_TAKINGOFF()
-	{
-		this->takenOffTick = GetTickCount64();
-	}
-
-	STATE_PARAMETER_TAKINGOFF(ULONGLONG takenOffTick) : takenOffTick(takenOffTick) { }
+	STATE_PARAMETER_TAKINGOFF(ULONGLONG takenOffTick) : status_takenOff(false), takenOffTick(takenOffTick) { }
 };
 
 struct StateController::STATE_PARAMETER_HOVERING : STATE_PARAMETER
@@ -99,22 +110,19 @@ struct StateController::STATE_PARAMETER_HOVERING : STATE_PARAMETER
 		COMMAND_LAND,
 	};
 
+	bool status_hovered;
 	STATE_PARAMETER_HOVERING_COMMAND command;
 
-	STATE_PARAMETER_HOVERING(STATE_PARAMETER_HOVERING_COMMAND command = COMMAND_NONE) : command(command) { }
+	STATE_PARAMETER_HOVERING(STATE_PARAMETER_HOVERING_COMMAND command = COMMAND_NONE) : status_hovered(false), command(command) { }
 };
 
 struct StateController::STATE_PARAMETER_SEARCHING : STATE_PARAMETER
 {
+	bool status_rotating;
 	ULONGLONG startedTick;
 	bool found;
 
-	STATE_PARAMETER_SEARCHING() : found(false)
-	{
-		this->startedTick = GetTickCount64();
-	}
-
-	STATE_PARAMETER_SEARCHING(ULONGLONG startedTick, bool found) : startedTick(startedTick), found(found) { }
+	STATE_PARAMETER_SEARCHING(ULONGLONG startedTick, bool found) : status_rotating(false), startedTick(startedTick), found(found) { }
 };
 
 struct StateController::STATE_PARAMETER_TRACKING : STATE_PARAMETER
@@ -153,14 +161,10 @@ struct StateController::STATE_PARAMETER_MISSING : STATE_PARAMETER
 
 struct StateController::STATE_PARAMETER_LANDING : STATE_PARAMETER
 {
+	bool status_landed;
 	ULONGLONG landedTick;
 
-	STATE_PARAMETER_LANDING()
-	{
-		this->landedTick = GetTickCount64();
-	}
-
-	STATE_PARAMETER_LANDING(ULONGLONG landedTick) : landedTick(landedTick) { }
+	STATE_PARAMETER_LANDING(ULONGLONG landedTick) : status_landed(false), landedTick(landedTick) { }
 };
 
 struct StateController::STATE_PARAMETER_FINISHED : STATE_PARAMETER { };

@@ -267,7 +267,7 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 		return -1;
 	}
 
-	auto tick = GetTickCount64();
+	static StateController::STATE_PARAMETER* currentParameter = nullptr;
 
 	while (true)
 	{
@@ -284,82 +284,106 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 		switch (state)
 		{
 		case StateController::STATE_EMERGENCY:
-		{
-			oni->mStateController->processState(nullptr);
-		}
+			delete currentParameter;
+			currentParameter = nullptr;
 		break;
 		case StateController::STATE_START:
 		{
-			oni->mStateController->processState(new StateController::STATE_PARAMETER_START(true));
+			auto param = dynamic_cast<StateController::STATE_PARAMETER_START*>(currentParameter);
+			if (param == nullptr)
+			{
+				delete currentParameter;
+				currentParameter = new StateController::STATE_PARAMETER_START;
+			}
+			else
+			{
+				param->connected = true;
+			}
 		}
 		break;
 		case StateController::STATE_READY:
 		{
+			auto param = dynamic_cast<StateController::STATE_PARAMETER_READY*>(currentParameter);
+			if (param == nullptr)
+			{
+				param = new StateController::STATE_PARAMETER_READY;
+				delete currentParameter;
+				currentParameter = param;
+			}
+
 			switch (command)
 			{
 			case TakeOff:
-				oni->mStateController->processState(
-					new StateController::STATE_PARAMETER_READY(
-						StateController::STATE_PARAMETER_READY::COMMAND_TAKEOFF
-					));
-				tick = GetTickCount64();
+				param->command = StateController::STATE_PARAMETER_READY::COMMAND_TAKEOFF;
 				break;
 			case Disconnect:
-				oni->mStateController->processState(
-					new StateController::STATE_PARAMETER_READY(
-						StateController::STATE_PARAMETER_READY::COMMAND_DISCONNECT
-					));
+				param->command = StateController::STATE_PARAMETER_READY::COMMAND_DISCONNECT;
 				break;
 			case None:
 			case Emergency:
 			case Search:
 			case Land:
 			default:
-				oni->mStateController->processState(
-					new StateController::STATE_PARAMETER_READY()
-				);
 				break;
 			}
 		}
 		break;
 		case StateController::STATE_TAKINGOFF:
 		{
-			oni->mStateController->processState(
-				new StateController::STATE_PARAMETER_TAKINGOFF(tick)
-			);
+			auto param = dynamic_cast<StateController::STATE_PARAMETER_TAKINGOFF*>(currentParameter);
+			if (param == nullptr)
+			{
+				param = new StateController::STATE_PARAMETER_TAKINGOFF(GetTickCount64());
+				delete currentParameter;;
+				currentParameter = param;
+			}
 		}
 		break;
 		case StateController::STATE_HOVERING:
 		{
+			auto param = dynamic_cast<StateController::STATE_PARAMETER_HOVERING*>(currentParameter);
+			if (param == nullptr)
+			{
+				param = new StateController::STATE_PARAMETER_HOVERING(StateController::STATE_PARAMETER_HOVERING::COMMAND_NONE);
+				delete currentParameter;
+				currentParameter = param;
+			}
+
 			switch (command)
 			{
 			case Search:
-				oni->mStateController->processState(
-					new StateController::STATE_PARAMETER_HOVERING(
-						StateController::STATE_PARAMETER_HOVERING::COMMAND_SEARCH
-					));
-				tick = GetTickCount64();
+				param->command = StateController::STATE_PARAMETER_HOVERING::COMMAND_SEARCH;
 				break;
 			case Land:
-				oni->mStateController->processState(
-					new StateController::STATE_PARAMETER_HOVERING(
-						StateController::STATE_PARAMETER_HOVERING::COMMAND_LAND
-					));
-				tick = GetTickCount64();
+				param->command = StateController::STATE_PARAMETER_HOVERING::COMMAND_LAND;
 				break;
 			case None:
 			case Emergency:
 			case TakeOff:
 			default:
-				oni->mStateController->processState(
-					new StateController::STATE_PARAMETER_HOVERING()
-				);
 				break;
 			}
 		}
 		break;
 		case StateController::STATE_SEARCHING:
 		{
+			if (command == Land)
+			{
+				oni->mStateController->setState(StateController::STATE_LANDING);
+				delete currentParameter;
+				currentParameter = nullptr;
+				oni->mStateController->processState(currentParameter);
+				continue;
+			}
+
+			auto param = dynamic_cast<StateController::STATE_PARAMETER_SEARCHING*>(currentParameter);
+			if (param == nullptr)
+			{
+				param = new StateController::STATE_PARAMETER_SEARCHING(GetTickCount64(), false);
+				delete currentParameter;
+				currentParameter = param;
+			}
+
 			auto image = oni->getCameraImage(0.7, 0.7);
 
 			// TODO: Trackerが人を検出したらfoundをtrueにする
@@ -371,17 +395,20 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 			cv::imshow("debug_search", image);
 			cv::waitKey(1);
 
-			oni->mStateController->processState(
-				new StateController::STATE_PARAMETER_SEARCHING(tick, found)
-			);
+			param->found = found;
 		}
 		break;
 		case StateController::STATE_TRACKING:
 		{
-			auto image = oni->getCameraImage(0.7, 0.7);
+			auto param = dynamic_cast<StateController::STATE_PARAMETER_TRACKING*>(currentParameter);
+			if (param == nullptr)
+			{
+				param = new StateController::STATE_PARAMETER_TRACKING(oni->mTracker, StateController::STATE_PARAMETER_TRACKING::STATUS_NONE, StateController::STATE_PARAMETER_TRACKING::DIRECTION_NONE);
+				delete currentParameter;
+				currentParameter = param;
+			}
 
-			auto status = StateController::STATE_PARAMETER_TRACKING::STATUS_NONE;
-			auto direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_NONE;
+			auto image = oni->getCameraImage(0.7, 0.7);
 
 			// TODO: Trackerからの情報を用いてドローンをどのように動かすか決める
 			// 例えば、下のように実装する。
@@ -392,7 +419,7 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 
 			if(peopleList.empty())
 			{
-				status = StateController::STATE_PARAMETER_TRACKING::STATUS_MISSED;
+				param->status = StateController::STATE_PARAMETER_TRACKING::STATUS_MISSED;
 			}
 			else
 			{
@@ -401,7 +428,7 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 
 				if (oni->mTracker->isPersonInBorder(image, person))
 				{
-					status = StateController::STATE_PARAMETER_TRACKING::STATUS_CAPTURED;
+					param->status = StateController::STATE_PARAMETER_TRACKING::STATUS_CAPTURED;
 
 					cv::Mat channels[3];
 					cv::Mat hsv_image;
@@ -436,13 +463,14 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 					imgSub2.copyTo(im2);
 					cv::resize(comb, comb, cv::Size(180, 320));
 					cv::imshow("tehai", comb);
+					cv::waitKey(1);
 					//ここまでテスト
 					
 					printf("STATUS_CAPTURED\n");
 				}
 				else
 				{
-					status = StateController::STATE_PARAMETER_TRACKING::STATUS_FOUND;
+					param->status = StateController::STATE_PARAMETER_TRACKING::STATUS_FOUND;
 
 					double leftBorder = image.cols / 3.0;
 					double rightBorder = image.cols * 2.0 / 3.0;
@@ -450,66 +478,74 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 					
 					if (personLocation < leftBorder)
 					{
-						direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_LEFT;
+						param->direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_LEFT;
 						printf("STATUS_FOUND: DIRECTION_LEFT\n");
 					}
 					else if (rightBorder < personLocation)
 					{
-						direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_RIGHT;
+						param->direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_RIGHT;
 						printf("STATUS_FOUND: DIRECTION_RIGHT\n");
 					}
 					else if (leftBorder <= personLocation && personLocation <= rightBorder)
 					{
-						direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_FORWARD;
+						param->direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_FORWARD;
 						printf("STATUS_FOUND: DIRECTION_FORWARD\n");
 					}
 				}
 			}
-
-			oni->mStateController->processState(
-				new StateController::STATE_PARAMETER_TRACKING(
-					nullptr,
-					status,
-					direction
-				));
-			tick = GetTickCount64();
 		}
 		break;
 		case StateController::STATE_MISSING:
 		{
+			auto param = dynamic_cast<StateController::STATE_PARAMETER_MISSING*>(currentParameter);
+			if (param == nullptr)
+			{
+				param = new StateController::STATE_PARAMETER_MISSING(oni->mTracker, GetTickCount64(), false);
+				delete currentParameter;
+				currentParameter = param;
+			}
+
 			auto image = oni->getCameraImage();
 
 			// TODO: Trackerが人を検出したらfoundをtrueにする
 			// 例えば、下のように実装する。
 			auto peopleList = oni->mTracker->getPeople(image);
 
-			bool found = !peopleList.empty();
+			param->found = !peopleList.empty();
 
 			cv::imshow("debug_search", image);
 			cv::waitKey(1);
-
-			oni->mStateController->processState(
-				new StateController::STATE_PARAMETER_MISSING(
-					nullptr,
-					tick,
-					found
-				));
 		}
 		break;
 		case StateController::STATE_LANDING:
 		{
-			oni->mStateController->processState(
-				new StateController::STATE_PARAMETER_LANDING(tick)
-			);
+			auto param = dynamic_cast<StateController::STATE_PARAMETER_LANDING*>(currentParameter);
+			if (param == nullptr)
+			{
+				param = new StateController::STATE_PARAMETER_LANDING(GetTickCount64());
+				delete currentParameter;
+				currentParameter = param;
+			}
 		}
 		break;
 		case StateController::STATE_FINISHED:
 		{
+			auto param = dynamic_cast<StateController::STATE_PARAMETER_FINISHED*>(currentParameter);
+			if (param == nullptr)
+			{
+				param = new StateController::STATE_PARAMETER_FINISHED;
+				delete currentParameter;
+				currentParameter = param;
+			}
+
+			oni->mStateController->processState(currentParameter);
+
 			return 0;
 		}
 		default: break;
 		}
 
+		oni->mStateController->processState(currentParameter);
 		Sleep(50);
 	}
 
