@@ -6,9 +6,6 @@
 
 #include "Oni.h"
 
-int64 start = 0;
-int64 end = 0;
-
 void Oni::oni_event_loop(eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTROLLER_DICTIONARY_ELEMENT_t *elementDictionary, void *customData)
 {
 	auto *deviceController = static_cast<ARCONTROLLER_Device_t*>(customData);
@@ -234,7 +231,6 @@ DWORD WINAPI Oni::user_command_loop(LPVOID lpParam)
 		case 's':
 		{
 			oni->mReceivedCommand = OniCommand::Search;
-			start = cv::getTickCount();//追跡時間計測開始
 		}
 		break;
 
@@ -256,6 +252,248 @@ DWORD WINAPI Oni::user_command_loop(LPVOID lpParam)
 	}
 
 	return 0;
+}
+
+void Oni::processStateStart(StateController::STATE_PARAMETER*& currentParameter)
+{
+	auto param = dynamic_cast<StateController::STATE_PARAMETER_START*>(currentParameter);
+	if (param == nullptr)
+	{
+		delete currentParameter;
+		currentParameter = new StateController::STATE_PARAMETER_START;
+	}
+	else
+	{
+		param->connected = true;
+	}
+}
+
+void Oni::processStateReady(StateController::STATE_PARAMETER*& currentParameter, Oni::OniCommand command)
+{
+	auto param = dynamic_cast<StateController::STATE_PARAMETER_READY*>(currentParameter);
+	if (param == nullptr)
+	{
+		param = new StateController::STATE_PARAMETER_READY;
+		delete currentParameter;
+		currentParameter = param;
+	}
+
+	switch (command)
+	{
+	case TakeOff:
+		param->command = StateController::STATE_PARAMETER_READY::COMMAND_TAKEOFF;
+		break;
+	case Disconnect:
+		param->command = StateController::STATE_PARAMETER_READY::COMMAND_DISCONNECT;
+		break;
+	case None:
+	case Emergency:
+	case Search:
+	case Land:
+	default:
+		break;
+	}
+}
+
+void Oni::processStateTakingOff(StateController::STATE_PARAMETER*& currentParameter)
+{
+	auto param = dynamic_cast<StateController::STATE_PARAMETER_TAKINGOFF*>(currentParameter);
+	if (param == nullptr)
+	{
+		param = new StateController::STATE_PARAMETER_TAKINGOFF(GetTickCount64());
+		delete currentParameter;;
+		currentParameter = param;
+	}
+}
+
+void Oni::processStateHovering(StateController::STATE_PARAMETER*& currentParameter, Oni::OniCommand command)
+{
+	auto param = dynamic_cast<StateController::STATE_PARAMETER_HOVERING*>(currentParameter);
+	if (param == nullptr)
+	{
+		param = new StateController::STATE_PARAMETER_HOVERING(StateController::STATE_PARAMETER_HOVERING::COMMAND_NONE);
+		delete currentParameter;
+		currentParameter = param;
+	}
+
+	switch (command)
+	{
+	case Search:
+		param->command = StateController::STATE_PARAMETER_HOVERING::COMMAND_SEARCH;
+		break;
+	case Land:
+		param->command = StateController::STATE_PARAMETER_HOVERING::COMMAND_LAND;
+		break;
+	case None:
+	case Emergency:
+	case TakeOff:
+	default:
+		break;
+	}
+}
+
+void Oni::processStateSearching(Oni* oni, StateController::STATE_PARAMETER*& currentParameter)
+{
+	auto param = dynamic_cast<StateController::STATE_PARAMETER_SEARCHING*>(currentParameter);
+	if (param == nullptr)
+	{
+		param = new StateController::STATE_PARAMETER_SEARCHING(GetTickCount64(), false);
+		delete currentParameter;
+		currentParameter = param;
+	}
+
+	auto image = oni->getCameraImage(0.7, 0.7);
+
+	// TODO: Trackerが人を検出したらfoundをtrueにする
+	// 例えば、下のように実装する。
+	auto peopleList = oni->mTracker->getPeople(image);
+
+	bool found = !peopleList.empty();
+
+	cv::imshow("debug_search", image);
+	cv::waitKey(1);
+
+	param->found = found;
+}
+
+void Oni::processStateTracking(Oni* oni, StateController::STATE_PARAMETER*& currentParameter)
+{
+	auto param = dynamic_cast<StateController::STATE_PARAMETER_TRACKING*>(currentParameter);
+	if (param == nullptr)
+	{
+		param = new StateController::STATE_PARAMETER_TRACKING(oni->mTracker, StateController::STATE_PARAMETER_TRACKING::STATUS_NONE, StateController::STATE_PARAMETER_TRACKING::DIRECTION_NONE);
+		delete currentParameter;
+		currentParameter = param;
+	}
+
+	auto image = oni->getCameraImage(0.7, 0.7);
+
+	// TODO: Trackerからの情報を用いてドローンをどのように動かすか決める
+	// 例えば、下のように実装する。
+	auto peopleList = oni->mTracker->getPeople(image);
+
+	cv::imshow("debug_search", image);
+	cv::waitKey(1);
+
+	if(peopleList.empty())
+	{
+		param->status = StateController::STATE_PARAMETER_TRACKING::STATUS_MISSED;
+	}
+	else
+	{
+		int trackingPerson = 0;
+		auto person = peopleList[trackingPerson];
+
+		if (oni->mTracker->isPersonInBorder(image, person))
+		{
+			param->status = StateController::STATE_PARAMETER_TRACKING::STATUS_CAPTURED;
+
+			cv::Mat channels[3];
+			cv::Mat hsv_image;
+			cv::Mat hsv_image1;
+
+			//ここからテスト
+			cv::Rect rect(person.tl().x, person.tl().y, person.br().x - person.tl().x, person.br().y - person.tl().y);
+			cv::Mat imgSub(image, rect);	//人領域
+			cvtColor(imgSub, hsv_image, CV_RGB2HSV);
+			cv::split(hsv_image, channels);
+			int width = person.br().x - person.tl().x;
+			int hight = person.br().y - person.tl().y;
+
+			//HとSの値を変更
+
+			channels[0] = cv::Mat(cv::Size(width,hight),CV_8UC1,100);
+			channels[1] = cv::Mat(cv::Size(width,hight), CV_8UC1, 90);
+
+			cv::merge(channels, 3, hsv_image1);
+			cvtColor(hsv_image1, imgSub, CV_HSV2RGB);
+
+			cv::Mat imgSub2;
+			cv::resize(imgSub, imgSub2, cv::Size(325, 270), 0, 0);
+			cv::Mat base = cv::imread("tehai.png", 1);
+			cv::Mat comb(cv::Size(base.cols, base.rows), CV_8UC3);
+			cv::Mat im1(comb, cv::Rect(0, 0, base.cols, base.rows));
+			cv::Mat im2(comb, cv::Rect(40, 140, imgSub2.cols, imgSub2.rows));
+			base.copyTo(im1);
+			imgSub2.copyTo(im2);
+			cv::resize(comb, comb, cv::Size(180, 320));
+			cv::imshow("tehai", comb);
+			cv::waitKey(1);
+			//ここまでテスト
+
+			printf("STATUS_CAPTURED\n");
+		}
+		else
+		{
+			param->status = StateController::STATE_PARAMETER_TRACKING::STATUS_FOUND;
+
+			double leftBorder = image.cols / 3.0;
+			double rightBorder = image.cols * 2.0 / 3.0;
+			double personLocation = person.x + person.width/2;
+
+			if (personLocation < leftBorder)
+			{
+				param->direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_LEFT;
+				printf("STATUS_FOUND: DIRECTION_LEFT\n");
+			}
+			else if (rightBorder < personLocation)
+			{
+				param->direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_RIGHT;
+				printf("STATUS_FOUND: DIRECTION_RIGHT\n");
+			}
+			else if (leftBorder <= personLocation && personLocation <= rightBorder)
+			{
+				param->direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_FORWARD;
+				printf("STATUS_FOUND: DIRECTION_FORWARD\n");
+			}
+		}
+	}
+}
+
+void Oni::processStateMissing(Oni* oni, StateController::STATE_PARAMETER*& currentParameter)
+{
+	auto param = dynamic_cast<StateController::STATE_PARAMETER_MISSING*>(currentParameter);
+	if (param == nullptr)
+	{
+		param = new StateController::STATE_PARAMETER_MISSING(oni->mTracker, GetTickCount64(), false);
+		delete currentParameter;
+		currentParameter = param;
+	}
+
+	auto image = oni->getCameraImage();
+
+	// TODO: Trackerが人を検出したらfoundをtrueにする
+	// 例えば、下のように実装する。
+	auto peopleList = oni->mTracker->getPeople(image);
+
+	param->found = !peopleList.empty();
+
+	cv::imshow("debug_search", image);
+	cv::waitKey(1);
+}
+
+void Oni::processStateLanding(StateController::STATE_PARAMETER*& currentParameter)
+{
+	auto param = dynamic_cast<StateController::STATE_PARAMETER_LANDING*>(currentParameter);
+	if (param == nullptr)
+	{
+		param = new StateController::STATE_PARAMETER_LANDING(GetTickCount64());
+		delete currentParameter;
+		currentParameter = param;
+	}
+}
+
+void Oni::processStateFinished(Oni* oni, StateController::STATE_PARAMETER*& currentParameter)
+{
+	auto param = dynamic_cast<StateController::STATE_PARAMETER_FINISHED*>(currentParameter);
+	if (param == nullptr)
+	{
+		param = new StateController::STATE_PARAMETER_FINISHED;
+		delete currentParameter;
+		currentParameter = param;
+	}
+
+	oni->mStateController->processState(currentParameter);
 }
 
 DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
@@ -288,82 +526,16 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 			currentParameter = nullptr;
 		break;
 		case StateController::STATE_START:
-		{
-			auto param = dynamic_cast<StateController::STATE_PARAMETER_START*>(currentParameter);
-			if (param == nullptr)
-			{
-				delete currentParameter;
-				currentParameter = new StateController::STATE_PARAMETER_START;
-			}
-			else
-			{
-				param->connected = true;
-			}
-		}
+			processStateStart(currentParameter);
 		break;
 		case StateController::STATE_READY:
-		{
-			auto param = dynamic_cast<StateController::STATE_PARAMETER_READY*>(currentParameter);
-			if (param == nullptr)
-			{
-				param = new StateController::STATE_PARAMETER_READY;
-				delete currentParameter;
-				currentParameter = param;
-			}
-
-			switch (command)
-			{
-			case TakeOff:
-				param->command = StateController::STATE_PARAMETER_READY::COMMAND_TAKEOFF;
-				break;
-			case Disconnect:
-				param->command = StateController::STATE_PARAMETER_READY::COMMAND_DISCONNECT;
-				break;
-			case None:
-			case Emergency:
-			case Search:
-			case Land:
-			default:
-				break;
-			}
-		}
+			processStateReady(currentParameter, command);
 		break;
 		case StateController::STATE_TAKINGOFF:
-		{
-			auto param = dynamic_cast<StateController::STATE_PARAMETER_TAKINGOFF*>(currentParameter);
-			if (param == nullptr)
-			{
-				param = new StateController::STATE_PARAMETER_TAKINGOFF(GetTickCount64());
-				delete currentParameter;;
-				currentParameter = param;
-			}
-		}
+			processStateTakingOff(currentParameter);
 		break;
 		case StateController::STATE_HOVERING:
-		{
-			auto param = dynamic_cast<StateController::STATE_PARAMETER_HOVERING*>(currentParameter);
-			if (param == nullptr)
-			{
-				param = new StateController::STATE_PARAMETER_HOVERING(StateController::STATE_PARAMETER_HOVERING::COMMAND_NONE);
-				delete currentParameter;
-				currentParameter = param;
-			}
-
-			switch (command)
-			{
-			case Search:
-				param->command = StateController::STATE_PARAMETER_HOVERING::COMMAND_SEARCH;
-				break;
-			case Land:
-				param->command = StateController::STATE_PARAMETER_HOVERING::COMMAND_LAND;
-				break;
-			case None:
-			case Emergency:
-			case TakeOff:
-			default:
-				break;
-			}
-		}
+			processStateHovering(currentParameter, command);
 		break;
 		case StateController::STATE_SEARCHING:
 		{
@@ -376,172 +548,43 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 				continue;
 			}
 
-			auto param = dynamic_cast<StateController::STATE_PARAMETER_SEARCHING*>(currentParameter);
-			if (param == nullptr)
-			{
-				param = new StateController::STATE_PARAMETER_SEARCHING(GetTickCount64(), false);
-				delete currentParameter;
-				currentParameter = param;
-			}
-
-			auto image = oni->getCameraImage(0.7, 0.7);
-
-			// TODO: Trackerが人を検出したらfoundをtrueにする
-			// 例えば、下のように実装する。
-			auto peopleList = oni->mTracker->getPeople(image);
-
-			bool found = !peopleList.empty();
-
-			cv::imshow("debug_search", image);
-			cv::waitKey(1);
-
-			param->found = found;
+			processStateSearching(oni, currentParameter);
 		}
 		break;
 		case StateController::STATE_TRACKING:
 		{
-			auto param = dynamic_cast<StateController::STATE_PARAMETER_TRACKING*>(currentParameter);
-			if (param == nullptr)
+			if (command == Land)
 			{
-				param = new StateController::STATE_PARAMETER_TRACKING(oni->mTracker, StateController::STATE_PARAMETER_TRACKING::STATUS_NONE, StateController::STATE_PARAMETER_TRACKING::DIRECTION_NONE);
+				oni->mStateController->setState(StateController::STATE_LANDING);
 				delete currentParameter;
-				currentParameter = param;
+				currentParameter = nullptr;
+				oni->mStateController->processState(currentParameter);
+				continue;
 			}
 
-			auto image = oni->getCameraImage(0.7, 0.7);
-
-			// TODO: Trackerからの情報を用いてドローンをどのように動かすか決める
-			// 例えば、下のように実装する。
-			auto peopleList = oni->mTracker->getPeople(image);
-
-			cv::imshow("debug_search", image);
-			cv::waitKey(1);
-
-			if(peopleList.empty())
-			{
-				param->status = StateController::STATE_PARAMETER_TRACKING::STATUS_MISSED;
-			}
-			else
-			{
-				int trackingPerson = 0;
-				auto person = peopleList[trackingPerson];
-
-				if (oni->mTracker->isPersonInBorder(image, person))
-				{
-					param->status = StateController::STATE_PARAMETER_TRACKING::STATUS_CAPTURED;
-
-					cv::Mat channels[3];
-					cv::Mat hsv_image;
-					cv::Mat hsv_image1;
-
-					end = cv::getTickCount();
-					//ここでstart - endを出力
-					
-					//ここからテスト
-					cv::Rect rect(person.tl().x, person.tl().y, person.br().x - person.tl().x, person.br().y - person.tl().y);
-					cv::Mat imgSub(image, rect);	//人領域
-					cvtColor(imgSub, hsv_image, CV_RGB2HSV);
-					cv::split(hsv_image, channels);
-					int width = person.br().x - person.tl().x;
-					int hight = person.br().y - person.tl().y;
-
-					//HとSの値を変更
-
-					channels[0] = cv::Mat(cv::Size(width,hight),CV_8UC1,100);
-					channels[1] = cv::Mat(cv::Size(width,hight), CV_8UC1, 90);
-
-					cv::merge(channels, 3, hsv_image1);
-					cvtColor(hsv_image1, imgSub, CV_HSV2RGB);
-
-					cv::Mat imgSub2;
-					cv::resize(imgSub, imgSub2, cv::Size(325, 270), 0, 0);
-					cv::Mat base = cv::imread("tehai.png", 1);
-					cv::Mat comb(cv::Size(base.cols, base.rows), CV_8UC3);
-					cv::Mat im1(comb, cv::Rect(0, 0, base.cols, base.rows));
-					cv::Mat im2(comb, cv::Rect(40, 140, imgSub2.cols, imgSub2.rows));
-					base.copyTo(im1);
-					imgSub2.copyTo(im2);
-					cv::resize(comb, comb, cv::Size(180, 320));
-					cv::imshow("tehai", comb);
-					cv::waitKey(1);
-					//ここまでテスト
-					
-					printf("STATUS_CAPTURED\n");
-				}
-				else
-				{
-					param->status = StateController::STATE_PARAMETER_TRACKING::STATUS_FOUND;
-
-					double leftBorder = image.cols / 3.0;
-					double rightBorder = image.cols * 2.0 / 3.0;
-					double personLocation = person.x + person.width/2;
-					
-					if (personLocation < leftBorder)
-					{
-						param->direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_LEFT;
-						printf("STATUS_FOUND: DIRECTION_LEFT\n");
-					}
-					else if (rightBorder < personLocation)
-					{
-						param->direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_RIGHT;
-						printf("STATUS_FOUND: DIRECTION_RIGHT\n");
-					}
-					else if (leftBorder <= personLocation && personLocation <= rightBorder)
-					{
-						param->direction = StateController::STATE_PARAMETER_TRACKING::DIRECTION_FORWARD;
-						printf("STATUS_FOUND: DIRECTION_FORWARD\n");
-					}
-				}
-			}
+			processStateTracking(oni, currentParameter);
 		}
 		break;
 		case StateController::STATE_MISSING:
 		{
-			auto param = dynamic_cast<StateController::STATE_PARAMETER_MISSING*>(currentParameter);
-			if (param == nullptr)
+			if (command == Land)
 			{
-				param = new StateController::STATE_PARAMETER_MISSING(oni->mTracker, GetTickCount64(), false);
+				oni->mStateController->setState(StateController::STATE_LANDING);
 				delete currentParameter;
-				currentParameter = param;
+				currentParameter = nullptr;
+				oni->mStateController->processState(currentParameter);
+				continue;
 			}
 
-			auto image = oni->getCameraImage();
-
-			// TODO: Trackerが人を検出したらfoundをtrueにする
-			// 例えば、下のように実装する。
-			auto peopleList = oni->mTracker->getPeople(image);
-
-			param->found = !peopleList.empty();
-
-			cv::imshow("debug_search", image);
-			cv::waitKey(1);
+			processStateMissing(oni, currentParameter);
 		}
 		break;
 		case StateController::STATE_LANDING:
-		{
-			auto param = dynamic_cast<StateController::STATE_PARAMETER_LANDING*>(currentParameter);
-			if (param == nullptr)
-			{
-				param = new StateController::STATE_PARAMETER_LANDING(GetTickCount64());
-				delete currentParameter;
-				currentParameter = param;
-			}
-		}
-		break;
+			processStateLanding(currentParameter);
+			break;
 		case StateController::STATE_FINISHED:
-		{
-			auto param = dynamic_cast<StateController::STATE_PARAMETER_FINISHED*>(currentParameter);
-			if (param == nullptr)
-			{
-				param = new StateController::STATE_PARAMETER_FINISHED;
-				delete currentParameter;
-				currentParameter = param;
-			}
-
-			oni->mStateController->processState(currentParameter);
-
+			processStateFinished(oni, currentParameter);
 			return 0;
-		}
 		default: break;
 		}
 

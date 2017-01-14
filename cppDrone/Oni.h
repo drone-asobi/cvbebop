@@ -76,6 +76,17 @@ private:
 
 	static eARCONTROLLER_ERROR oni_image_loop(ARCONTROLLER_Frame_t *frame, void *customData);
 
+private:
+	static void processStateStart(StateController::STATE_PARAMETER*& currentParameter);
+	static void processStateReady(StateController::STATE_PARAMETER*& currentParameter, Oni::OniCommand command);
+	static void processStateTakingOff(StateController::STATE_PARAMETER*& currentParameter);
+	static void processStateHovering(StateController::STATE_PARAMETER*& currentParameter, Oni::OniCommand command);
+	static void processStateSearching(Oni* oni, StateController::STATE_PARAMETER*& currentParameter);
+	static void processStateTracking(Oni* oni, StateController::STATE_PARAMETER*& currentParameter);
+	static void processStateMissing(Oni* oni, StateController::STATE_PARAMETER*& currentParameter);
+	static void processStateLanding(StateController::STATE_PARAMETER*& currentParameter);
+	static void processStateFinished(Oni* oni, StateController::STATE_PARAMETER*& currentParameter);
+
 // Constructors
 private:
 	Oni(): mDeviceController(nullptr), cEvent(oni_event_loop), cFrame(oni_image_loop)
