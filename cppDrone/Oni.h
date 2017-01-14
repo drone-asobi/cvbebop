@@ -8,6 +8,7 @@
 
 #define CONTROLLER_WINDOW_NAME "Oni Controller"
 #define CONTROLLER_IMAGE_FILE "controller.png"
+#define COOL_SCREEN_WINDOW_NAME "DRONE_ASOBI"
 
 class Oni
 {
@@ -34,8 +35,8 @@ private:
 	ARCONTROLLER_DICTIONARY_CALLBACK_t cEvent;
 	ARCONTROLLER_Stream_DidReceiveFrameCallback_t cFrame;
 
-	HANDLE hThread[2];
-	DWORD hThreadId[2];
+	HANDLE hThread[3];
+	DWORD hThreadId[3];
 
 // Methods
 public:
@@ -57,11 +58,13 @@ public:
 	{
 		hThread[0] = CreateThread(nullptr, 0, user_command_loop, this, 0, &hThreadId[0]);
 		hThread[1] = CreateThread(nullptr, 0, oni_state_loop, this, 0, &hThreadId[1]);
+		hThread[2] = CreateThread(nullptr, 0, cool_window_loop, this, 0, &hThreadId[2]);
 
-		WaitForMultipleObjects(2, hThread, TRUE, INFINITE);
+		WaitForMultipleObjects(3, hThread, TRUE, INFINITE);
 
 		CloseHandle(hThread[0]);
 		CloseHandle(hThread[1]);
+		CloseHandle(hThread[2]);
 	}
 
 	cv::Mat getCameraImage(double ratioX = 0.3, double ratioY = 0.3) const;
@@ -71,6 +74,8 @@ private:
 	static DWORD WINAPI user_command_loop(LPVOID lpParam);
 
 	static DWORD WINAPI oni_state_loop(LPVOID lpParam);
+
+	static DWORD WINAPI cool_window_loop(LPVOID lpParam);
 
 	static void oni_event_loop(eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTROLLER_DICTIONARY_ELEMENT_t *elementDictionary, void *customData);
 

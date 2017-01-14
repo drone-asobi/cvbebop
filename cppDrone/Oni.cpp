@@ -194,6 +194,49 @@ cv::Mat Oni::getCameraImage(double ratioX, double ratioY) const
 	return resized;
 }
 
+DWORD WINAPI Oni::cool_window_loop(LPVOID lpParam)
+{
+	using namespace cv;
+
+	auto oni = static_cast<Oni*>(lpParam);
+	if (oni == nullptr)
+	{
+		ARSAL_PRINT(ARSAL_PRINT_FATAL, TAG, "Oni is NULL.");
+		return -1;
+	}
+
+	Sleep(10000);
+
+	while(oni->mStateController->getState() != StateController::STATE_FINISHED)
+	{
+		Mat result = oni->getCameraImage(1.0, 1.0);
+
+		String text = "DRONE-ASOBI";
+		int fontFace = CV_FONT_HERSHEY_TRIPLEX;
+		double fontScale = 2;
+		int thickness = 3;
+
+		int baseline = 0;
+		Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
+		baseline += thickness;
+
+		// center the text
+		Point textOrg((result.cols - textSize.width) / 2, (result.rows + textSize.height) / 2);
+
+		// draw the box
+		rectangle(result, textOrg + Point(0, baseline), textOrg + Point(textSize.width, -textSize.height), Scalar(0, 0, 255));
+		// ... and the baseline first
+		line(result, textOrg + Point(0, thickness), textOrg + Point(textSize.width, thickness), Scalar(0, 0, 255));
+
+		// then put the text itself
+		putText(result, text, textOrg, fontFace, fontScale, Scalar::all(255), thickness, 8);
+
+		imshow(COOL_SCREEN_WINDOW_NAME, result);
+		waitKey(1);
+		Sleep(100);
+	}
+}
+
 DWORD WINAPI Oni::user_command_loop(LPVOID lpParam)
 {
 	auto oni = static_cast<Oni*>(lpParam);
