@@ -8,11 +8,11 @@
 
 void Oni::oni_event_loop(eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTROLLER_DICTIONARY_ELEMENT_t *elementDictionary, void *customData)
 {
-	auto *deviceController = static_cast<ARCONTROLLER_Device_t*>(customData);
+	auto *status = static_cast<DroneStatus*>(customData);
 
-	if (deviceController == nullptr)
+	if (status == nullptr)
 	{
-		ARSAL_PRINT(ARSAL_PRINT_ERROR, TAG, " DeviceController is NULL!");
+		ARSAL_PRINT(ARSAL_PRINT_ERROR, TAG, "DroneStatus is NULL!");
 		return;
 	}
 
@@ -36,6 +36,8 @@ void Oni::oni_event_loop(eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTROLLER_D
 		{
 			return;
 		}
+
+		status->battery = arg->value.U8;
 
 		// update UI
 		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "Battery state has changed: %d %%", arg->value.U8);
@@ -74,6 +76,7 @@ void Oni::oni_event_loop(eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTROLLER_D
 			break;
 		}
 
+		status->framerate = res;
 		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "Video frame rate is %d fps.", res);
 	}
 
@@ -106,6 +109,7 @@ void Oni::oni_event_loop(eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTROLLER_D
 			break;
 		}
 
+		status->resolution = res;
 		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "Video resolution is %dp", res);
 	}
 
@@ -143,6 +147,87 @@ void Oni::oni_event_loop(eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTROLLER_D
 		}
 
 		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "Video stream mode is %s.", mode);
+	}
+
+	if ((commandKey == ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_CAMERASTATE_ORIENTATION) && (elementDictionary != NULL))
+	{
+		ARCONTROLLER_DICTIONARY_ARG_t *arg = NULL;
+		ARCONTROLLER_DICTIONARY_ELEMENT_t *element = NULL;
+		HASH_FIND_STR(elementDictionary, ARCONTROLLER_DICTIONARY_SINGLE_KEY, element);
+		if (element != NULL)
+		{
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_CAMERASTATE_ORIENTATION_TILT, arg);
+			if (arg != NULL)
+			{
+				status->tilt = arg->value.I8;
+			}
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_CAMERASTATE_ORIENTATION_PAN, arg);
+			if (arg != NULL)
+			{
+				status->pan = arg->value.I8;
+			}
+		}
+
+		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "Camera orientation is tilt=%d, pan=%d.", status->tilt, status->pan);
+	}
+
+	if ((commandKey == ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_PILOTINGSTATE_SPEEDCHANGED) && (elementDictionary != NULL))
+	{
+		ARCONTROLLER_DICTIONARY_ARG_t *arg = NULL;
+		ARCONTROLLER_DICTIONARY_ELEMENT_t *element = NULL;
+		HASH_FIND_STR(elementDictionary, ARCONTROLLER_DICTIONARY_SINGLE_KEY, element);
+		if (element != NULL)
+		{
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_PILOTINGSTATE_SPEEDCHANGED_SPEEDX, arg);
+			if (arg != NULL)
+			{
+				status->speedX = arg->value.Float;
+			}
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_PILOTINGSTATE_SPEEDCHANGED_SPEEDY, arg);
+			if (arg != NULL)
+			{
+				status->speedY = arg->value.Float;
+			}
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_PILOTINGSTATE_SPEEDCHANGED_SPEEDZ, arg);
+			if (arg != NULL)
+			{
+				status->speedZ = arg->value.Float;
+			}
+		}
+
+		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "Speed is (%.3f, %.3f, %.3f).", status->speedX, status->speedY, status->speedZ);
+	}
+
+	if ((commandKey == ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_PILOTINGSTATE_ATTITUDECHANGED) && (elementDictionary != NULL))
+	{
+		ARCONTROLLER_DICTIONARY_ARG_t *arg = NULL;
+		ARCONTROLLER_DICTIONARY_ELEMENT_t *element = NULL;
+		HASH_FIND_STR(elementDictionary, ARCONTROLLER_DICTIONARY_SINGLE_KEY, element);
+		if (element != NULL)
+		{
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_PILOTINGSTATE_ATTITUDECHANGED_ROLL, arg);
+			if (arg != NULL)
+			{
+				status->roll = arg->value.Float;
+			}
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_PILOTINGSTATE_ATTITUDECHANGED_PITCH, arg);
+			if (arg != NULL)
+			{
+				status->pitch = arg->value.Float;
+			}
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_PILOTINGSTATE_ATTITUDECHANGED_YAW, arg);
+			if (arg != NULL)
+			{
+				status->yaw = arg->value.Float;
+			}
+			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_PILOTINGSTATE_ALTITUDECHANGED_ALTITUDE, arg);
+			if (arg != NULL)
+			{
+				status->altitude = arg->value.Double;
+			}
+		}
+
+		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "Current (roll, pitch, yaw, altitude) is (%.3f, %.3f, %.3f, %.3lf).", status->roll, status->pitch, status->yaw, status->altitude);
 	}
 }
 
@@ -205,11 +290,64 @@ DWORD WINAPI Oni::cool_window_loop(LPVOID lpParam)
 		return -1;
 	}
 
-	Sleep(10000);
+	Sleep(5000);
 
 	while(oni->mStateController->getState() != StateController::STATE_FINISHED)
 	{
 		Mat result = oni->getCameraImage(1.0, 1.0);
+
+		HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+		CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+		SMALL_RECT srctReadRect;
+		COORD coordBufSize;
+		COORD coordBufCoord;
+		CHAR_INFO chiBuffer[100 * 120];
+		BOOL fSuccess;
+
+		GetConsoleScreenBufferInfo(hStdout, &bufferInfo);
+
+		srctReadRect.Top = bufferInfo.srWindow.Top - 70;
+		srctReadRect.Left = 0;
+		srctReadRect.Bottom = bufferInfo.srWindow.Bottom;
+		srctReadRect.Right = 119;
+
+		coordBufSize.Y = 100;
+		coordBufSize.X = 120;
+		coordBufCoord.X = 0;
+		coordBufCoord.Y = 0;
+
+		fSuccess = ReadConsoleOutput(
+			hStdout,        // screen buffer to read from 
+			chiBuffer,      // buffer to copy into 
+			coordBufSize,   // col-row size of chiBuffer 
+			coordBufCoord,  // top left dest. cell in chiBuffer 
+			&srctReadRect); // screen buffer source rectangle 
+		if (!fSuccess)
+		{
+			printf("ReadConsoleOutput failed - (%d)\n", GetLastError());
+		}
+
+		int console_face = CV_FONT_HERSHEY_COMPLEX_SMALL;
+		double console_scale = 0.5;
+		int console_thickness = 1;
+		int offset = 50;
+		for (int i = 0; i < coordBufSize.Y; ++i)
+		{
+			String console_text;
+			for (int j = 0; j < coordBufSize.X; ++j)
+			{
+				console_text += chiBuffer[i * coordBufSize.X + j].Char.UnicodeChar;
+			}
+
+			int console_baseline = 0;
+			Size textSize = getTextSize(console_text, console_face, console_scale, console_thickness, &console_baseline);
+			console_baseline += console_thickness;
+
+			Point console_textOrg(10, offset);
+			offset += textSize.height;
+
+			putText(result, console_text, console_textOrg, console_face, console_scale, Scalar::all(255), console_thickness, CV_AA);
+		}
 
 		String text = "DRONE-ASOBI";
 		int fontFace = CV_FONT_HERSHEY_TRIPLEX;
@@ -233,7 +371,7 @@ DWORD WINAPI Oni::cool_window_loop(LPVOID lpParam)
 
 		imshow(COOL_SCREEN_WINDOW_NAME, result);
 		waitKey(1);
-		Sleep(100);
+		Sleep(50);
 	}
 }
 

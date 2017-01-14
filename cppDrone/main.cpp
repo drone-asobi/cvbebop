@@ -178,7 +178,7 @@ void process_bebop2()
 	ARCONTROLLER_Device_t* deviceController;
 	auto* videoDecoder = new VideoDecoder();
 
-	auto error = start_bebop2(&deviceController, command_received_callback, videoDecoder, receive_frame_callback);
+	auto error = start_bebop2(&deviceController, command_received_callback, videoDecoder, receive_frame_callback, nullptr);
 
 	if (error == ARCONTROLLER_OK) {
 

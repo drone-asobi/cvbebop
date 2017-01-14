@@ -16,7 +16,7 @@ static bool isBebopRunning;
 
 ARSAL_Sem_t stateSem;
 
-eARCONTROLLER_ERROR start_bebop2(ARCONTROLLER_Device_t** aDeviceController, ARCONTROLLER_DICTIONARY_CALLBACK_t aCommandReceivedCallback, bebop_driver::VideoDecoder* aVideoDecoder, ARCONTROLLER_Stream_DidReceiveFrameCallback_t aDidReceiveFrameCallback)
+eARCONTROLLER_ERROR start_bebop2(ARCONTROLLER_Device_t** aDeviceController, ARCONTROLLER_DICTIONARY_CALLBACK_t aCommandReceivedCallback, bebop_driver::VideoDecoder* aVideoDecoder, ARCONTROLLER_Stream_DidReceiveFrameCallback_t aDidReceiveFrameCallback, void* aEventCallbackData)
 {
 	// local declarations
 	auto error = ARCONTROLLER_OK;
@@ -92,7 +92,7 @@ eARCONTROLLER_ERROR start_bebop2(ARCONTROLLER_Device_t** aDeviceController, ARCO
 	// add the command received callback to be informed when a command has been received from the device
 	if (!failed)
 	{
-		error = ARCONTROLLER_Device_AddCommandReceivedCallback(deviceController, aCommandReceivedCallback, deviceController);
+		error = ARCONTROLLER_Device_AddCommandReceivedCallback(deviceController, aCommandReceivedCallback, aEventCallbackData);
 
 		if (error != ARCONTROLLER_OK)
 		{

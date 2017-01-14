@@ -24,6 +24,26 @@ public:
 		Disconnect,
 	};
 
+	struct DroneStatus
+	{
+		int battery;
+		int framerate;
+		int resolution;
+		int tilt;
+		int pan;
+		float speedX;
+		float speedY;
+		float speedZ;
+		float roll;
+		float pitch;
+		float yaw;
+		double altitude;
+		int dX;
+		int dY;
+		int dZ;
+		int dPsi;
+	};
+
 // Members
 private:
 	ARCONTROLLER_Device_t* mDeviceController;
@@ -31,6 +51,8 @@ private:
 	StateController* mStateController;
 	OniCommand mReceivedCommand = None;
 	OniTracker* mTracker;
+
+	DroneStatus* mDroneStatus;
 
 	ARCONTROLLER_DICTIONARY_CALLBACK_t cEvent;
 	ARCONTROLLER_Stream_DidReceiveFrameCallback_t cFrame;
@@ -44,7 +66,7 @@ public:
 	{
 		auto oni = new Oni();
 
-		auto startError = start_bebop2(&oni->mDeviceController, oni->cEvent, oni->mVideoDecoder, oni->cFrame);
+		auto startError = start_bebop2(&oni->mDeviceController, oni->cEvent, oni->mVideoDecoder, oni->cFrame, (void *)oni->mDroneStatus);
 		if(startError != ARCONTROLLER_OK)
 		{
 			return nullptr;
@@ -99,5 +121,6 @@ private:
 		mVideoDecoder = new bebop_driver::VideoDecoder();
 		mStateController = new StateController(mDeviceController);
 		mTracker = new OniTracker();
+		mDroneStatus = new DroneStatus;
 	}
 };
