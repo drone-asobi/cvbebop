@@ -173,7 +173,7 @@ eARCONTROLLER_ERROR start_bebop2(ARCONTROLLER_Device_t** aDeviceController, ARCO
 		error = deviceController->aRDrone3->sendPictureSettingsVideoFramerate(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_PICTURESETTINGS_VIDEOFRAMERATE_FRAMERATE_24_FPS);
 		error = deviceController->aRDrone3->sendPictureSettingsVideoResolutions(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_PICTURESETTINGS_VIDEORESOLUTIONS_TYPE_REC720_STREAM720);
 		error = deviceController->aRDrone3->sendMediaStreamingVideoStreamMode(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_MEDIASTREAMING_VIDEOSTREAMMODE_MODE_HIGH_RELIABILITY);
-		for(int cur_tilt = 0; cur_tilt >= -30; cur_tilt -= 5)
+		for(int cur_tilt = 0; cur_tilt >= -26; cur_tilt -= 2)
 		{
 			deviceController->aRDrone3->setCameraOrientation(deviceController->aRDrone3, cur_tilt, 0);
 			Sleep(200);
@@ -212,6 +212,8 @@ eARCONTROLLER_ERROR finish_bebop2(ARCONTROLLER_Device_t* deviceController)
 	// we are here because of a disconnection or user has quit IHM, so safely delete everything
 	if (deviceController != nullptr)
 	{
+		error = deviceController->aRDrone3->sendMediaRecordVideoV2(deviceController->aRDrone3, ARCOMMANDS_ARDRONE3_MEDIARECORD_VIDEOV2_RECORD_STOP);
+
 		deviceState = ARCONTROLLER_Device_GetState(deviceController, &error);
 		if ((error == ARCONTROLLER_OK) && (deviceState != ARCONTROLLER_DEVICE_STATE_STOPPED))
 		{
