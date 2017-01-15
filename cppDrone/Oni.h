@@ -42,6 +42,7 @@ public:
 		int dY;
 		int dZ;
 		int dPsi;
+		cv::Rect currentTarget;
 	};
 
 // Members
@@ -122,5 +123,6 @@ private:
 		mStateController = new StateController(mDeviceController);
 		mTracker = new OniTracker();
 		mDroneStatus = new DroneStatus;
+		memset(mDroneStatus, 0, sizeof(mDroneStatus));
 	}
 };

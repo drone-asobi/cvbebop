@@ -3,6 +3,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include <vector>
+#include <ctime>
 
 #include "Oni.h"
 
@@ -220,6 +221,18 @@ void Oni::oni_event_loop(eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTROLLER_D
 			{
 				status->yaw = arg->value.Float;
 			}
+		}
+
+		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "Current (roll, pitch, yaw) is (%.3f, %.3f, %.3f).", status->roll, status->pitch, status->yaw);
+	}
+
+	if ((commandKey == ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_PILOTINGSTATE_ALTITUDECHANGED) && (elementDictionary != NULL))
+	{
+		ARCONTROLLER_DICTIONARY_ARG_t *arg = NULL;
+		ARCONTROLLER_DICTIONARY_ELEMENT_t *element = NULL;
+		HASH_FIND_STR(elementDictionary, ARCONTROLLER_DICTIONARY_SINGLE_KEY, element);
+		if (element != NULL)
+		{
 			HASH_FIND_STR(element->arguments, ARCONTROLLER_DICTIONARY_KEY_ARDRONE3_PILOTINGSTATE_ALTITUDECHANGED_ALTITUDE, arg);
 			if (arg != NULL)
 			{
@@ -227,7 +240,7 @@ void Oni::oni_event_loop(eARCONTROLLER_DICTIONARY_KEY commandKey, ARCONTROLLER_D
 			}
 		}
 
-		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "Current (roll, pitch, yaw, altitude) is (%.3f, %.3f, %.3f, %.3lf).", status->roll, status->pitch, status->yaw, status->altitude);
+		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "Current altitude is %.3lf.", status->altitude);
 	}
 }
 
@@ -295,82 +308,233 @@ DWORD WINAPI Oni::cool_window_loop(LPVOID lpParam)
 
 	while(oni->mStateController->getState() != StateController::STATE_FINISHED)
 	{
-		Mat result = oni->getCameraImage(1.0, 1.0);
-
-		int rows = result.rows, cols = result.cols;
-		Mat hsv_orig, hsv_channel[3];
-		cvtColor(result, hsv_orig, CV_BGR2HSV);
-		split(hsv_orig, hsv_channel);
-		hsv_orig.release();
-		hsv_channel[0].release();
-		hsv_channel[0] = Mat::zeros(rows, cols, CV_8UC1);
-		merge(hsv_channel, 3, hsv_orig);
-		hsv_channel[0].release();
-		hsv_channel[1].release();
-		hsv_channel[2].release();
-		cvtColor(hsv_orig, result, CV_HSV2BGR);
-		hsv_orig.release();
-
-		HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-		CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-		SMALL_RECT srctReadRect;
-		COORD coordBufSize;
-		COORD coordBufCoord;
-		CHAR_INFO chiBuffer[100 * 120];
-
-		GetConsoleScreenBufferInfo(hStdout, &bufferInfo);
-
-		srctReadRect.Top = bufferInfo.srWindow.Top - 70;
-		srctReadRect.Left = 0;
-		srctReadRect.Bottom = bufferInfo.srWindow.Bottom;
-		srctReadRect.Right = 119;
-
-		coordBufSize = { 120, 100 };
-		coordBufCoord = { 0, 0 };
-
-		ReadConsoleOutput(hStdout, chiBuffer, coordBufSize, coordBufCoord, &srctReadRect);
-
-		int console_face = CV_FONT_HERSHEY_COMPLEX_SMALL;
-		double console_scale = 0.3;
-		int console_thickness = 1;
-		int offset = 80;
-		for (int i = 0; i < coordBufSize.Y; ++i)
+		Mat origin = oni->getCameraImage(1.0, 1.0);
+		Mat result;
+		// Make image red tone.
 		{
-			String console_text;
-			for (int j = 0; j < coordBufSize.X; ++j)
-			{
-				console_text += chiBuffer[i * coordBufSize.X + j].Char.UnicodeChar;
-			}
-
-			int console_baseline = 0;
-			Size textSize = getTextSize(console_text, console_face, console_scale, console_thickness, &console_baseline);
-			console_baseline += console_thickness;
-
-			Point console_textOrg(5, offset);
-			offset += textSize.height;
-
-			putText(result, console_text, console_textOrg, console_face, console_scale, Scalar(255, 255, 255, 20), console_thickness, CV_AA);
+			int rows = origin.rows, cols = origin.cols;
+			Mat hsv_orig, hsv_channel[3];
+			cvtColor(origin, hsv_orig, CV_BGR2HSV);
+			split(hsv_orig, hsv_channel);
+			hsv_orig.release();
+			hsv_channel[0].release();
+			hsv_channel[0] = Mat::zeros(rows, cols, CV_8UC1);
+			merge(hsv_channel, 3, hsv_orig);
+			hsv_channel[0].release();
+			hsv_channel[1].release();
+			hsv_channel[2].release();
+			cvtColor(hsv_orig, result, CV_HSV2BGR);
+			hsv_orig.release();
 		}
 
-		String text = "DRONE-ASOBI";
-		int fontFace = CV_FONT_HERSHEY_TRIPLEX;
-		double fontScale = 2;
-		int thickness = 3;
+		// Print current date-time.
+		{
+			time_t rawtime;
+			time(&rawtime);
+			auto timeinfo = localtime(&rawtime);
 
-		int baseline = 0;
-		Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
-		baseline += thickness;
+			char buffer[80];
+			strftime(buffer, sizeof(buffer), "%F %T %z", timeinfo);
 
-		// center the text
-		Point textOrg((result.cols - textSize.width) / 2, (result.rows + textSize.height) / 2);
+			String text(buffer);
+			int fontFace = CV_FONT_HERSHEY_DUPLEX;
+			double fontScale = 0.6;
+			int thickness = 1;
+			int baseline = 0;
+			Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
+			baseline += thickness;
+			Point textOrg(5, 20 + textSize.height / 2);
 
-		// draw the box
-		rectangle(result, textOrg + Point(0, baseline), textOrg + Point(textSize.width, -textSize.height), Scalar(0, 0, 255));
-		// ... and the baseline first
-		line(result, textOrg + Point(0, thickness), textOrg + Point(textSize.width, thickness), Scalar(0, 0, 255));
+			putText(result, text, textOrg, fontFace, fontScale, Scalar::all(255), thickness, CV_AA);
+		}
 
-		// then put the text itself
-		putText(result, text, textOrg, fontFace, fontScale, Scalar::all(255), thickness, 8);
+		// Print console output
+		{
+			HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+			CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+			SMALL_RECT srctReadRect;
+			COORD coordBufSize = { 120, 120 };
+			COORD coordBufCoord = { 0, 0 };
+			CHAR_INFO chiBuffer[120 * 120];
+
+			GetConsoleScreenBufferInfo(hStdout, &bufferInfo);
+
+			srctReadRect.Top = bufferInfo.srWindow.Top - 90;
+			srctReadRect.Left = 0;
+			srctReadRect.Bottom = bufferInfo.srWindow.Bottom;
+			srctReadRect.Right = 119;
+
+			ReadConsoleOutput(hStdout, chiBuffer, coordBufSize, coordBufCoord, &srctReadRect);
+
+			int console_face = CV_FONT_HERSHEY_PLAIN;
+			double console_scale = 0.35;
+			int console_thickness = 1;
+			int offset = 40;
+			for (int i = 0; i < coordBufSize.Y; ++i)
+			{
+				String console_text;
+				for (int j = 0; j < coordBufSize.X; ++j)
+				{
+					console_text += chiBuffer[i * coordBufSize.X + j].Char.UnicodeChar;
+				}
+
+				int console_baseline = 0;
+				Size textSize = getTextSize(console_text, console_face, console_scale, console_thickness, &console_baseline);
+				console_baseline += console_thickness;
+
+				Point console_textOrg(5, offset + textSize.height / 2);
+				offset += textSize.height + console_baseline;
+
+				putText(result, console_text, console_textOrg, console_face, console_scale, Scalar::all(255), console_thickness, CV_AA);
+			}
+		}
+
+		// Print drone status
+		{
+			String text_arr[] = {
+				format("Battery  : %8d %%", oni->mDroneStatus->battery),
+				format("Roll     : %3.4f rad.", oni->mDroneStatus->roll),
+				format("Pitch    : %3.4f rad.", oni->mDroneStatus->pitch),
+				format("Yaw      : %3.4f rad.", oni->mDroneStatus->yaw),
+				format("Altitude : %3.4lf m", oni->mDroneStatus->altitude),
+				//format("Rel. dX  : %8d m", oni->mDroneStatus->dX),
+				//format("Rel. dY  : %8d m", oni->mDroneStatus->dY),
+				//format("Rel. dZ  : %8d m", oni->mDroneStatus->dZ),
+				//format("Rel. dPsi: %8d rad", oni->mDroneStatus->dPsi),
+				format("Speed-X  : %3.4f m/s", oni->mDroneStatus->speedX),
+				format("Speed-Y  : %3.4f m/s", oni->mDroneStatus->speedY),
+				format("Speed-Z  : %3.4f m/s", oni->mDroneStatus->speedZ),
+				format("Tilt     : %8d", oni->mDroneStatus->tilt),
+				format("Pan      : %8d", oni->mDroneStatus->pan) };
+
+			int offset = 20;
+			for (auto text : text_arr) {
+				int fontFace = CV_FONT_HERSHEY_DUPLEX;
+				double fontScale = 0.6;
+				int thickness = 1;
+				int baseline = 0;
+				Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
+				baseline += thickness;
+				Point textOrg(result.cols - 300, offset + textSize.height / 2);
+				offset += textSize.height + baseline;
+
+				putText(result, text, textOrg, fontFace, fontScale, Scalar::all(255), thickness, CV_AA);
+			}
+		}
+
+		// Print main title
+		if (oni->mStateController->getState() == StateController::STATE_READY) {
+			String text = "DRONE-ASOBI";
+			int fontFace = CV_FONT_HERSHEY_TRIPLEX;
+			double fontScale = 3.5;
+			int thickness = 3;
+			int baseline = 0;
+			Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
+			baseline += thickness;
+			Point textOrg((result.cols - textSize.width) / 2, result.rows / 3 + textSize.height / 2);
+
+			rectangle(result, textOrg + Point(-10, thickness + 10), textOrg + Point(textSize.width + 10, -textSize.height - 10), Scalar(255, 255, 255), CV_FILLED);
+			putText(result, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, CV_AA);
+
+			text = "TAKE-OFF";
+			baseline = 0;
+			fontScale = 2.5;
+			textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
+			baseline += thickness;
+			textOrg = Point((result.cols - textSize.width) / 2, result.rows * 2 / 3 + textSize.height / 2);
+			putText(result, text, textOrg, fontFace, fontScale, Scalar::all(255), thickness, CV_AA);
+		}
+
+		// Print taking off message
+		if (oni->mStateController->getState() == StateController::STATE_TAKINGOFF)
+		{
+			String text = "TAKING OFF...";
+			int fontFace = CV_FONT_HERSHEY_TRIPLEX;
+			double fontScale = 2.5;
+			int thickness = 3;
+			int baseline = 0;
+			Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
+			baseline += thickness;
+			Point textOrg((result.cols - textSize.width) / 2, result.rows * 2 / 3 + textSize.height / 2);
+
+			putText(result, text, textOrg, fontFace, fontScale, Scalar(255, 255, 255), thickness, CV_AA);
+		}
+
+		// Print ready message
+		if (oni->mStateController->getState() == StateController::STATE_HOVERING)
+		{
+			String text = "READY";
+			int fontFace = CV_FONT_HERSHEY_TRIPLEX;
+			double fontScale = 2.5;
+			int thickness = 3;
+			int baseline = 0;
+			Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
+			baseline += thickness;
+			Point textOrg((result.cols - textSize.width) / 2, result.rows * 2 / 3 + textSize.height / 2);
+
+			putText(result, text, textOrg, fontFace, fontScale, Scalar(255, 255, 255), thickness, CV_AA);
+		}
+
+		// Print searching target message
+		if (oni->mStateController->getState() == StateController::STATE_SEARCHING)
+		{
+			String text = "SEARCHING TARGET...";
+			int fontFace = CV_FONT_HERSHEY_TRIPLEX;
+			double fontScale = 2.5;
+			int thickness = 3;
+			int baseline = 0;
+			Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
+			baseline += thickness;
+			Point textOrg((result.cols - textSize.width) / 2, result.rows * 2 / 3 + textSize.height / 2);
+
+			putText(result, text, textOrg, fontFace, fontScale, Scalar(255, 255, 255), thickness, CV_AA);
+		}
+
+		// Print tracking message
+		if (oni->mStateController->getState() == StateController::STATE_TRACKING ||
+			oni->mStateController->getState() == StateController::STATE_MISSING)
+		{
+			String text = "TRACKING THE TARGET";
+			int fontFace = CV_FONT_HERSHEY_TRIPLEX;
+			double fontScale = 2.5;
+			int thickness = 3;
+			int baseline = 0;
+			Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
+			baseline += thickness;
+			Point textOrg((result.cols - textSize.width) / 2, result.rows * 2 / 3 + textSize.height / 2);
+
+			putText(result, text, textOrg, fontFace, fontScale, Scalar(255, 255, 255), thickness, CV_AA);
+			
+			auto target = oni->mDroneStatus->currentTarget;
+			target.x /= oni->mTracker->resize_rate;
+			target.y /= oni->mTracker->resize_rate;
+			target.width /= oni->mTracker->resize_rate;
+			target.height /= oni->mTracker->resize_rate;
+			rectangle(result, target, Scalar(255, 255, 255, 255), 3);
+		}
+
+		//// Ex.
+		//{
+		//	String text = "DRONE-ASOBI";
+		//	int fontFace = CV_FONT_HERSHEY_TRIPLEX;
+		//	double fontScale = 2;
+		//	int thickness = 3;
+
+		//	int baseline = 0;
+		//	Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
+		//	baseline += thickness;
+
+		//	// center the text
+		//	Point textOrg((result.cols - textSize.width) / 2, (result.rows + textSize.height) / 2);
+
+		//	// draw the box
+		//	rectangle(result, textOrg + Point(0, baseline), textOrg + Point(textSize.width, -textSize.height), Scalar(0, 0, 255));
+		//	// ... and the baseline first
+		//	line(result, textOrg + Point(0, thickness), textOrg + Point(textSize.width, thickness), Scalar(0, 0, 255));
+
+		//	// then put the text itself
+		//	putText(result, text, textOrg, fontFace, fontScale, Scalar::all(255), thickness, CV_AA);
+		//}
 
 		imshow(COOL_SCREEN_WINDOW_NAME, result);
 		waitKey(50);
@@ -539,6 +703,10 @@ void Oni::processStateSearching(Oni* oni, StateController::STATE_PARAMETER*& cur
 	cv::waitKey(1);
 
 	param->found = found;
+	if(found)
+	{
+		oni->mDroneStatus->currentTarget = peopleList[0];
+	}
 }
 
 void Oni::processStateTracking(Oni* oni, StateController::STATE_PARAMETER*& currentParameter)
@@ -568,6 +736,7 @@ void Oni::processStateTracking(Oni* oni, StateController::STATE_PARAMETER*& curr
 	{
 		int trackingPerson = 0;
 		auto person = peopleList[trackingPerson];
+		oni->mDroneStatus->currentTarget = person;
 
 		if (oni->mTracker->isPersonInBorder(image, person))
 		{
