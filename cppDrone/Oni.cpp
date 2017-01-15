@@ -275,6 +275,7 @@ cv::Mat Oni::getCameraImage(double ratioX, double ratioY) const
 	cv::Mat resized;
 
 	cv::resize(image, resized, cv::Size(), ratioX, ratioY);
+	image.release();
 
 	return resized;
 }
@@ -290,11 +291,25 @@ DWORD WINAPI Oni::cool_window_loop(LPVOID lpParam)
 		return -1;
 	}
 
-	Sleep(5000);
+	Sleep(3000);
 
 	while(oni->mStateController->getState() != StateController::STATE_FINISHED)
 	{
 		Mat result = oni->getCameraImage(1.0, 1.0);
+
+		int rows = result.rows, cols = result.cols;
+		Mat hsv_orig, hsv_channel[3];
+		cvtColor(result, hsv_orig, CV_BGR2HSV);
+		split(hsv_orig, hsv_channel);
+		hsv_orig.release();
+		hsv_channel[0].release();
+		hsv_channel[0] = Mat::zeros(rows, cols, CV_8UC1);
+		merge(hsv_channel, 3, hsv_orig);
+		hsv_channel[0].release();
+		hsv_channel[1].release();
+		hsv_channel[2].release();
+		cvtColor(hsv_orig, result, CV_HSV2BGR);
+		hsv_orig.release();
 
 		HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
 		CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
@@ -302,7 +317,6 @@ DWORD WINAPI Oni::cool_window_loop(LPVOID lpParam)
 		COORD coordBufSize;
 		COORD coordBufCoord;
 		CHAR_INFO chiBuffer[100 * 120];
-		BOOL fSuccess;
 
 		GetConsoleScreenBufferInfo(hStdout, &bufferInfo);
 
@@ -311,26 +325,15 @@ DWORD WINAPI Oni::cool_window_loop(LPVOID lpParam)
 		srctReadRect.Bottom = bufferInfo.srWindow.Bottom;
 		srctReadRect.Right = 119;
 
-		coordBufSize.Y = 100;
-		coordBufSize.X = 120;
-		coordBufCoord.X = 0;
-		coordBufCoord.Y = 0;
+		coordBufSize = { 120, 100 };
+		coordBufCoord = { 0, 0 };
 
-		fSuccess = ReadConsoleOutput(
-			hStdout,        // screen buffer to read from 
-			chiBuffer,      // buffer to copy into 
-			coordBufSize,   // col-row size of chiBuffer 
-			coordBufCoord,  // top left dest. cell in chiBuffer 
-			&srctReadRect); // screen buffer source rectangle 
-		if (!fSuccess)
-		{
-			printf("ReadConsoleOutput failed - (%d)\n", GetLastError());
-		}
+		ReadConsoleOutput(hStdout, chiBuffer, coordBufSize, coordBufCoord, &srctReadRect);
 
 		int console_face = CV_FONT_HERSHEY_COMPLEX_SMALL;
-		double console_scale = 0.5;
+		double console_scale = 0.3;
 		int console_thickness = 1;
-		int offset = 50;
+		int offset = 80;
 		for (int i = 0; i < coordBufSize.Y; ++i)
 		{
 			String console_text;
@@ -343,10 +346,10 @@ DWORD WINAPI Oni::cool_window_loop(LPVOID lpParam)
 			Size textSize = getTextSize(console_text, console_face, console_scale, console_thickness, &console_baseline);
 			console_baseline += console_thickness;
 
-			Point console_textOrg(10, offset);
+			Point console_textOrg(5, offset);
 			offset += textSize.height;
 
-			putText(result, console_text, console_textOrg, console_face, console_scale, Scalar::all(255), console_thickness, CV_AA);
+			putText(result, console_text, console_textOrg, console_face, console_scale, Scalar(255, 255, 255, 20), console_thickness, CV_AA);
 		}
 
 		String text = "DRONE-ASOBI";
@@ -370,9 +373,10 @@ DWORD WINAPI Oni::cool_window_loop(LPVOID lpParam)
 		putText(result, text, textOrg, fontFace, fontScale, Scalar::all(255), thickness, 8);
 
 		imshow(COOL_SCREEN_WINDOW_NAME, result);
-		waitKey(1);
-		Sleep(50);
+		waitKey(50);
+		result.release();
 	}
+	return 0;
 }
 
 DWORD WINAPI Oni::user_command_loop(LPVOID lpParam)
