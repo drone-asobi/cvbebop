@@ -513,10 +513,6 @@ void Oni::processCoolScreen(Oni* oni, const cv::Mat& wanted_base)
 		putText(result, text, textOrg, fontFace, fontScale, Scalar(255, 255, 255), thickness, CV_AA);
 
 		auto target = oni->mDroneStatus->currentTarget;
-		target.x /= oni->mTracker->resize_rate;
-		target.y /= oni->mTracker->resize_rate;
-		target.width /= oni->mTracker->resize_rate;
-		target.height /= oni->mTracker->resize_rate;
 		rectangle(result, target, Scalar(255, 255, 255, 255), 3);
 	}
 
@@ -723,7 +719,7 @@ void Oni::processStateSearching(Oni* oni, StateController::STATE_PARAMETER*& cur
 		currentParameter = param;
 	}
 
-	auto image = oni->getCameraImage(0.7, 0.7);
+	auto image = oni->getCameraImage(oni->mTracker->resize_rate, oni->mTracker->resize_rate);
 
 	auto peopleList = oni->mTracker->getPeople(image);
 
@@ -732,7 +728,10 @@ void Oni::processStateSearching(Oni* oni, StateController::STATE_PARAMETER*& cur
 	param->found = found;
 	if(found)
 	{
-		oni->mDroneStatus->currentTarget = peopleList[0];
+		auto newRect = cv::Rect(
+			peopleList[0].tl() / oni->mTracker->resize_rate,
+			cv::Size(peopleList[0].width / oni->mTracker->resize_rate, peopleList[0].height / oni->mTracker->resize_rate));
+		oni->mDroneStatus->currentTarget = newRect;
 	}
 	image.release();
 }
@@ -747,14 +746,8 @@ void Oni::processStateTracking(Oni* oni, StateController::STATE_PARAMETER*& curr
 		currentParameter = param;
 	}
 
-	auto image = oni->getCameraImage(0.7, 0.7);
-
-	// TODO: Trackerからの情報を用いてドローンをどのように動かすか決める
-	// 例えば、下のように実装する。
+	auto image = oni->getCameraImage(oni->mTracker->resize_rate, oni->mTracker->resize_rate);
 	auto peopleList = oni->mTracker->getPeople(image);
-
-	//cv::imshow("debug_search", image);
-	//cv::waitKey(1);
 
 	if(peopleList.empty())
 	{
@@ -764,45 +757,13 @@ void Oni::processStateTracking(Oni* oni, StateController::STATE_PARAMETER*& curr
 	{
 		int trackingPerson = 0;
 		auto person = peopleList[trackingPerson];
-		oni->mDroneStatus->currentTarget = person;
+		auto newRect = cv::Rect(person.tl() / oni->mTracker->resize_rate, cv::Size(person.width / oni->mTracker->resize_rate, person.height / oni->mTracker->resize_rate));
+		oni->mDroneStatus->currentTarget = newRect;
 
 		if (oni->mTracker->isPersonInBorder(image, person))
 		{
 			param->status = StateController::STATE_PARAMETER_TRACKING::STATUS_CAPTURED;
-
 			oni->mTracker->addCaptured(image, person);
-
-			//cv::Mat channels[3];
-			//cv::Mat hsv_image;
-			//cv::Mat hsv_image1;
-
-			////ここからテスト
-			//cv::Rect rect(person.tl().x, person.tl().y, person.br().x - person.tl().x, person.br().y - person.tl().y);
-			//cv::Mat imgSub(image, rect);	//人領域
-			//cvtColor(imgSub, hsv_image, CV_RGB2HSV);
-			//cv::split(hsv_image, channels);
-			//int width = person.br().x - person.tl().x;
-			//int hight = person.br().y - person.tl().y;
-
-			////HとSの値を変更
-
-			//channels[0] = cv::Mat(cv::Size(width,hight),CV_8UC1,100);
-			//channels[1] = cv::Mat(cv::Size(width,hight), CV_8UC1, 90);
-
-			//cv::merge(channels, 3, hsv_image1);
-			//cvtColor(hsv_image1, imgSub, CV_HSV2RGB);
-
-			//cv::Mat imgSub2;
-			//cv::resize(imgSub, imgSub2, cv::Size(325, 270), 0, 0);
-			//cv::Mat base = cv::imread("tehai.png", 1);
-			//cv::Mat comb(cv::Size(base.cols, base.rows), CV_8UC3);
-			//cv::Mat im1(comb, cv::Rect(0, 0, base.cols, base.rows));
-			//cv::Mat im2(comb, cv::Rect(40, 140, imgSub2.cols, imgSub2.rows));
-			//base.copyTo(im1);
-			//imgSub2.copyTo(im2);
-			//cv::resize(comb, comb, cv::Size(180, 320));
-			////ここまでテスト
-
 			printf("STATUS_CAPTURED\n");
 		}
 		else
@@ -842,16 +803,11 @@ void Oni::processStateMissing(Oni* oni, StateController::STATE_PARAMETER*& curre
 		currentParameter = param;
 	}
 
-	auto image = oni->getCameraImage(0.7, 0.7);
+	auto image = oni->getCameraImage(oni->mTracker->resize_rate, oni->mTracker->resize_rate);
 
-	// TODO: Trackerが人を検出したらfoundをtrueにする
-	// 例えば、下のように実装する。
 	auto peopleList = oni->mTracker->getPeople(image);
 
 	param->found = !peopleList.empty();
-
-	//cv::imshow("debug_search", image);
-	//cv::waitKey(1);
 }
 
 void Oni::processStateCaptured(Oni* oni, StateController::STATE_PARAMETER*& currentParameter)

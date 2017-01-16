@@ -154,7 +154,9 @@ void StateController::processStateSearching(STATE_PARAMETER_SEARCHING * param)
 			}
 
 			// Rotate to right
-			// deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 20);
+			if (!DRONE_DEBUG_MODE) {
+				deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 20);
+			}
 		}
 	}
 }

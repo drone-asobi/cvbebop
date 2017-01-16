@@ -331,7 +331,7 @@ void opencv_detect_person_hogsvm(Mat img, cv::Rect &r)
 
 }
 
-void opencv_detect_person_haarcascade(Mat img, cv::Rect &r)
+void static opencv_detect_person_haarcascade(Mat img, cv::Rect &r)
 {
 
 	//全身を大きめに検知して、その中に上半身があれば出力とか、誤認識は減るかもしれんが認識率そのものも減る可能性

@@ -68,4 +68,9 @@
       <Filter>リソース ファイル</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="lbpcascade2000.xml">
+      <Filter>リソース ファイル</Filter>
+    </Xml>
+  </ItemGroup>
 </Project>

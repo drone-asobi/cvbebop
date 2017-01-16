@@ -279,6 +279,9 @@ xcopy /y /d "$(ProjectDir)controller.png" "$(OutDir)"</Command>
       <DeploymentContent>true</DeploymentContent>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="lbpcascade2000.xml" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
