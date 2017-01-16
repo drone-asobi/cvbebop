@@ -293,7 +293,7 @@ cv::Mat Oni::getCameraImage(double ratioX, double ratioY) const
 	return resized;
 }
 
-void Oni::processCoolScreen(Oni* oni)
+void Oni::processCoolScreen(Oni* oni, const cv::Mat& wanted_base)
 {
 	using namespace cv;
 
@@ -396,7 +396,7 @@ void Oni::processCoolScreen(Oni* oni)
 			format("Tilt     : %8d", oni->mDroneStatus->tilt),
 			format("Pan      : %8d", oni->mDroneStatus->pan) };
 
-		int offset = 20;
+		int offset = 50;
 		for (auto text : text_arr) {
 			int fontFace = CV_FONT_HERSHEY_DUPLEX;
 			double fontScale = 0.6;
@@ -411,40 +411,58 @@ void Oni::processCoolScreen(Oni* oni)
 		}
 	}
 
+	// Print all captured
+	{
+		int offset = 40;
+		for(auto captured : oni->mTracker->getCaptured())
+		{
+			Mat wanted(wanted_base.rows, wanted_base.cols, wanted_base.type());
+			wanted_base.copyTo(wanted);
+			Mat target;
+			resize(captured, target, Size(325, 270));
+			target.copyTo(wanted(Rect(Point(40, 140), Size(325, 270))));
+
+			Mat channels[3];
+			cvtColor(wanted, wanted, CV_BGR2HSV);
+			split(wanted, channels);
+			channels[0].release();
+			channels[0] = Mat::zeros(wanted.rows, wanted.cols, CV_8UC1);
+			merge(channels, 3, wanted);
+			cvtColor(wanted, wanted, CV_HSV2BGR);
+
+			resize(wanted, wanted, Size(135, 240));
+
+			wanted.copyTo(result(Rect(Point(offset, result.rows - wanted.rows - 20), wanted.size())));
+			offset += wanted.cols + 10;
+		}
+	}
+
 	// Print main title
 	if (oni->mStateController->getState() == StateController::STATE_READY) {
-		String text = "DRONE-ASOBI";
+		String text = "DRONE_TAGGER";
 		int fontFace = CV_FONT_HERSHEY_TRIPLEX;
 		double fontScale = 3.5;
 		int thickness = 3;
 		int baseline = 0;
 		Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
 		baseline += thickness;
-		Point textOrg((result.cols - textSize.width) / 2, result.rows / 3 + textSize.height / 2);
+		Point textOrg((result.cols - textSize.width) / 2, result.rows / 2 + textSize.height / 2);
 
-		rectangle(result, textOrg + Point(-10, thickness + 10), textOrg + Point(textSize.width + 10, -textSize.height - 10), Scalar(255, 255, 255), CV_FILLED);
+		rectangle(result, textOrg + Point(-40, thickness + 40), textOrg + Point(textSize.width + 40, -textSize.height - 40), Scalar(255, 255, 255), CV_FILLED);
 		putText(result, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, CV_AA);
-
-		text = "TAKE-OFF";
-		baseline = 0;
-		fontScale = 2.5;
-		textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
-		baseline += thickness;
-		textOrg = Point((result.cols - textSize.width) / 2, result.rows * 2 / 3 + textSize.height / 2);
-		putText(result, text, textOrg, fontFace, fontScale, Scalar::all(255), thickness, CV_AA);
 	}
 
 	// Print taking off message
 	if (oni->mStateController->getState() == StateController::STATE_TAKINGOFF)
 	{
-		String text = "TAKING OFF...";
+		String text = "> TAKING OFF_";
 		int fontFace = CV_FONT_HERSHEY_TRIPLEX;
-		double fontScale = 2.5;
-		int thickness = 3;
+		double fontScale = 0.7;
+		int thickness = 1;
 		int baseline = 0;
 		Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
 		baseline += thickness;
-		Point textOrg((result.cols - textSize.width) / 2, result.rows * 2 / 3 + textSize.height / 2);
+		Point textOrg(result.cols - 300, 20 + textSize.height / 2);
 
 		putText(result, text, textOrg, fontFace, fontScale, Scalar(255, 255, 255), thickness, CV_AA);
 	}
@@ -452,14 +470,14 @@ void Oni::processCoolScreen(Oni* oni)
 	// Print ready message
 	if (oni->mStateController->getState() == StateController::STATE_HOVERING)
 	{
-		String text = "READY";
+		String text = "> HOVERING_";
 		int fontFace = CV_FONT_HERSHEY_TRIPLEX;
-		double fontScale = 2.5;
-		int thickness = 3;
+		double fontScale = 0.7;
+		int thickness = 1;
 		int baseline = 0;
 		Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
 		baseline += thickness;
-		Point textOrg((result.cols - textSize.width) / 2, result.rows * 2 / 3 + textSize.height / 2);
+		Point textOrg(result.cols - 300, 20 + textSize.height / 2);
 
 		putText(result, text, textOrg, fontFace, fontScale, Scalar(255, 255, 255), thickness, CV_AA);
 	}
@@ -467,14 +485,14 @@ void Oni::processCoolScreen(Oni* oni)
 	// Print searching target message
 	if (oni->mStateController->getState() == StateController::STATE_SEARCHING)
 	{
-		String text = "SEARCHING TARGET...";
+		String text = "> SEARCHING_";
 		int fontFace = CV_FONT_HERSHEY_TRIPLEX;
-		double fontScale = 2.5;
-		int thickness = 3;
+		double fontScale = 0.7;
+		int thickness = 1;
 		int baseline = 0;
 		Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
 		baseline += thickness;
-		Point textOrg((result.cols - textSize.width) / 2, result.rows * 2 / 3 + textSize.height / 2);
+		Point textOrg(result.cols - 300, 20 + textSize.height / 2);
 
 		putText(result, text, textOrg, fontFace, fontScale, Scalar(255, 255, 255), thickness, CV_AA);
 	}
@@ -483,14 +501,14 @@ void Oni::processCoolScreen(Oni* oni)
 	if (oni->mStateController->getState() == StateController::STATE_TRACKING ||
 		oni->mStateController->getState() == StateController::STATE_MISSING)
 	{
-		String text = "TRACKING THE TARGET";
+		String text = "> TRACKING_";
 		int fontFace = CV_FONT_HERSHEY_TRIPLEX;
-		double fontScale = 2.5;
-		int thickness = 3;
+		double fontScale = 0.7;
+		int thickness = 1;
 		int baseline = 0;
 		Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
 		baseline += thickness;
-		Point textOrg((result.cols - textSize.width) / 2, result.rows * 2 / 3 + textSize.height / 2);
+		Point textOrg(result.cols - 300, 20 + textSize.height / 2);
 
 		putText(result, text, textOrg, fontFace, fontScale, Scalar(255, 255, 255), thickness, CV_AA);
 
@@ -502,28 +520,54 @@ void Oni::processCoolScreen(Oni* oni)
 		rectangle(result, target, Scalar(255, 255, 255, 255), 3);
 	}
 
-	//// Ex.
-	//{
-	//	String text = "DRONE-ASOBI";
-	//	int fontFace = CV_FONT_HERSHEY_TRIPLEX;
-	//	double fontScale = 2;
-	//	int thickness = 3;
+	// Print captured
+	if (oni->mStateController->getState() == StateController::STATE_CAPTURED)
+	{
+		String text = "> CAPTURED_";
+		int fontFace = CV_FONT_HERSHEY_TRIPLEX;
+		double fontScale = 0.7;
+		int thickness = 1;
+		int baseline = 0;
+		Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
+		baseline += thickness;
+		Point textOrg(result.cols - 300, 20 + textSize.height / 2);
 
-	//	int baseline = 0;
-	//	Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
-	//	baseline += thickness;
+		putText(result, text, textOrg, fontFace, fontScale, Scalar(255, 255, 255), thickness, CV_AA);
 
-	//	// center the text
-	//	Point textOrg((result.cols - textSize.width) / 2, (result.rows + textSize.height) / 2);
+		auto captured = *oni->mTracker->getCaptured().rbegin();
+		Mat wanted(wanted_base.rows, wanted_base.cols, wanted_base.type());
+		wanted_base.copyTo(wanted);
+		Mat target;
+		resize(captured, target, Size(325, 270));
+		target.copyTo(wanted(Rect(Point(40, 140), Size(325, 270))));
 
-	//	// draw the box
-	//	rectangle(result, textOrg + Point(0, baseline), textOrg + Point(textSize.width, -textSize.height), Scalar(0, 0, 255));
-	//	// ... and the baseline first
-	//	line(result, textOrg + Point(0, thickness), textOrg + Point(textSize.width, thickness), Scalar(0, 0, 255));
+		Mat channels[3];
+		cvtColor(wanted, wanted, CV_BGR2HSV);
+		split(wanted, channels);
+		channels[0].release();
+		channels[0] = Mat::zeros(wanted.rows, wanted.cols, CV_8UC1);
+		merge(channels, 3, wanted);
+		cvtColor(wanted, wanted, CV_HSV2BGR);
 
-	//	// then put the text itself
-	//	putText(result, text, textOrg, fontFace, fontScale, Scalar::all(255), thickness, CV_AA);
-	//}
+		resize(wanted, wanted, Size(180, 320));
+
+		wanted.copyTo(result(Rect(Point((result.cols - wanted.cols) / 2, (result.rows - wanted.rows) / 2), wanted.size())));
+	}
+
+	// Print landing message
+	if (oni->mStateController->getState() == StateController::STATE_LANDING)
+	{
+		String text = "> LANDING_";
+		int fontFace = CV_FONT_HERSHEY_TRIPLEX;
+		double fontScale = 0.7;
+		int thickness = 1;
+		int baseline = 0;
+		Size textSize = getTextSize(text, fontFace, fontScale, thickness, &baseline);
+		baseline += thickness;
+		Point textOrg(result.cols - 300, 20 + textSize.height / 2);
+
+		putText(result, text, textOrg, fontFace, fontScale, Scalar(255, 255, 255), thickness, CV_AA);
+	}
 
 	imshow(COOL_SCREEN_WINDOW_NAME, result);
 	result.release();
@@ -538,11 +582,13 @@ DWORD WINAPI Oni::user_command_loop(LPVOID lpParam)
 		return -1;
 	}
 
-	Sleep(3000);
+	Sleep(2000);
+
+	auto wanted_base = cv::imread("tehai.png");
 
 	while (oni->mStateController->getState() != StateController::STATE_FINISHED)
 	{
-		processCoolScreen(oni);
+		processCoolScreen(oni, wanted_base);
 
 		auto commandKey = cv::waitKey(100);
 
@@ -679,20 +725,16 @@ void Oni::processStateSearching(Oni* oni, StateController::STATE_PARAMETER*& cur
 
 	auto image = oni->getCameraImage(0.7, 0.7);
 
-	// TODO: Trackerが人を検出したらfoundをtrueにする
-	// 例えば、下のように実装する。
 	auto peopleList = oni->mTracker->getPeople(image);
 
 	bool found = !peopleList.empty();
-
-	cv::imshow("debug_search", image);
-	cv::waitKey(1);
 
 	param->found = found;
 	if(found)
 	{
 		oni->mDroneStatus->currentTarget = peopleList[0];
 	}
+	image.release();
 }
 
 void Oni::processStateTracking(Oni* oni, StateController::STATE_PARAMETER*& currentParameter)
@@ -711,8 +753,8 @@ void Oni::processStateTracking(Oni* oni, StateController::STATE_PARAMETER*& curr
 	// 例えば、下のように実装する。
 	auto peopleList = oni->mTracker->getPeople(image);
 
-	cv::imshow("debug_search", image);
-	cv::waitKey(1);
+	//cv::imshow("debug_search", image);
+	//cv::waitKey(1);
 
 	if(peopleList.empty())
 	{
@@ -728,38 +770,38 @@ void Oni::processStateTracking(Oni* oni, StateController::STATE_PARAMETER*& curr
 		{
 			param->status = StateController::STATE_PARAMETER_TRACKING::STATUS_CAPTURED;
 
-			cv::Mat channels[3];
-			cv::Mat hsv_image;
-			cv::Mat hsv_image1;
+			oni->mTracker->addCaptured(image, person);
 
-			//ここからテスト
-			cv::Rect rect(person.tl().x, person.tl().y, person.br().x - person.tl().x, person.br().y - person.tl().y);
-			cv::Mat imgSub(image, rect);	//人領域
-			cvtColor(imgSub, hsv_image, CV_RGB2HSV);
-			cv::split(hsv_image, channels);
-			int width = person.br().x - person.tl().x;
-			int hight = person.br().y - person.tl().y;
+			//cv::Mat channels[3];
+			//cv::Mat hsv_image;
+			//cv::Mat hsv_image1;
 
-			//HとSの値を変更
+			////ここからテスト
+			//cv::Rect rect(person.tl().x, person.tl().y, person.br().x - person.tl().x, person.br().y - person.tl().y);
+			//cv::Mat imgSub(image, rect);	//人領域
+			//cvtColor(imgSub, hsv_image, CV_RGB2HSV);
+			//cv::split(hsv_image, channels);
+			//int width = person.br().x - person.tl().x;
+			//int hight = person.br().y - person.tl().y;
 
-			channels[0] = cv::Mat(cv::Size(width,hight),CV_8UC1,100);
-			channels[1] = cv::Mat(cv::Size(width,hight), CV_8UC1, 90);
+			////HとSの値を変更
 
-			cv::merge(channels, 3, hsv_image1);
-			cvtColor(hsv_image1, imgSub, CV_HSV2RGB);
+			//channels[0] = cv::Mat(cv::Size(width,hight),CV_8UC1,100);
+			//channels[1] = cv::Mat(cv::Size(width,hight), CV_8UC1, 90);
 
-			cv::Mat imgSub2;
-			cv::resize(imgSub, imgSub2, cv::Size(325, 270), 0, 0);
-			cv::Mat base = cv::imread("tehai.png", 1);
-			cv::Mat comb(cv::Size(base.cols, base.rows), CV_8UC3);
-			cv::Mat im1(comb, cv::Rect(0, 0, base.cols, base.rows));
-			cv::Mat im2(comb, cv::Rect(40, 140, imgSub2.cols, imgSub2.rows));
-			base.copyTo(im1);
-			imgSub2.copyTo(im2);
-			cv::resize(comb, comb, cv::Size(180, 320));
-			cv::imshow("tehai", comb);
-			cv::waitKey(1);
-			//ここまでテスト
+			//cv::merge(channels, 3, hsv_image1);
+			//cvtColor(hsv_image1, imgSub, CV_HSV2RGB);
+
+			//cv::Mat imgSub2;
+			//cv::resize(imgSub, imgSub2, cv::Size(325, 270), 0, 0);
+			//cv::Mat base = cv::imread("tehai.png", 1);
+			//cv::Mat comb(cv::Size(base.cols, base.rows), CV_8UC3);
+			//cv::Mat im1(comb, cv::Rect(0, 0, base.cols, base.rows));
+			//cv::Mat im2(comb, cv::Rect(40, 140, imgSub2.cols, imgSub2.rows));
+			//base.copyTo(im1);
+			//imgSub2.copyTo(im2);
+			//cv::resize(comb, comb, cv::Size(180, 320));
+			////ここまでテスト
 
 			printf("STATUS_CAPTURED\n");
 		}
@@ -800,7 +842,7 @@ void Oni::processStateMissing(Oni* oni, StateController::STATE_PARAMETER*& curre
 		currentParameter = param;
 	}
 
-	auto image = oni->getCameraImage();
+	auto image = oni->getCameraImage(0.7, 0.7);
 
 	// TODO: Trackerが人を検出したらfoundをtrueにする
 	// 例えば、下のように実装する。
@@ -808,11 +850,22 @@ void Oni::processStateMissing(Oni* oni, StateController::STATE_PARAMETER*& curre
 
 	param->found = !peopleList.empty();
 
-	cv::imshow("debug_search", image);
-	cv::waitKey(1);
+	//cv::imshow("debug_search", image);
+	//cv::waitKey(1);
 }
 
-void Oni::processStateLanding(StateController::STATE_PARAMETER*& currentParameter)
+void Oni::processStateCaptured(Oni* oni, StateController::STATE_PARAMETER*& currentParameter)
+{
+	auto param = dynamic_cast<StateController::STATE_PARAMETER_CAPTURED*>(currentParameter);
+	if (param == nullptr)
+	{
+		param = new StateController::STATE_PARAMETER_CAPTURED(oni->mTracker, GetTickCount64());
+		delete currentParameter;
+		currentParameter = param;
+	}
+}
+
+void Oni::processStateLanding(Oni* oni, StateController::STATE_PARAMETER*& currentParameter)
 {
 	auto param = dynamic_cast<StateController::STATE_PARAMETER_LANDING*>(currentParameter);
 	if (param == nullptr)
@@ -820,6 +873,8 @@ void Oni::processStateLanding(StateController::STATE_PARAMETER*& currentParamete
 		param = new StateController::STATE_PARAMETER_LANDING(GetTickCount64());
 		delete currentParameter;
 		currentParameter = param;
+
+		oni->mTracker->clearCaptured();
 	}
 }
 
@@ -919,8 +974,22 @@ DWORD WINAPI Oni::oni_state_loop(LPVOID lpParam)
 			processStateMissing(oni, currentParameter);
 		}
 		break;
+		case StateController::STATE_CAPTURED:
+		{
+			if (command == Land)
+			{
+				oni->mStateController->setState(StateController::STATE_LANDING);
+				delete currentParameter;
+				currentParameter = nullptr;
+				oni->mStateController->processState(currentParameter);
+				continue;
+			}
+
+			processStateCaptured(oni, currentParameter);
+		}
+		break;
 		case StateController::STATE_LANDING:
-			processStateLanding(currentParameter);
+			processStateLanding(oni, currentParameter);
 			break;
 		case StateController::STATE_FINISHED:
 			processStateFinished(oni, currentParameter);

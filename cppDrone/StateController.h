@@ -5,8 +5,9 @@ extern "C" {
 }
 
 #define TAKING_OFF_WAIT_TICK 10000
-#define SEARCHING_WAIT_TICK 10000
+#define SEARCHING_WAIT_TICK 30000
 #define MISSING_WAIT_TICK 5000
+#define CAPTURED_WAIT_TICK 5000
 #define LANDING_WAIT_TICK 5000
 
 class StateController
@@ -22,6 +23,7 @@ public:
 		STATE_SEARCHING,
 		STATE_TRACKING,
 		STATE_MISSING,
+		STATE_CAPTURED,
 		STATE_LANDING,
 		STATE_FINISHED,
 	};
@@ -34,6 +36,7 @@ public:
 	struct STATE_PARAMETER_SEARCHING;
 	struct STATE_PARAMETER_TRACKING;
 	struct STATE_PARAMETER_MISSING;
+	struct STATE_PARAMETER_CAPTURED;
 	struct STATE_PARAMETER_LANDING;
 	struct STATE_PARAMETER_FINISHED;
 
@@ -57,6 +60,7 @@ private:
 	void processStateSearching(STATE_PARAMETER_SEARCHING* param);
 	void processStateTracking(STATE_PARAMETER_TRACKING* param);
 	void processStateMissing(STATE_PARAMETER_MISSING* param);
+	void processStateCaptured(STATE_PARAMETER_CAPTURED* param);
 	void processStateLanding(STATE_PARAMETER_LANDING* param);
 	void processStateFinished(STATE_PARAMETER_FINISHED* param);
 
@@ -148,6 +152,14 @@ struct StateController::STATE_PARAMETER_TRACKING : STATE_PARAMETER
 	STATE_PARAMETER_TRACKING_DIRECTION direction;
 
 	STATE_PARAMETER_TRACKING(void* tracker, STATE_PARAMETER_TRACKING_STATUS status, STATE_PARAMETER_TRACKING_DIRECTION direction) : tracker(tracker), status(status), direction(direction) { }
+};
+
+struct StateController::STATE_PARAMETER_CAPTURED : STATE_PARAMETER
+{
+	void* tracker;
+	ULONGLONG capturedTick;
+
+	STATE_PARAMETER_CAPTURED(void* tracker, ULONGLONG capturedTick) : tracker(tracker), capturedTick(capturedTick) { }
 };
 
 struct StateController::STATE_PARAMETER_MISSING : STATE_PARAMETER

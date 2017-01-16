@@ -154,7 +154,7 @@ void StateController::processStateSearching(STATE_PARAMETER_SEARCHING * param)
 			}
 
 			// Rotate to right
-			//deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 20);
+			// deviceController->aRDrone3->setPilotingPCMDYaw(deviceController->aRDrone3, 20);
 		}
 	}
 }
@@ -215,19 +215,34 @@ void StateController::processStateTracking(STATE_PARAMETER_TRACKING * param)
 	case STATE_PARAMETER_TRACKING::STATUS_MISSED:
 	{
 		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "State[Tracking => Missing]: Missed a person!");
-		deviceController->aRDrone3->setPilotingPCMD(deviceController->aRDrone3, 0, 0, 0, 0, 0, 0);
+		// deviceController->aRDrone3->setPilotingPCMD(deviceController->aRDrone3, 0, 0, 0, 0, 0, 0);
 		setState(STATE_MISSING);
 	}
 	break;
 	case STATE_PARAMETER_TRACKING::STATUS_CAPTURED:
 	{
-		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "State[Tracking => Hovering]: Captured a person! Stop searching, and hover.");
+		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "State[Tracking => Captured]: Captured a person!");
 		deviceController->aRDrone3->setPilotingPCMD(deviceController->aRDrone3, 0, 0, 0, 0, 0, 0);
 
-		setState(STATE_HOVERING);
+		setState(STATE_CAPTURED);
 	}
 	break;
 	default: break;
+	}
+}
+
+void StateController::processStateCaptured(STATE_PARAMETER_CAPTURED * param)
+{
+	if (param == nullptr)
+	{
+		ARSAL_PRINT(ARSAL_PRINT_WARNING, TAG, "State[Captured]: No parameters!");
+		return;
+	}
+
+	if (GetTickCount64() - param->capturedTick >= CAPTURED_WAIT_TICK)
+	{
+		ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "State[Captured => Hovering]: Captured timeout. Back to hovering.");
+		setState(STATE_HOVERING);
 	}
 }
 
@@ -343,13 +358,22 @@ void StateController::processState(STATE_PARAMETER* arg)
 	case STATE_MISSING:
 	{
 		// Stop: Top priority behavior than any errors.
-		deviceController->aRDrone3->setPilotingPCMD(deviceController->aRDrone3, 0, 0, 0, 0, 0, 0);
+		// deviceController->aRDrone3->setPilotingPCMD(deviceController->aRDrone3, 0, 0, 0, 0, 0, 0);
 
 		processStateMissing(static_cast<STATE_PARAMETER_MISSING*>(arg));
 	}
 	break;
+	case STATE_CAPTURED:
+	{
+		// Stop: Top priority behavior than any errors.
+		deviceController->aRDrone3->setPilotingPCMD(deviceController->aRDrone3, 0, 0, 0, 0, 0, 0);
+
+		processStateCaptured(static_cast<STATE_PARAMETER_CAPTURED*>(arg));
+	}
+	break;
 	case STATE_LANDING:
 	{
+		deviceController->aRDrone3->setPilotingPCMD(deviceController->aRDrone3, 0, 0, 0, 0, 0, 0);
 		processStateLanding(static_cast<STATE_PARAMETER_LANDING*>(arg));
 	}
 	break;

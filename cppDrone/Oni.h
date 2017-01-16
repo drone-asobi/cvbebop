@@ -6,9 +6,7 @@
 
 #define MONITOR_WINDOW_NAME "Drone Monitor"
 
-#define CONTROLLER_WINDOW_NAME "Oni Controller"
-#define CONTROLLER_IMAGE_FILE "controller.png"
-#define COOL_SCREEN_WINDOW_NAME "DRONE_ASOBI"
+#define COOL_SCREEN_WINDOW_NAME "DRONE_TAGGER"
 
 class Oni
 {
@@ -88,7 +86,7 @@ public:
 		CloseHandle(hThread[1]);
 	}
 
-	cv::Mat getCameraImage(double ratioX = 0.3, double ratioY = 0.3) const;
+	cv::Mat getCameraImage(double ratioX, double ratioY) const;
 
 private:
 	static DWORD WINAPI user_command_loop(LPVOID lpParam);
@@ -100,7 +98,7 @@ private:
 	static eARCONTROLLER_ERROR oni_image_loop(ARCONTROLLER_Frame_t *frame, void *customData);
 
 private:
-	static void processCoolScreen(Oni * oni);
+	static void processCoolScreen(Oni * oni, const cv::Mat& wanted_base);
 
 	static void processStateStart(StateController::STATE_PARAMETER*& currentParameter);
 	static void processStateReady(StateController::STATE_PARAMETER*& currentParameter, Oni::OniCommand command);
@@ -109,7 +107,8 @@ private:
 	static void processStateSearching(Oni* oni, StateController::STATE_PARAMETER*& currentParameter);
 	static void processStateTracking(Oni* oni, StateController::STATE_PARAMETER*& currentParameter);
 	static void processStateMissing(Oni* oni, StateController::STATE_PARAMETER*& currentParameter);
-	static void processStateLanding(StateController::STATE_PARAMETER*& currentParameter);
+	static void processStateCaptured(Oni* oni, StateController::STATE_PARAMETER*& currentParameter);
+	static void processStateLanding(Oni* oni, StateController::STATE_PARAMETER*& currentParameter);
 	static void processStateFinished(Oni* oni, StateController::STATE_PARAMETER*& currentParameter);
 
 // Constructors

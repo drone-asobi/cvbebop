@@ -26,7 +26,7 @@ bool OniTracker::isPersonInBorder(cv::Mat image, cv::Rect person)
 
 	/////距離計測/////
 	double reference_d = 2.5;	//基準の距離(m)
-	double reference_size = 7938; //基準の人領域の大きさ
+	double reference_size = 7938 * 8 / 3; //基準の人領域の大きさ
 	double distance = 0;	//距離(m)
 
 							/////距離の度合い/////
@@ -45,7 +45,6 @@ bool OniTracker::isPersonInBorder(cv::Mat image, cv::Rect person)
  */
 std::vector<cv::Rect> OniTracker::getPeople(cv::Mat image)
 {
-	// ref: http://opencv.jp/cookbook/opencv_img.html#id43
 	HOGDescriptor hog;
 	hog.setSVMDetector(HOGDescriptor::getDefaultPeopleDetector());
 
@@ -57,16 +56,26 @@ std::vector<cv::Rect> OniTracker::getPeople(cv::Mat image)
 	hog.detectMultiScale(image, found, 0.2, cv::Size(8, 8), cv::Size(16, 16), 1.05, 2);
 
 	std::cout << "found:" << found.size() << std::endl;
-	for (auto it = found.begin(); it != found.end(); ++it)
-	{
-		auto r = *it;
-		// 描画に際して，検出矩形を若干小さくする
-		r.x += cvRound(r.width * 0.1);
-		r.width = cvRound(r.width * 0.8);
-		r.y += cvRound(r.height * 0.07);
-		r.height = cvRound(r.height * 0.8);
-		cv::rectangle(image, r.tl(), r.br(), cv::Scalar(0, 255, 0), 3);
-		r.area();
-	}
 	return found;
+}
+
+void OniTracker::addCaptured(Mat image, Rect person)
+{
+	Mat region(person.height, person.width, image.type());
+	Mat(image, person).copyTo(region);
+	captured.push_back(region);
+}
+
+std::vector<Mat>& OniTracker::getCaptured()
+{
+	return captured;
+}
+
+void OniTracker::clearCaptured()
+{
+	for (auto person : captured)
+	{
+		person.release();
+	}
+	captured.clear();
 }
