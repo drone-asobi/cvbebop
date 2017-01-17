@@ -4,6 +4,7 @@
 #include <opencv2/imgproc.hpp>
 #include <vector>
 #include <ctime>
+#include <algorithm>
 
 #include "Oni.h"
 

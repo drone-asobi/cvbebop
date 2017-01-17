@@ -72,5 +72,8 @@
     <Xml Include="lbpcascade2000.xml">
       <Filter>リソース ファイル</Filter>
     </Xml>
+    <Xml Include="lbpcascade10000.xml">
+      <Filter>リソース ファイル</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

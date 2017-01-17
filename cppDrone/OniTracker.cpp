@@ -33,32 +33,52 @@ bool OniTracker::isPersonInBorder(const Mat& image, const Rect person)
  */
 std::vector<Rect> OniTracker::getPeople(const Mat& image)
 {
-	if (this->useCascade) {
+	if (this->useCascade2000) {
 		Mat gray_img; //グレイ画像変換
 		cvtColor(image, gray_img, CV_BGR2GRAY);
 		equalizeHist(gray_img, gray_img);
 
 		std::vector<cv::Rect> people;
-		this->cascade.detectMultiScale(gray_img, people); //条件設定
+		this->cascade2000.detectMultiScale(gray_img, people); //条件設定
 		gray_img.release();
 
 		std::cout << "found:" << people.size() << std::endl;
+
+		std::sort(people.begin(), people.end(), [](cv::Rect a, cv::Rect b) { return a.area() > b.area(); });
+
+		return people;
+	}
+
+	if (this->useCascade10000) {
+		Mat gray_img; //グレイ画像変換
+		cvtColor(image, gray_img, CV_BGR2GRAY);
+		equalizeHist(gray_img, gray_img);
+
+		std::vector<cv::Rect> people;
+		this->cascade10000.detectMultiScale(gray_img, people); //条件設定
+		gray_img.release();
+
+		std::cout << "found:" << people.size() << std::endl;
+
+		std::sort(people.begin(), people.end(), [](cv::Rect a, cv::Rect b) { return a.area() > b.area(); });
 
 		return people;
 	}
 
 	if (this->useHog)
 	{
-		std::vector<Rect> found;
+		std::vector<Rect> people;
 		// 画像，検出結果，閾値（SVMのhyper-planeとの距離），
 		// 探索窓の移動距離（Block移動距離の倍数），
 		// 画像外にはみ出た対象を探すためのpadding，
 		// 探索窓のスケール変化係数，グルーピング係数
-		this->hog.detectMultiScale(image, found, 0.2, Size(8, 8), Size(16, 16), 1.05, 2);
+		this->hog.detectMultiScale(image, people, 0.2, Size(8, 8), Size(16, 16), 1.05, 2);
 
-		std::cout << "found:" << found.size() << std::endl;
+		std::cout << "found:" << people.size() << std::endl;
 
-		return found;
+		std::sort(people.begin(), people.end(), [](cv::Rect a, cv::Rect b) { return a.area() > b.area(); });
+
+		return people;
 	}
 
 	return std::vector<Rect>();

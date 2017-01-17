@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <mutex>
+#include <algorithm>
 
 #include <opencv2/core.hpp>
 #include <opencv2/objdetect.hpp>
@@ -15,12 +16,14 @@ class OniTracker
 {
 public:
 	const double resize_rate = 0.7;
-	const bool useCascade = true;
+	const bool useCascade2000 = false;
+	const bool useCascade10000 = true;
 	const bool useHog = false;
 
 private:
 	std::mutex captured_mutex;
-	cv::CascadeClassifier cascade;
+	cv::CascadeClassifier cascade2000;
+	cv::CascadeClassifier cascade10000;
 	cv::HOGDescriptor hog;
 	std::vector<cv::Mat> captured;
 
@@ -38,7 +41,8 @@ public:
 public:
 	OniTracker()
 	{
-		cascade.load("lbpcascade2000.xml");
+		cascade2000.load("lbpcascade2000.xml");
+		cascade10000.load("lbpcascade10000.xml");
 		hog.setSVMDetector(cv::HOGDescriptor::getDefaultPeopleDetector());
 	}
 };

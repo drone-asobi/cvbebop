@@ -10,7 +10,7 @@ extern "C" {
 #define CAPTURED_WAIT_TICK 5000
 #define LANDING_WAIT_TICK 5000
 
-#define DRONE_DEBUG_MODE true
+#define DRONE_DEBUG_MODE false
 
 class StateController
 {
